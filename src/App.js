@@ -30,6 +30,7 @@ import {
   CommandCenterPage, GenresPage, CountriesPage, MissingPiecesPage, DuplicatesPage,
   AuditLogPage, SnapshotsPage, AwardsPage, FormatsPage, ContentThemesPage
 } from './js/pages/library/LibraryPages.js';
+import { MediaTypesPage, CollectionBuilderPage, LibraryHubPage } from './js/pages/library/ExtraPages.js';
 
 export class App {
   constructor() {
@@ -206,6 +207,10 @@ export class App {
       '/missing': () => this.renderPage(() => new MissingPiecesPage().render()),
       '/audit': () => this.renderPage(() => new AuditLogPage().render()),
       '/snapshots': () => this.renderPage(() => new SnapshotsPage().render()),
+      '/media-types': () => this.renderPage(() => new MediaTypesPage().render()),
+      '/collection-builder': () => this.renderPage(() => new CollectionBuilderPage().render()),
+      '/library': () => this.renderPage(() => new LibraryHubPage().render()),
+      '/library-hub': () => this.renderPage(() => new LibraryHubPage().render()),
       // System
       '/settings': () => this.renderPage(() => SettingsPage({})),
       '/settings/:section': (params) => this.renderPage(() => SettingsPage(params)),
