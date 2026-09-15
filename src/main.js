@@ -11,6 +11,7 @@
 import './styles/design-tokens.css';
 import './styles/base.css';
 import './styles/components.css';
+import './styles/library.css';
 
 // Themes - All 8 themes + custom builder support
 import './styles/themes/midnight-neon.css';

@@ -24,6 +24,13 @@ import { SearchPage } from './js/pages/SearchPage.js';
 import { SettingsPage } from './js/pages/SettingsPage.js';
 import { FavoritesPage, WatchLaterPage, HistoryPage, ContinueWatchingPage, PlatformsPage, PersonPage, AnalyticsPage } from './js/pages/FavoritesPage.js';
 
+// Advanced Library Pages
+import { 
+  EraPage, FranchisesPage, SmartCollectionsPage, HealthCenterPage, StoragePage,
+  CommandCenterPage, GenresPage, CountriesPage, MissingPiecesPage, DuplicatesPage,
+  AuditLogPage, SnapshotsPage, AwardsPage, FormatsPage, ContentThemesPage
+} from './js/pages/library/LibraryPages.js';
+
 export class App {
   constructor() {
     this.container = null;
@@ -179,6 +186,27 @@ export class App {
       '/analytics': () => this.renderPage(AnalyticsPage),
       '/recommendations': () => this.renderPage(RecommendationsPage),
       '/trending': () => this.renderPage(TrendingPage),
+      // Advanced Library - Era & Time
+      '/eras': () => this.renderPage(() => new EraPage().render()),
+      '/era/:era': (params) => this.renderPage(() => new EraPage().render(params)),
+      // Franchises & Collections
+      '/franchises': () => this.renderPage(() => new FranchisesPage().render()),
+      '/collections': () => this.renderPage(() => new SmartCollectionsPage().render()),
+      '/genres': () => this.renderPage(() => new GenresPage().render()),
+      '/genre/:id': (params) => this.renderPage(() => new GenresPage().render(params)),
+      '/countries': () => this.renderPage(() => new CountriesPage().render()),
+      '/awards': () => this.renderPage(() => new AwardsPage().render()),
+      '/formats': () => this.renderPage(() => new FormatsPage().render()),
+      '/content-themes': () => this.renderPage(() => new ContentThemesPage().render()),
+      // Health & Organization
+      '/command-center': () => this.renderPage(() => new CommandCenterPage().render()),
+      '/health': () => this.renderPage(() => new HealthCenterPage().render()),
+      '/storage': () => this.renderPage(() => new StoragePage().render()),
+      '/duplicates': () => this.renderPage(() => new DuplicatesPage().render()),
+      '/missing': () => this.renderPage(() => new MissingPiecesPage().render()),
+      '/audit': () => this.renderPage(() => new AuditLogPage().render()),
+      '/snapshots': () => this.renderPage(() => new SnapshotsPage().render()),
+      // System
       '/settings': () => this.renderPage(() => SettingsPage({})),
       '/settings/:section': (params) => this.renderPage(() => SettingsPage(params)),
       '/404': () => this.renderPage(NotFoundPage)

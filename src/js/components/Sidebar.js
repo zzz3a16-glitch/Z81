@@ -72,6 +72,66 @@ export function createSidebar() {
       </div>
 
       <div class="sidebar-section">
+        <div class="sidebar-section-title">مكتبة متقدمة</div>
+        <a href="/command-center" class="sidebar-item" data-route="/command-center" data-router>
+          <span class="sidebar-item-icon">🎛️</span>
+          <span class="sidebar-item-label">مركز القيادة</span>
+        </a>
+        <a href="/eras" class="sidebar-item" data-route="/eras" data-router>
+          <span class="sidebar-item-icon">📅</span>
+          <span class="sidebar-item-label">العقود والحقب</span>
+        </a>
+        <a href="/franchises" class="sidebar-item" data-route="/franchises" data-router>
+          <span class="sidebar-item-icon">🎬</span>
+          <span class="sidebar-item-label">السلاسل</span>
+        </a>
+        <a href="/collections" class="sidebar-item" data-route="/collections" data-router>
+          <span class="sidebar-item-icon">📚</span>
+          <span class="sidebar-item-label">المجموعات الذكية</span>
+        </a>
+        <a href="/genres" class="sidebar-item" data-route="/genres" data-router>
+          <span class="sidebar-item-icon">🎭</span>
+          <span class="sidebar-item-label">الأنواع</span>
+        </a>
+        <a href="/countries" class="sidebar-item" data-route="/countries" data-router>
+          <span class="sidebar-item-icon">🌍</span>
+          <span class="sidebar-item-label">الدول</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">صحة وتنظيم</div>
+        <a href="/health" class="sidebar-item" data-route="/health" data-router>
+          <span class="sidebar-item-icon">🏥</span>
+          <span class="sidebar-item-label">صحة المكتبة</span>
+        </a>
+        <a href="/storage" class="sidebar-item" data-route="/storage" data-router>
+          <span class="sidebar-item-icon">💾</span>
+          <span class="sidebar-item-label">التخزين</span>
+        </a>
+        <a href="/duplicates" class="sidebar-item" data-route="/duplicates" data-router>
+          <span class="sidebar-item-icon">👥</span>
+          <span class="sidebar-item-label">المكررات</span>
+        </a>
+        <a href="/missing" class="sidebar-item" data-route="/missing" data-router>
+          <span class="sidebar-item-icon">🧩</span>
+          <span class="sidebar-item-label">المفقود</span>
+        </a>
+        <a href="/awards" class="sidebar-item" data-route="/awards" data-router>
+          <span class="sidebar-item-icon">🏆</span>
+          <span class="sidebar-item-label">الجوائز</span>
+        </a>
+        <a href="/formats" class="sidebar-item" data-route="/formats" data-router>
+          <span class="sidebar-item-icon">💿</span>
+          <span class="sidebar-item-label">الصيغ</span>
+        </a>
+        <a href="/content-themes" class="sidebar-item" data-route="/content-themes" data-router>
+          <span class="sidebar-item-icon">🎨</span>
+          <span class="sidebar-item-label">ثيمات المحتوى</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
         <div class="sidebar-section-title">ذكاء</div>
         <a href="/recommendations" class="sidebar-item" data-route="/recommendations" data-router>
           <span class="sidebar-item-icon">💡</span>
@@ -84,6 +144,14 @@ export function createSidebar() {
         <a href="/search" class="sidebar-item" data-route="/search" data-router>
           <span class="sidebar-item-icon">🔍</span>
           <span class="sidebar-item-label">البحث المتقدم</span>
+        </a>
+        <a href="/audit" class="sidebar-item" data-route="/audit" data-router>
+          <span class="sidebar-item-icon">📝</span>
+          <span class="sidebar-item-label">سجل التدقيق</span>
+        </a>
+        <a href="/snapshots" class="sidebar-item" data-route="/snapshots" data-router>
+          <span class="sidebar-item-icon">📸</span>
+          <span class="sidebar-item-label">اللقطات</span>
         </a>
       </div>
 
