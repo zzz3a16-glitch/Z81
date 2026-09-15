@@ -1,0 +1,47 @@
+{
+  "name": "zPopcorn - منصة الوسائط الذكية",
+  "short_name": "zPopcorn",
+  "description": "Professional Media Intelligence Platform - منصة ذكية لإدارة الوسائط الشخصية",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#8b5cf6",
+  "orientation": "any",
+  "dir": "rtl",
+  "lang": "ar",
+  "categories": ["entertainment", "media", "productivity"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "البحث",
+      "short_name": "بحث",
+      "description": "البحث المتقدم في المكتبة",
+      "url": "/search",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "المساعد الذكي",
+      "short_name": "المساعد",
+      "description": "المساعد الذكي للوسائط",
+      "url": "/assistant",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "التوصيات",
+      "short_name": "توصيات",
+      "description": "توصيات مخصصة لك",
+      "url": "/recommendations",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

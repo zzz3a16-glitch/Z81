@@ -7,11 +7,13 @@
  * Region: Saudi Arabia (SA) Default
  */
 
-// Styles - Design System
+// Styles - Design System - Production Grade
 import './styles/design-tokens.css';
 import './styles/base.css';
 import './styles/components.css';
 import './styles/library.css';
+import './styles/mobile.css';
+import './styles/assistant.css';
 
 // Themes - All 8 themes + custom builder support
 import './styles/themes/midnight-neon.css';
@@ -105,11 +107,49 @@ window.addEventListener('unhandledrejection', (event) => {
   console.error('Unhandled promise rejection:', event.reason);
 });
 
-// Service Worker registration (for PWA/offline support)
-if ('serviceWorker' in navigator && import.meta.env.PROD) {
+// Service Worker registration - Production PWA with update handling
+if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {
-      // SW registration failed, not critical
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => {
+        console.log('📦 PWA: SW registered', reg.scope);
+        
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                console.log('📦 PWA: Update available');
+                window.dispatchEvent(new CustomEvent('sw-update-available', { detail: { registration: reg } }));
+                
+                // Show update toast if toast service available
+                const event = new CustomEvent('show-toast', {
+                  detail: {
+                    message: 'يتوفر تحديث جديد للتطبيق',
+                    type: 'info',
+                    duration: 8000,
+                    action: {
+                      label: 'تحديث',
+                      onClick: () => {
+                        newWorker.postMessage({ type: 'SKIP_WAITING' });
+                        window.location.reload();
+                      }
+                    }
+                  }
+                });
+                window.dispatchEvent(event);
+              }
+            });
+          }
+        });
+      })
+      .catch(err => {
+        console.warn('PWA: SW registration failed', err);
+      });
+
+    // Handle controller change (new SW activated)
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      console.log('📦 PWA: New SW activated');
     });
   });
 }

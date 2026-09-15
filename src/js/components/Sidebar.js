@@ -132,7 +132,12 @@ export function createSidebar() {
       </div>
 
       <div class="sidebar-section">
-        <div class="sidebar-section-title">ذكاء</div>
+        <div class="sidebar-section-title">ذكاء اصطناعي</div>
+        <a href="/assistant" class="sidebar-item" data-route="/assistant" data-router>
+          <span class="sidebar-item-icon">🤖</span>
+          <span class="sidebar-item-label">المساعد الذكي</span>
+          <span class="sidebar-item-badge" style="background: linear-gradient(135deg, #8b5cf6, #06b6d4); color: white; font-size: 9px;">جديد</span>
+        </a>
         <a href="/recommendations" class="sidebar-item" data-route="/recommendations" data-router>
           <span class="sidebar-item-icon">💡</span>
           <span class="sidebar-item-label">توصيات لك</span>
@@ -161,9 +166,17 @@ export function createSidebar() {
           <span class="sidebar-item-icon">⚙️</span>
           <span class="sidebar-item-label">الإعدادات</span>
         </a>
-        <a href="/settings/themes" class="sidebar-item" data-route="/settings/themes" data-router>
+        <a href="/settings/appearance" class="sidebar-item" data-route="/settings/appearance" data-router>
           <span class="sidebar-item-icon">🎨</span>
           <span class="sidebar-item-label">المظاهر</span>
+        </a>
+        <a href="/settings/playback" class="sidebar-item" data-route="/settings/playback" data-router>
+          <span class="sidebar-item-icon">▶️</span>
+          <span class="sidebar-item-label">التشغيل</span>
+        </a>
+        <a href="/settings/tmdb" class="sidebar-item" data-route="/settings/tmdb" data-router>
+          <span class="sidebar-item-icon">🎬</span>
+          <span class="sidebar-item-label">TMDB</span>
         </a>
       </div>
     </nav>

@@ -22,6 +22,8 @@ import { AnimePage } from './js/pages/AnimePage.js';
 import { MovieDetailsPage, TVDetailsPage } from './js/pages/DetailsPage.js';
 import { SearchPage } from './js/pages/SearchPage.js';
 import { SettingsPage } from './js/pages/SettingsPage.js';
+import { EnhancedSettingsPage } from './js/pages/EnhancedSettingsPage.js';
+import { AssistantPage } from './js/pages/AssistantPage.js';
 import { FavoritesPage, WatchLaterPage, HistoryPage, ContinueWatchingPage, PlatformsPage, PersonPage, AnalyticsPage } from './js/pages/FavoritesPage.js';
 
 // Advanced Library Pages
@@ -44,14 +46,36 @@ export class App {
   async init() {
     if (this.initialized) return;
     
-    console.log('🍿 zPopcorn Ultimate - Initializing...');
+    console.log('🍿 zPopcorn Ultimate - Initializing Production-Grade...');
+
+    // Initialize performance monitoring
+    try {
+      const { performanceManager } = await import('./js/services/performance/PerformanceManager.js');
+      performanceManager.init();
+      console.log('✓ Performance manager initialized');
+    } catch (e) {
+      console.warn('Performance manager init failed:', e);
+    }
     
-    // Initialize database
+    // Initialize database with migration
     try {
       await db.init();
-      console.log('✓ Database initialized');
+      const { MigrationManager } = await import('./js/services/storage/MigrationManager.js');
+      const migrator = new MigrationManager();
+      await migrator.migrate();
+      console.log('✓ Database + migrations initialized');
     } catch (e) {
       console.warn('Database init failed:', e);
+    }
+
+    // Initialize media identity systems
+    try {
+      const { editionManager, personalArchive } = await import('./js/services/media/MediaIdentity.js');
+      await editionManager.init();
+      await personalArchive.init();
+      console.log('✓ Media identity systems initialized');
+    } catch (e) {
+      console.warn('Media identity init failed:', e);
     }
 
     // Initialize behavior engine
@@ -75,10 +99,17 @@ export class App {
       await notificationService.init();
       await watchlistManager.init();
       await ratingManager.init();
-      console.log('✓ Services initialized');
+      console.log('✓ Core services initialized');
     } catch (e) {
       console.warn('Services init failed:', e);
     }
+
+    // Initialize security
+    try {
+      const { securityManager } = await import('./js/services/security/SecurityManager.js');
+      securityManager.cleanup();
+      console.log('✓ Security manager initialized');
+    } catch {}
 
     // Setup DOM
     this.setupDOM();
@@ -211,9 +242,13 @@ export class App {
       '/collection-builder': () => this.renderPage(() => new CollectionBuilderPage().render()),
       '/library': () => this.renderPage(() => new LibraryHubPage().render()),
       '/library-hub': () => this.renderPage(() => new LibraryHubPage().render()),
-      // System
-      '/settings': () => this.renderPage(() => SettingsPage({})),
-      '/settings/:section': (params) => this.renderPage(() => SettingsPage(params)),
+      '/assistant': () => this.renderPage(() => AssistantPage()),
+      '/chat': () => this.renderPage(() => AssistantPage()),
+      // System - Enhanced Settings with 15 categories
+      '/settings': () => this.renderPage(() => EnhancedSettingsPage({})),
+      '/settings/:section': (params) => this.renderPage(() => EnhancedSettingsPage(params)),
+      '/settings-old': () => this.renderPage(() => SettingsPage({})),
+      '/settings-old/:section': (params) => this.renderPage(() => SettingsPage(params)),
       '/404': () => this.renderPage(NotFoundPage)
     });
 

@@ -38,25 +38,89 @@ export class PlayerService {
   init(videoElement) {
     this.videoElement = videoElement;
     
-    if (!videoElement) return;
+    if (videoElement) {
+      // Bind HTML5 video events
+      videoElement.addEventListener('loadedmetadata', () => this.onLoadedMetadata());
+      videoElement.addEventListener('timeupdate', () => this.onTimeUpdate());
+      videoElement.addEventListener('play', () => this.onPlay());
+      videoElement.addEventListener('pause', () => this.onPause());
+      videoElement.addEventListener('ended', () => this.onEnded());
+      videoElement.addEventListener('volumechange', () => this.onVolumeChange());
+      videoElement.addEventListener('error', (e) => this.onError(e));
+      videoElement.addEventListener('waiting', () => this.onWaiting());
+      videoElement.addEventListener('canplay', () => this.onCanPlay());
+      videoElement.addEventListener('progress', () => this.onProgress());
+    }
 
-    // Bind events
-    videoElement.addEventListener('loadedmetadata', () => this.onLoadedMetadata());
-    videoElement.addEventListener('timeupdate', () => this.onTimeUpdate());
-    videoElement.addEventListener('play', () => this.onPlay());
-    videoElement.addEventListener('pause', () => this.onPause());
-    videoElement.addEventListener('ended', () => this.onEnded());
-    videoElement.addEventListener('volumechange', () => this.onVolumeChange());
-    videoElement.addEventListener('error', (e) => this.onError(e));
-    videoElement.addEventListener('waiting', () => this.onWaiting());
-    videoElement.addEventListener('canplay', () => this.onCanPlay());
-    videoElement.addEventListener('progress', () => this.onProgress());
+    // Enhanced mpv listeners
+    if (this.isElectron) {
+      this.setupMpvListeners();
+    }
 
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => this.handleKeyboard(e));
 
     // Start progress tracking
     this.startProgressTracking();
+  }
+
+  setupMpvListeners() {
+    if (this.mpvListenersSetup || !window.electronAPI) return;
+    
+    window.electronAPI.onMpvEvent((event) => {
+      if (!event) return;
+
+      // Handle mpv property changes
+      if (event.event === 'property-change') {
+        switch (event.name) {
+          case 'time-pos':
+            if (typeof event.data === 'number') {
+              this.state.position = event.data;
+              this.notifyListeners();
+            }
+            break;
+          case 'duration':
+            if (typeof event.data === 'number') {
+              this.state.duration = event.data;
+              this.notifyListeners();
+            }
+            break;
+          case 'pause':
+            this.state.paused = !!event.data;
+            this.notifyListeners();
+            break;
+          case 'volume':
+            if (typeof event.data === 'number') {
+              this.state.volume = event.data / 100;
+              this.notifyListeners();
+            }
+            break;
+        }
+      }
+
+      if (event.event === 'end-file') {
+        this.onEnded();
+      }
+
+      if (event.event === 'file-loaded') {
+        this.state.loading = false;
+        this.state.error = null;
+        this.notifyListeners();
+      }
+    });
+
+    this.mpvListenersSetup = true;
+  }
+
+  formatTime(seconds) {
+    if (!seconds || isNaN(seconds)) return '0:00';
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    if (h > 0) {
+      return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+    return `${m}:${s.toString().padStart(2, '0')}`;
   }
 
   async loadMedia(media, options = {}) {
@@ -66,38 +130,70 @@ export class PlayerService {
     this.notifyListeners();
 
     try {
-      // Get saved progress
-      const savedProgress = await db.get('watchProgress', media.id?.toString() || media.mediaId);
+      // Get saved progress with enhanced tracking
+      let savedProgress = null;
+      try {
+        savedProgress = await db.get('watchProgress', media.id?.toString() || media.mediaId);
+      } catch {}
       
       let startPosition = 0;
-      if (savedProgress && savedProgress.progress > 5 && savedProgress.progress < 95) {
+      if (savedProgress && savedProgress.progress > 3 && savedProgress.progress < 92) {
         startPosition = savedProgress.position;
+        // Ask user if they want to resume
+        if (startPosition > 30 && !options.forceStart) {
+          const shouldResume = options.autoResume !== false ? true : 
+            confirm(`متابعة من ${this.formatTime(startPosition)}؟`);
+          if (!shouldResume) startPosition = 0;
+        }
       }
 
       if (options.startPosition !== undefined) {
         startPosition = options.startPosition;
       }
 
-      // For web version, we need a video source
-      // In Electron with mpv, this would be handled via IPC
+      // Enhanced mpv integration
       if (this.isElectron && media.path) {
-        // Electron mpv playback
-        await window.electronAPI.playMedia({
+        // Check file exists first
+        try {
+          const fileCheck = await window.electronAPI.checkFileExists(media.path);
+          if (!fileCheck.exists) {
+            throw new Error(`الملف غير موجود: ${media.path}`);
+          }
+        } catch (e) {
+          if (e.message.includes('غير موجود')) throw e;
+          // Non-critical check failure, continue
+        }
+
+        // Electron mpv playback with enhanced IPC
+        const result = await window.electronAPI.playMedia({
           path: media.path,
           position: startPosition,
-          mediaId: media.id
+          mediaId: media.id,
+          title: media.title || media.name
         });
+
+        if (!result.success) {
+          throw new Error(result.error || 'فشل تشغيل الملف');
+        }
+
+        // Setup mpv event listeners
+        if (!this.mpvListenersSetup) {
+          this.setupMpvListeners();
+        }
       } else if (this.videoElement) {
-        // Web fallback - use trailer or placeholder
-        // In production, this would be real file path
         if (media.videoUrl) {
           this.videoElement.src = media.videoUrl;
           this.videoElement.currentTime = startPosition;
+          await this.videoElement.play().catch(() => {});
         } else {
-          // No video source - show info only
+          // No video source - show info only with enhanced UI
           this.state.loading = false;
           this.notifyListeners();
-          return { success: true, mode: 'info_only' };
+          return { 
+            success: true, 
+            mode: 'info_only',
+            message: 'الملف المحلي غير متاح في المتصفح - يتطلب تطبيق Electron'
+          };
         }
       }
 
