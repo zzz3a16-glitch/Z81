@@ -1,0 +1,83 @@
+/* Theme 03 - Aurora - Ethereal Dreamy */
+:root[data-theme="aurora"] {
+  --color-background: #0f172a;
+  --color-background-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+  --color-surface: rgba(15, 23, 42, 0.8);
+  --color-surface-hover: rgba(30, 27, 75, 0.9);
+  --color-surface-elevated: rgba(49, 46, 129, 0.8);
+  --color-card: rgba(255, 255, 255, 0.05);
+  --color-card-hover: rgba(255, 255, 255, 0.1);
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-subtle: rgba(255, 255, 255, 0.05);
+  --color-accent: #667eea;
+  --color-accent-secondary: #764ba2;
+  --color-accent-tertiary: #06b6d4;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgba(255, 255, 255, 0.75);
+  --color-text-muted: rgba(255, 255, 255, 0.5);
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #06b6d4;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 20px rgba(102, 126, 234, 0.1);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 30px rgba(102, 126, 234, 0.15);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 40px rgba(118, 75, 162, 0.2);
+  --shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 60px rgba(102, 126, 234, 0.25);
+  --shadow-glow-primary: 0 0 30px rgba(102, 126, 234, 0.3);
+  --shadow-glow-secondary: 0 0 40px rgba(118, 75, 162, 0.4);
+
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: blur(24px);
+
+  --hero-overlay: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 27, 75, 0.6) 50%, transparent 100%);
+  --card-hover-transform: translateY(-6px) scale(1.03);
+  --card-hover-glow: 0 0 40px rgba(102, 126, 234, 0.4);
+  --button-glow: 0 0 30px rgba(102, 126, 234, 0.5);
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --motion-intensity: pronounced;
+  --blur-intensity: 24px;
+  --glow-intensity: 0.4;
+}
+
+:root[data-theme="aurora"] body {
+  background: var(--color-background-gradient);
+  background-attachment: fixed;
+  background-size: 400% 400%;
+  animation: auroraShift 20s ease infinite;
+}
+
+@keyframes auroraShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+:root[data-theme="aurora"] .media-card {
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+}
+
+:root[data-theme="aurora"] .media-card:hover {
+  box-shadow: var(--shadow-lg), var(--card-hover-glow);
+  border-color: rgba(102, 126, 234, 0.5);
+}
+
+:root[data-theme="aurora"] .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: var(--button-glow);
+  border-radius: 16px;
+}
+
+:root[data-theme="aurora"] .sidebar {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: var(--glass-blur);
+  border-right: 1px solid var(--glass-border);
+}

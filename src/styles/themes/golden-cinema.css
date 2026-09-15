@@ -1,0 +1,78 @@
+/* Theme 06 - Golden Cinema - Opulent Prestigious */
+:root[data-theme="golden-cinema"] {
+  --color-background: #000000;
+  --color-background-gradient: linear-gradient(180deg, #0a0a00 0%, #000000 100%);
+  --color-surface: #1a1a1a;
+  --color-surface-hover: #242424;
+  --color-surface-elevated: #2a2a2a;
+  --color-card: #1e1e1e;
+  --color-card-hover: #2a2a2a;
+  --color-border: #3a3a2a;
+  --color-border-subtle: #2a2a1e;
+  --color-accent: #d4af37;
+  --color-accent-secondary: #f5f5dc;
+  --color-accent-tertiary: #ffd700;
+  --color-text-primary: #f5f5dc;
+  --color-text-secondary: rgba(245, 245, 220, 0.7);
+  --color-text-muted: rgba(245, 245, 220, 0.5);
+  --color-success: #5a7a5a;
+  --color-warning: #d4af37;
+  --color-danger: #8b4513;
+  --color-info: #8b7355;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 10px rgba(212, 175, 55, 0.05);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 20px rgba(212, 175, 55, 0.1);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.15);
+  --shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(212, 175, 55, 0.2);
+  --shadow-glow-primary: 0 0 20px rgba(212, 175, 55, 0.3);
+  --shadow-glow-secondary: 0 0 30px rgba(245, 245, 220, 0.2);
+
+  --glass-bg: rgba(212, 175, 55, 0.03);
+  --glass-border: rgba(212, 175, 55, 0.15);
+  --glass-blur: blur(12px);
+
+  --hero-overlay: linear-gradient(to right, rgba(0, 0, 0, 0.95) 0%, rgba(26, 26, 26, 0.7) 50%, transparent 100%);
+  --card-hover-transform: translateY(-2px);
+  --card-hover-glow: 0 0 20px rgba(212, 175, 55, 0.25);
+  --button-glow: 0 0 15px rgba(212, 175, 55, 0.3);
+
+  --radius-sm: 2px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+
+  --motion-intensity: subtle;
+  --blur-intensity: 12px;
+  --glow-intensity: 0.2;
+}
+
+:root[data-theme="golden-cinema"] body {
+  background: var(--color-background);
+}
+
+:root[data-theme="golden-cinema"] .media-card {
+  border: 1px solid var(--color-border-subtle);
+  background: linear-gradient(180deg, #1e1e1e 0%, #121212 100%);
+}
+
+:root[data-theme="golden-cinema"] .media-card:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-md), var(--card-hover-glow);
+}
+
+:root[data-theme="golden-cinema"] .btn-primary {
+  background: linear-gradient(135deg, #8b7355 0%, #d4af37 100%);
+  color: #000000;
+  font-weight: 600;
+  box-shadow: var(--button-glow);
+}
+
+:root[data-theme="golden-cinema"] .sidebar {
+  background: rgba(0, 0, 0, 0.95);
+  border-right: 1px solid var(--color-border);
+}
+
+:root[data-theme="golden-cinema"] .sidebar-item.active {
+  border-right-color: var(--color-accent);
+  color: var(--color-accent);
+}

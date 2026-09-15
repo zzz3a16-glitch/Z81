@@ -1,0 +1,96 @@
+/* Theme 07 - Arctic - Light Premium Clean */
+:root[data-theme="arctic"] {
+  --color-background: #ffffff;
+  --color-background-gradient: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  --color-surface: #f8fafc;
+  --color-surface-hover: #f1f5f9;
+  --color-surface-elevated: #ffffff;
+  --color-card: #ffffff;
+  --color-card-hover: #f8fafc;
+  --color-border: #e2e8f0;
+  --color-border-subtle: #f1f5f9;
+  --color-accent: #0ea5e9;
+  --color-accent-secondary: #06b6d4;
+  --color-accent-tertiary: #3b82f6;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-text-inverse: #ffffff;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #0ea5e9;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+  --shadow-glow-primary: 0 0 20px rgba(14, 165, 233, 0.15);
+  --shadow-glow-secondary: 0 0 30px rgba(6, 182, 214, 0.15);
+
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(226, 232, 240, 0.8);
+  --glass-blur: blur(20px);
+
+  --hero-overlay: linear-gradient(to right, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.8) 50%, rgba(248, 250, 252, 0.3) 100%);
+  --card-hover-transform: translateY(-4px);
+  --card-hover-glow: 0 10px 30px rgba(14, 165, 233, 0.15);
+  --button-glow: 0 4px 12px rgba(14, 165, 233, 0.3);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  --motion-intensity: normal;
+  --blur-intensity: 20px;
+  --glow-intensity: 0.15;
+}
+
+:root[data-theme="arctic"] body {
+  background: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+:root[data-theme="arctic"] .media-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+:root[data-theme="arctic"] .media-card:hover {
+  box-shadow: var(--shadow-lg), var(--card-hover-glow);
+  border-color: var(--color-accent);
+  transform: var(--card-hover-transform);
+}
+
+:root[data-theme="arctic"] .btn-primary {
+  background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+  color: white;
+  box-shadow: var(--button-glow);
+}
+
+:root[data-theme="arctic"] .sidebar {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: var(--glass-blur);
+  border-right: 1px solid var(--color-border);
+}
+
+:root[data-theme="arctic"] .header {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--color-border);
+}
+
+:root[data-theme="arctic"] .hero-content {
+  color: var(--color-text-primary);
+}
+
+:root[data-theme="arctic"] .hero-title {
+  color: var(--color-text-primary);
+  text-shadow: none;
+}
+
+:root[data-theme="arctic"] .hero-description {
+  color: var(--color-text-secondary);
+}

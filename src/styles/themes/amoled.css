@@ -1,0 +1,76 @@
+/* Theme 04 - AMOLED - Pure Black Minimal */
+:root[data-theme="amoled"] {
+  --color-background: #000000;
+  --color-background-gradient: #000000;
+  --color-surface: #000000;
+  --color-surface-hover: #0a0a0a;
+  --color-surface-elevated: #121212;
+  --color-card: #000000;
+  --color-card-hover: #121212;
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border-subtle: rgba(255, 255, 255, 0.03);
+  --color-accent: #a855f7;
+  --color-accent-secondary: #ffffff;
+  --color-accent-tertiary: #e0e0e0;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgba(255, 255, 255, 0.6);
+  --color-text-muted: rgba(255, 255, 255, 0.35);
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #a855f7;
+
+  --shadow-sm: none;
+  --shadow-md: 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --shadow-lg: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 4px 12px rgba(0, 0, 0, 0.8);
+  --shadow-xl: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 8px 24px rgba(0, 0, 0, 0.9);
+  --shadow-glow-primary: none;
+  --shadow-glow-secondary: none;
+
+  --glass-bg: rgba(255, 255, 255, 0.01);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-blur: none;
+
+  --hero-overlay: linear-gradient(to right, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.8) 40%, rgba(0, 0, 0, 0.3) 100%);
+  --card-hover-transform: none;
+  --card-hover-glow: none;
+  --button-glow: none;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --motion-intensity: subtle;
+  --blur-intensity: 0px;
+  --glow-intensity: 0;
+}
+
+:root[data-theme="amoled"] body {
+  background: #000000;
+}
+
+:root[data-theme="amoled"] .media-card {
+  border: 1px solid var(--color-border);
+  background: #000000;
+}
+
+:root[data-theme="amoled"] .media-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: #0a0a0a;
+}
+
+:root[data-theme="amoled"] .btn-primary {
+  background: #ffffff;
+  color: #000000;
+  font-weight: 600;
+}
+
+:root[data-theme="amoled"] .btn-primary:hover {
+  background: #e0e0e0;
+}
+
+:root[data-theme="amoled"] .sidebar {
+  background: #000000;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}

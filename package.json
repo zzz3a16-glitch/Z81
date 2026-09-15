@@ -1,0 +1,23 @@
+{
+  "name": "zpopcorn",
+  "version": "2.0.0",
+  "description": "zPopcorn Ultimate - Professional Media Intelligence Platform",
+  "type": "module",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "watch-party": "node watch-party-server/server.js"
+  },
+  "dependencies": {
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

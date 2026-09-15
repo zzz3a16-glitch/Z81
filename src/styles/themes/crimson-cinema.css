@@ -1,0 +1,73 @@
+/* Theme 05 - Crimson Cinema - Luxurious Dramatic */
+:root[data-theme="crimson-cinema"] {
+  --color-background: #0a0000;
+  --color-background-gradient: linear-gradient(180deg, #1a0a0a 0%, #0a0000 100%);
+  --color-surface: #1a0a0a;
+  --color-surface-hover: #2a1212;
+  --color-surface-elevated: #321a1a;
+  --color-card: #241212;
+  --color-card-hover: #321a1a;
+  --color-border: #4a2222;
+  --color-border-subtle: #3a1a1a;
+  --color-accent: #dc143c;
+  --color-accent-secondary: #8b0000;
+  --color-accent-tertiary: #ff6b6b;
+  --color-text-primary: #fff5f5;
+  --color-text-secondary: rgba(255, 245, 245, 0.7);
+  --color-text-muted: rgba(255, 245, 245, 0.5);
+  --color-success: #4a7c59;
+  --color-warning: #8b6914;
+  --color-danger: #dc143c;
+  --color-info: #8b5a6b;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 10px rgba(139, 0, 0, 0.1);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 20px rgba(220, 20, 60, 0.15);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(220, 20, 60, 0.2);
+  --shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(139, 0, 0, 0.25);
+  --shadow-glow-primary: 0 0 20px rgba(139, 0, 0, 0.3);
+  --shadow-glow-secondary: 0 0 30px rgba(220, 20, 60, 0.4);
+
+  --glass-bg: rgba(139, 0, 0, 0.05);
+  --glass-border: rgba(220, 20, 60, 0.15);
+  --glass-blur: blur(16px);
+
+  --hero-overlay: linear-gradient(to right, rgba(26, 10, 10, 0.95) 0%, rgba(26, 10, 10, 0.6) 50%, transparent 100%);
+  --card-hover-transform: translateY(-3px);
+  --card-hover-glow: 0 0 25px rgba(220, 20, 60, 0.3);
+  --button-glow: 0 0 20px rgba(220, 20, 60, 0.4);
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --motion-intensity: normal;
+  --blur-intensity: 16px;
+  --glow-intensity: 0.25;
+}
+
+:root[data-theme="crimson-cinema"] body {
+  background: var(--color-background-gradient);
+  background-attachment: fixed;
+}
+
+:root[data-theme="crimson-cinema"] .media-card {
+  border: 1px solid var(--color-border-subtle);
+  background: linear-gradient(180deg, var(--color-card) 0%, #1a0a0a 100%);
+}
+
+:root[data-theme="crimson-cinema"] .media-card:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-md), var(--card-hover-glow);
+}
+
+:root[data-theme="crimson-cinema"] .btn-primary {
+  background: linear-gradient(135deg, #8b0000 0%, #dc143c 100%);
+  box-shadow: var(--button-glow);
+}
+
+:root[data-theme="crimson-cinema"] .sidebar {
+  background: rgba(26, 10, 10, 0.9);
+  backdrop-filter: var(--glass-blur);
+  border-right: 1px solid var(--color-border);
+}

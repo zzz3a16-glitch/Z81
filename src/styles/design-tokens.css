@@ -1,0 +1,190 @@
+/* zPopcorn Design System - Design Tokens v3.0 */
+:root {
+  /* ========== COLOR PRIMITIVES ========== */
+  --color-true-black: #000000;
+  --color-black-1000: #000000;
+  --color-black-900: #121212;
+  --color-black-800: #1a1a1a;
+  --color-black-700: #242424;
+  --color-black-600: #323232;
+  --color-black-500: #424242;
+  --color-black-400: #525252;
+  --color-black-300: #616161;
+  --color-black-200: #757575;
+  --color-black-100: #8c8c8c;
+
+  --color-white: #ffffff;
+  --color-white-900: #f5f5f5;
+  --color-white-800: #e0e0e0;
+  --color-white-700: #cccccc;
+  --color-white-600: #b8b8b8;
+  --color-white-500: #969696;
+
+  --color-gray-50: #f8f9fa;
+  --color-gray-100: #f1f3f4;
+  --color-gray-200: #e8eaed;
+  --color-gray-300: #d8dbe0;
+  --color-gray-400: #b8c0c8;
+  --color-gray-500: #96a0b0;
+  --color-gray-600: #758195;
+  --color-gray-700: #5d6c82;
+  --color-gray-800: #4a5568;
+  --color-gray-900: #2d3748;
+
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+  --color-primary-800: #3730a3;
+  --color-primary-900: #312e81;
+
+  --color-secondary-50: #f5f3ff;
+  --color-secondary-100: #ede9fe;
+  --color-secondary-200: #ddd6fe;
+  --color-secondary-300: #c4b5fd;
+  --color-secondary-400: #a78bfa;
+  --color-secondary-500: #8b5cf6;
+  --color-secondary-600: #7c3aed;
+  --color-secondary-700: #6d28d9;
+  --color-secondary-800: #5b21b6;
+  --color-secondary-900: #4c1d95;
+
+  /* ========== SEMANTIC COLORS - DEFAULT DARK ========== */
+  --color-background: #0a0a0f;
+  --color-surface: #12121c;
+  --color-surface-hover: #1a1a28;
+  --color-surface-elevated: #1e1e32;
+  --color-card: rgba(255, 255, 255, 0.05);
+  --color-card-hover: rgba(255, 255, 255, 0.08);
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-subtle: rgba(255, 255, 255, 0.05);
+  --color-accent: #8b5cf6;
+  --color-accent-secondary: #06b6d4;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgba(255, 255, 255, 0.7);
+  --color-text-muted: rgba(255, 255, 255, 0.5);
+  --color-text-inverse: #000000;
+
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
+
+  /* ========== TYPOGRAPHY ========== */
+  --font-family-arabic-primary: 'Noto Sans Arabic', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family-arabic-secondary: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', serif;
+  --font-family-arabic-modern: 'Cairo', 'Noto Sans Arabic', sans-serif;
+  --font-family-fallback: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'SF Mono', 'Fira Code', monospace;
+  --font-family: var(--font-family-arabic-primary);
+
+  --font-size-display: 3.5rem;
+  --font-size-h1: 2.5rem;
+  --font-size-h2: 2rem;
+  --font-size-h3: 1.5rem;
+  --font-size-h4: 1.25rem;
+  --font-size-body-lg: 1.125rem;
+  --font-size-body: 1rem;
+  --font-size-caption: 0.875rem;
+  --font-size-label: 0.75rem;
+  --font-size-metadata: 0.6875rem;
+
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.7;
+
+  /* ========== SPACING - 8px BASE ========== */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 32px;
+  --spacing-4xl: 40px;
+  --spacing-5xl: 48px;
+  --spacing-6xl: 64px;
+  --spacing-7xl: 80px;
+
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* ========== BORDER RADIUS ========== */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* ========== SHADOWS ========== */
+  --shadow-none: 0 0 rgba(0, 0, 0, 0);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.4);
+  --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.5);
+  --shadow-glass-sm: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-glass-md: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --shadow-neon-purple: 0 0 40px rgba(139, 92, 246, 0.3);
+  --shadow-neon-cyan: 0 0 40px rgba(6, 182, 212, 0.3);
+
+  /* ========== MOTION ========== */
+  --duration-instant: 100ms;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+  --duration-slower: 600ms;
+
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* ========== Z-INDEX ========== */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+  --z-toast: 800;
+
+  /* ========== LAYOUT ========== */
+  --header-height: 64px;
+  --sidebar-width: 280px;
+  --sidebar-collapsed-width: 72px;
+  --content-max-width: 1440px;
+  --card-aspect-ratio: 2/3;
+  --backdrop-aspect-ratio: 16/9;
+
+  /* ========== COMPONENT TOKENS ========== */
+  --button-height-sm: 32px;
+  --button-height-md: 40px;
+  --button-height-lg: 48px;
+  --input-height: 44px;
+  --avatar-size-sm: 32px;
+  --avatar-size-md: 48px;
+  --avatar-size-lg: 64px;
+}
