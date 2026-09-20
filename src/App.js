@@ -58,7 +58,7 @@ export class App {
     try {
       const { performanceManager } = await import('./js/services/performance/PerformanceManager.js');
       performanceManager.init();
-      console.log('✓ Performance manager initialized');
+      console.log('Performance manager initialized');
     } catch (e) {
       console.warn('Performance manager init failed:', e);
     }
@@ -69,7 +69,7 @@ export class App {
       const { MigrationManager } = await import('./js/services/storage/MigrationManager.js');
       const migrator = new MigrationManager();
       await migrator.migrate();
-      console.log('✓ Database + migrations initialized');
+      console.log('Database + migrations initialized');
     } catch (e) {
       console.warn('Database init failed:', e);
     }
@@ -79,7 +79,7 @@ export class App {
       const { editionManager, personalArchive } = await import('./js/services/media/MediaIdentity.js');
       await editionManager.init();
       await personalArchive.init();
-      console.log('✓ Media identity systems initialized');
+      console.log('Media identity systems initialized');
     } catch (e) {
       console.warn('Media identity init failed:', e);
     }
@@ -87,7 +87,7 @@ export class App {
     // Initialize behavior engine
     try {
       await behaviorEngine.init();
-      console.log('✓ Behavior engine initialized');
+      console.log('Behavior engine initialized');
     } catch (e) {
       console.warn('Behavior engine init failed:', e);
     }
@@ -95,7 +95,7 @@ export class App {
     // Initialize taste profile
     try {
       await tasteProfile.init();
-      console.log('✓ Taste profile initialized');
+      console.log('Taste profile initialized');
     } catch (e) {
       console.warn('Taste profile init failed:', e);
     }
@@ -105,7 +105,7 @@ export class App {
       await notificationService.init();
       await watchlistManager.init();
       await ratingManager.init();
-      console.log('✓ Core services initialized');
+      console.log('Core services initialized');
     } catch (e) {
       console.warn('Services init failed:', e);
     }
@@ -114,7 +114,7 @@ export class App {
     try {
       const { securityManager } = await import('./js/services/security/SecurityManager.js');
       securityManager.cleanup();
-      console.log('✓ Security manager initialized');
+      console.log('Security manager initialized');
     } catch {}
 
     // Setup DOM
@@ -155,7 +155,7 @@ export class App {
     }
 
     this.initialized = true;
-    console.log('✓ zPopcorn ready!');
+    console.log('zPopcorn ready!');
     
     // Dispatch ready event
     window.dispatchEvent(new CustomEvent('zpopcornready'));
@@ -504,8 +504,8 @@ export class App {
     playerContainer.style.alignItems = 'center';
     playerContainer.style.justifyContent = 'center';
     playerContainer.innerHTML = `
-      <div style="max-width: 640px; margin: 24px; padding: 32px; text-align: center; background: var(--color-surface, #12121c); border: 1px solid var(--color-border); border-radius: 16px; color: var(--color-text-primary); box-shadow: 0 24px 64px rgba(0,0,0,0.5);">
-        <div style="width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;background:var(--color-accent,#8b5cf6)22;border:1px solid var(--color-accent,#8b5cf6)55;color:var(--color-accent,#8b5cf6);font-size:22px;">▶</div>
+      <div style="max-width: 640px; margin: 24px; padding: 32px; text-align: center; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-xl); color: var(--color-text-primary); box-shadow: var(--shadow-3, 0 24px 64px rgba(0,0,0,0.5));">
+        <div style="width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent);">${icon('playCircle', 26)}</div>
         <h2 style="font-size:1.25rem;margin-bottom:8px;">${media.title || media.name || 'وسائط'}</h2>
         <p style="color:var(--color-text-secondary);line-height:1.7;margin-bottom:20px;">
           مشغّل الوسائط غير مُفعّل بعد — تم تصميم بنية zPopcorn على أن يكون محرك
@@ -551,11 +551,11 @@ export class App {
         files = media.localFiles.map((f) => ({ path: f, status: 'ok' }));
       }
       const items = [];
-      items.push(`<span class="badge" style="padding:4px 10px;border-radius:999px;border:1px solid var(--color-border);font-size:12px;">المحرك: غير مُفعّل بعد</span>`);
+      items.push(`<span class="badge" style="padding:4px 10px;border-radius: var(--r-full);border:1px solid var(--color-border);font-size:12px;">المحرك: غير مُفعّل بعد</span>`);
       if (files.length) {
-        items.push(`<span class="badge" style="padding:4px 10px;border-radius:999px;background:rgba(16,185,129,.12);color:#10b981;border:1px solid rgba(16,185,129,.4);font-size:12px;" dir="ltr">${files.length} ملف محلي</span>`);
+        items.push(`<span class="badge" style="padding:4px 10px;border-radius: var(--r-full);background:var(--success-soft);color:var(--color-success);border:1px solid color-mix(in srgb, var(--color-success) 40%, transparent);font-size:12px;" dir="ltr">${files.length} ملف محلي</span>`);
       } else {
-        items.push(`<span class="badge" style="padding:4px 10px;border-radius:999px;border:1px solid var(--color-border);font-size:12px;color:var(--color-text-muted);">لا يوجد ملف محلي مرتبط</span>`);
+        items.push(`<span class="badge" style="padding:4px 10px;border-radius: var(--r-full);border:1px solid var(--color-border);font-size:12px;color:var(--color-text-muted);">لا يوجد ملف محلي مرتبط</span>`);
       }
       flags.innerHTML = items.join('');
     })();

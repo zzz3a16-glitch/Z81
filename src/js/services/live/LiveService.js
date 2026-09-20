@@ -10,7 +10,7 @@
  */
 import { db } from '../storage/Database.js';
 import { isDesktop, api } from '../../bridge.js';
-import { parseM3U, parseXMLTV, parseM3U8Master, parseJSONPlaylist, sniffFormat, normText, progsForDay, nowNext, dayKey } from './m3u.js';
+import { parseM3U, parseXMLTV, parseM3U8Master, parseJSONPlaylist, sniffFormat, normText, progsForDay, nowNext, dayKey, qualityOf, buildHay } from './m3u.js';
 
 const S_SRC = 'live_sources';
 const S_PL = 'live_playlists';
@@ -100,13 +100,35 @@ class LiveManager {
       if (src.enabled === false) continue;
       const pl = this.playlists.get(src.id);
       if (!pl) continue;
+      const added = pl.builtAt || src.lastUpdate || 0;
       for (const c of pl.channels) {
         const ch = c.src ? c : { ...c, src: src.id };
         if (!ch.src) ch.src = src.id;
+        // index-time decoration — queries stay one includes() per channel (spec 34)
+        ch._hay = buildHay(ch, src.name);
+        if (ch._q === undefined) ch._q = qualityOf(ch.raw || ch.name, ch.group); // parse-time value wins; covers pre-index docs
+        ch._added = added;
         this.flat.push(ch);
         this.byId.set(ch.id, ch);
       }
     }
+  }
+
+  /** language buckets for navigation (spec 29) */
+  languages() {
+    const m = new Map();
+    for (const c of this.visible()) { const k = (c.lang || '').trim(); if (k) m.set(k, (m.get(k) || 0) + 1); }
+    return [...m].map(([label, count]) => ({ label, count })).sort((a, b) => b.count - a.count).slice(0, 48);
+  }
+
+  /** §42 memory telemetry — real numbers, no fake gauges */
+  memStats() {
+    let chans = 0, estBytes = 0;
+    for (const d of this.playlists.values()) { chans += d.channels.length; estBytes += d.raw && d.text ? d.text.length : d.channels.length * 240; }
+    let epgProgs = 0;
+    for (const arr of this.epgMem.values()) epgProgs += arr.length;
+    const epgDocs = [...(this.epgMem.keys() || [])].length;
+    return { indexed: this.flat.length, playlists: this.playlists.size, playlistChannels: chans, estBytes, epgWindows: epgProgs, epgDocs, logoCache: this._logoCache.size };
   }
 
   /* ───────────────────────── config / session ───────────────────────── */
@@ -401,18 +423,24 @@ class LiveManager {
 
   channel(id) { return this.byId.get(id) || this.favs.get(id) || null; }
 
-  channels({ q = '', group = '', country = '', cat = '', source = '', lang = '', sort = 'name', limit = 0 } = {}) {
+  channels({ q = '', group = '', country = '', cat = '', source = '', lang = '', sort = 'name', limit = 0, quality = '', liveNow = false } = {}) {
     let list = this.visible();
     if (source) list = list.filter((c) => c.src === source);
     if (group) list = list.filter((c) => c.group === group);
     if (country) list = list.filter((c) => c.country === country);
     if (cat) list = list.filter((c) => c.cat === cat);
-    if (lang) list = list.filter((c) => (c.lang || '').includes(lang));
+    if (lang) list = list.filter((c) => (c.lang || '').trim().toLowerCase() === String(lang).trim().toLowerCase());
+    if (quality === 'hd') list = list.filter((c) => (c._q || 0) >= 1);
+    if (quality === '4k') list = list.filter((c) => (c._q || 0) >= 2);
+    if (liveNow) {
+      if (!this.epgMem.size) return []; // honest: no EPG loaded → nothing is verifiably on air
+      list = list.filter((c) => { const cn = this.currentNext(c); return !!(cn && cn.cur); });
+    }
     const query = normText(q);
     if (query) {
       const toks = query.split(' ').filter(Boolean);
       list = list.filter((c) => {
-        const hay = c._hay || (c._hay = `${normText(c.name)} ${normText(c.group)} ${normText(c.raw)}`);
+        const hay = c._hay || (c._hay = buildHay(c)); // indexed fallback if pre-rebuild
         return toks.every((t) => hay.includes(t));
       });
     }

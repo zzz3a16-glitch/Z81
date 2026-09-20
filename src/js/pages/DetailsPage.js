@@ -143,7 +143,7 @@ export async function DetailsPage(params, mediaType = 'movie') {
     wrapEl.innerHTML = Array.from({ length: 10 }, (_, i) => {
       const n = i + 1;
       const on = userRating && n <= Math.round(userRating.personalRating / 2);
-      return `<button data-r="${n}" title="${n}/10" class="z-iconbtn" style="width:30px;height:30px;border:1px solid ${on ? 'var(--accent-line)' : 'transparent'};border-radius:8px;color:${on ? 'var(--accent-bright)' : 'var(--color-text-faint)'}">${n}</button>`;
+      return `<button data-r="${n}" title="${n}/10" class="z-iconbtn" style="width:30px;height:30px;border:1px solid ${on ? 'var(--accent-line)' : 'transparent'};border-radius: var(--r-md);color:${on ? 'var(--accent-bright)' : 'var(--color-text-faint)'}">${n}</button>`;
     }).join('');
     rateSec.body.appendChild(wrapEl);
     wrapEl.querySelectorAll('[data-r]').forEach((b) => b.addEventListener('click', async () => {

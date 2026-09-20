@@ -10,7 +10,7 @@ import { tmdbClient as tmdb } from '../services/tmdb/TMDBClient.js';
 
 export async function PersonPage(params = {}) {
   const page = el('div', 'z-person');
-  page.innerHTML = `<div class="z-narrow" style="padding:40px var(--page-gutter)"><div class="sk" style="height:120px;border-radius:16px"></div></div>`;
+  page.innerHTML = `<div class="z-narrow" style="padding:40px var(--page-gutter)"><div class="sk" style="height:120px;border-radius: var(--r-xl)"></div></div>`;
   let person = null;
   try {
     person = await tmdb.getPerson(params.id);

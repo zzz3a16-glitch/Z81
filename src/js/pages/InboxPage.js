@@ -301,7 +301,7 @@ class InboxView {
   cardHtml(it) {
     const parsed = it.parsed || {};
     const conf = Math.round(Number(it.confidence || 0));
-    const confColor = conf >= 92 ? 'var(--color-success,#10b981)' : conf >= 60 ? 'var(--color-warning,#f59e0b)' : 'var(--color-danger,#ef4444)';
+    const confColor = conf >= 92 ? 'var(--color-success)' : conf >= 60 ? 'var(--color-warning)' : 'var(--color-danger)';
     const kindLabel = it.media_type === 'tv'
       ? (it.episode != null ? `حلقة ${fmtSE(it.season, it.episode)}` : 'مسلسل')
       : it.media_type === 'anime' ? 'أنمي' : it.media_type === 'documentary' ? 'وثائقي' : 'فيلم';

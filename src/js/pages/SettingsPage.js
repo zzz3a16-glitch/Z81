@@ -3,6 +3,7 @@
  */
 
 import { themeManager, THEMES } from '../services/theme/ThemeManager.js';
+import { icon } from '../ui/icons.js';
 import { tmdbClient } from '../services/tmdb/TMDBClient.js';
 import { backupManager } from '../services/backup/BackupManager.js';
 import { notificationService } from '../services/notification/NotificationService.js';
@@ -18,33 +19,33 @@ export async function SettingsPage(params) {
       <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 24px;">الإعدادات</h1>
       
       <div style="display: grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: start;">
-        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 12px; position: sticky; top: 80px;">
+        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 12px; position: sticky; top: 80px;">
           <div style="display: flex; flex-direction: column; gap: 4px;">
-            <a href="/settings" data-router class="settings-nav-item ${section === 'general' ? 'active' : ''}" data-section="general" style="padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; ${section === 'general' ? 'background: var(--color-accent); color: white;' : ''}">
+            <a href="/settings" data-router class="settings-nav-item ${section === 'general' ? 'active' : ''}" data-section="general" style="padding: 10px 12px; border-radius: var(--r-md); text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; ${section === 'general' ? 'background: var(--color-accent); color: var(--accent-contrast);' : ''}">
               <span></span> عام
             </a>
-            <a href="/settings/themes" data-router class="settings-nav-item ${section === 'themes' ? 'active' : ''}" data-section="themes" style="padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; ${section === 'themes' ? 'background: var(--color-accent); color: white;' : ''}">
+            <a href="/settings/themes" data-router class="settings-nav-item ${section === 'themes' ? 'active' : ''}" data-section="themes" style="padding: 10px 12px; border-radius: var(--r-md); text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; ${section === 'themes' ? 'background: var(--color-accent); color: var(--accent-contrast);' : ''}">
               <span></span> المظهر
             </a>
-            <a href="/settings/tmdb" data-router class="settings-nav-item ${section === 'tmdb' ? 'active' : ''}" data-section="tmdb" style="padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; ${section === 'tmdb' ? 'background: var(--color-accent); color: white;' : ''}">
+            <a href="/settings/tmdb" data-router class="settings-nav-item ${section === 'tmdb' ? 'active' : ''}" data-section="tmdb" style="padding: 10px 12px; border-radius: var(--r-md); text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; ${section === 'tmdb' ? 'background: var(--color-accent); color: var(--accent-contrast);' : ''}">
               <span></span> TMDB
             </a>
-            <a href="/settings/playback" data-router class="settings-nav-item ${section === 'playback' ? 'active' : ''}" data-section="playback" style="padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; ${section === 'playback' ? 'background: var(--color-accent); color: white;' : ''}">
-              <span>▶</span> التشغيل
+            <a href="/settings/playback" data-router class="settings-nav-item ${section === 'playback' ? 'active' : ''}" data-section="playback" style="padding: 10px 12px; border-radius: var(--r-md); text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; ${section === 'playback' ? 'background: var(--color-accent); color: var(--accent-contrast);' : ''}">
+              ${'<span>' + icon('play', 14) + '</span>'} التشغيل
             </a>
-            <a href="/settings/notifications" data-router class="settings-nav-item ${section === 'notifications' ? 'active' : ''}" data-section="notifications" style="padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; ${section === 'notifications' ? 'background: var(--color-accent); color: white;' : ''}">
+            <a href="/settings/notifications" data-router class="settings-nav-item ${section === 'notifications' ? 'active' : ''}" data-section="notifications" style="padding: 10px 12px; border-radius: var(--r-md); text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; ${section === 'notifications' ? 'background: var(--color-accent); color: var(--accent-contrast);' : ''}">
               <span></span> الإشعارات
             </a>
-            <a href="/settings/backup" data-router class="settings-nav-item ${section === 'backup' ? 'active' : ''}" data-section="backup" style="padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; ${section === 'backup' ? 'background: var(--color-accent); color: white;' : ''}">
+            <a href="/settings/backup" data-router class="settings-nav-item ${section === 'backup' ? 'active' : ''}" data-section="backup" style="padding: 10px 12px; border-radius: var(--r-md); text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; ${section === 'backup' ? 'background: var(--color-accent); color: var(--accent-contrast);' : ''}">
               <span></span> النسخ الاحتياطي
             </a>
-            <a href="/settings/about" data-router class="settings-nav-item ${section === 'about' ? 'active' : ''}" data-section="about" style="padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; ${section === 'about' ? 'background: var(--color-accent); color: white;' : ''}">
+            <a href="/settings/about" data-router class="settings-nav-item ${section === 'about' ? 'active' : ''}" data-section="about" style="padding: 10px 12px; border-radius: var(--r-md); text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; ${section === 'about' ? 'background: var(--color-accent); color: var(--accent-contrast);' : ''}">
               <span></span> حول
             </a>
           </div>
         </div>
         
-        <div id="settings-content" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 24px;">
+        <div id="settings-content" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 24px;">
           <!-- Content will be loaded here -->
         </div>
       </div>
@@ -181,20 +182,20 @@ async function createThemesSection() {
     
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 32px;" id="themes-grid">
  ${allThemes.map(theme => `
-        <div class="theme-card ${currentTheme === theme.id ? 'active' : ''}" data-theme="${theme.id}" style="border: 2px solid ${currentTheme === theme.id ? 'var(--color-accent)' : 'var(--color-border)'}; border-radius: 12px; overflow: hidden; cursor: pointer; transition: all 0.2s; background: var(--color-surface);">
+        <div class="theme-card ${currentTheme === theme.id ? 'active' : ''}" data-theme="${theme.id}" style="border: 2px solid ${currentTheme === theme.id ? 'var(--color-accent)' : 'var(--color-border)'}; border-radius: var(--r-lg); overflow: hidden; cursor: pointer; transition: all 0.2s; background: var(--color-surface);">
           <div style="height: 120px; background: ${theme.preview.bg}; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
             <div style="position: absolute; inset: 0; background: linear-gradient(135deg, ${theme.preview.accent}40, ${theme.preview.accent2}40);"></div>
             <div style="position: relative; display: flex; gap: 8px;">
-              <div style="width: 40px; height: 40px; background: ${theme.preview.accent}; border-radius: 8px; box-shadow: 0 4px 12px ${theme.preview.accent}60;"></div>
-              <div style="width: 40px; height: 40px; background: ${theme.preview.accent2}; border-radius: 8px; box-shadow: 0 4px 12px ${theme.preview.accent2}60;"></div>
+              <div style="width: 40px; height: 40px; background: ${theme.preview.accent}; border-radius: var(--r-md); box-shadow: 0 4px 12px ${theme.preview.accent}60;"></div>
+              <div style="width: 40px; height: 40px; background: ${theme.preview.accent2}; border-radius: var(--r-md); box-shadow: 0 4px 12px ${theme.preview.accent2}60;"></div>
             </div>
- ${currentTheme === theme.id ? '<div style="position: absolute; top: 8px; right: 8px; background: var(--color-accent); color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">نشط</div>' : ''}
+ ${currentTheme === theme.id ? '<div style="position: absolute; top: 8px; right: 8px; background: var(--color-accent); color: var(--accent-contrast); padding: 4px 8px; border-radius: var(--r-lg); font-size: 11px; font-weight: 600;">نشط</div>' : ''}
           </div>
           <div style="padding: 16px;">
             <h3 style="font-weight: 600; margin-bottom: 4px;">${theme.name}</h3>
             <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 8px;">${theme.description}</p>
             <div style="display: flex; gap: 6px; align-items: center;">
-              <span style="font-size: 11px; padding: 2px 6px; background: ${theme.isDark ? '#1a1a1a' : '#f0f0f0'}; color: ${theme.isDark ? 'white' : 'black'}; border-radius: 4px;">${theme.isDark ? 'داكن' : 'فاتح'}</span>
+              <span style="font-size: 11px; padding: 2px 6px; background: ${theme.isDark ? '#1a1a1a' : '#f0f0f0'}; color: ${theme.isDark ? 'var(--color-white)' : 'var(--color-text-primary)'}; border-radius: var(--r-xs);">${theme.isDark ? 'داكن' : 'فاتح'}</span>
               <span style="font-size: 11px; color: var(--color-text-muted);">${theme.category}</span>
             </div>
           </div>
@@ -202,7 +203,7 @@ async function createThemesSection() {
  `).join('')}
     </div>
     
-    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
       <h3 style="font-weight: 600; margin-bottom: 16px;">منشئ المظاهر المخصص</h3>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px;">
         <div>
@@ -242,7 +243,7 @@ async function createThemesSection() {
  card.style.borderColor = 'var(--color-accent)';
       
  const badge = document.createElement('div');
- badge.style.cssText = 'position: absolute; top: 8px; right: 8px; background: var(--color-accent); color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;';
+ badge.style.cssText = 'position: absolute; top: 8px; right: 8px; background: var(--color-accent); color: var(--accent-contrast); padding: 4px 8px; border-radius: var(--r-lg); font-size: 11px; font-weight: 600;';
  badge.textContent = 'نشط';
  card.querySelector('[style*="height: 120px"]').appendChild(badge);
       
@@ -318,9 +319,9 @@ async function createTMDBSection() {
  div.innerHTML = `
     <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">إعدادات TMDB</h2>
     
-    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px; margin-bottom: 20px;">
       <h3 style="font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-        <span style="width: 10px; height: 10px; background: #10b981; border-radius: 50%; display: inline-block;"></span>
+        <span style="width: 10px; height: 10px; background: var(--color-success); border-radius: 50%; display: inline-block;"></span>
  حالة الاتصال
       </h3>
       <div style="display: grid; gap: 8px; font-size: 14px;">
@@ -333,7 +334,7 @@ async function createTMDBSection() {
       <div id="connection-result" style="margin-top: 12px; font-size: 13px;"></div>
     </div>
     
-    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px; margin-bottom: 20px;">
       <h3 style="font-weight: 600; margin-bottom: 12px;">مفتاح TMDB API</h3>
       <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px;">احصل على مفتاح مجاني من <a href="https://www.themoviedb.org/settings/api" target="_blank" style="color: var(--color-accent);">themoviedb.org</a></p>
       <div style="display: flex; gap: 8px;">
@@ -344,7 +345,7 @@ async function createTMDBSection() {
       <div style="font-size: 12px; color: var(--color-text-muted); margin-top: 8px;">المفتاح الحالي: ${apiKey ? apiKey.slice(0, 8) + '...' : 'غير محدد (يستخدم مفتاح تجريبي)'}</div>
     </div>
     
-    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
       <h3 style="font-weight: 600; margin-bottom: 12px;">التخزين المؤقت</h3>
       <div style="display: grid; gap: 8px; font-size: 14px; margin-bottom: 16px;">
         <div style="display: flex; justify-content: space-between;"><span>البيانات الوصفية:</span><span>${stats.cache.metadata.size} عنصر</span></div>
@@ -362,9 +363,9 @@ async function createTMDBSection() {
  try {
  const config = await tmdbClient.getConfiguration();
  if (config) {
- resultDiv.innerHTML = '<span style="color: #10b981;">TMDB متصل بنجاح</span>';
+ resultDiv.innerHTML = '<span style="color: var(--color-success);">TMDB متصل بنجاح</span>';
  } else {
- resultDiv.innerHTML = '<span style="color: #ef4444;">فشل الاتصال</span>';
+ resultDiv.innerHTML = '<span style="color: var(--color-danger);">فشل الاتصال</span>';
  }
  } catch (e) {
  resultDiv.innerHTML = `<span style="color: #ef4444;">فشل: ${e.message}</span>`;
@@ -405,14 +406,14 @@ function createPlaybackSection() {
     <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">إعدادات التشغيل</h2>
     
     <div style="display: flex; flex-direction: column; gap: 20px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-md);">
         <div>
           <div style="font-weight: 500;">التشغيل التلقائي للحلقة التالية</div>
           <div style="font-size: 13px; color: var(--color-text-secondary);">تشغيل الحلقة التالية تلقائياً</div>
         </div>
         <label style="position: relative; display: inline-block; width: 44px; height: 24px;">
           <input type="checkbox" id="auto-next" ${localStorage.getItem('zpopcorn-auto-next') === 'true' ? 'checked' : ''} style="opacity: 0; width: 0; height: 0;">
-          <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--color-border); border-radius: 24px; transition: 0.2s;"></span>
+          <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--color-border); border-radius: var(--r-2xl); transition: 0.2s;"></span>
         </label>
       </div>
       
@@ -457,14 +458,14 @@ function createNotificationsSection() {
     
     <div style="display: flex; flex-direction: column; gap: 12px;">
  ${Object.entries(prefs).map(([type, enabled]) => `
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-md);">
           <div>
             <div style="font-weight: 500;">${getNotificationTypeName(type)}</div>
             <div style="font-size: 12px; color: var(--color-text-secondary);">${getNotificationTypeDesc(type)}</div>
           </div>
           <label style="position: relative; display: inline-block; width: 44px; height: 24px;">
             <input type="checkbox" data-type="${type}" ${enabled ? 'checked' : ''} style="opacity: 0; width: 0; height: 0;">
-            <span class="toggle-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: ${enabled ? 'var(--color-accent)' : 'var(--color-border)'}; border-radius: 24px; transition: 0.2s;"></span>
+            <span class="toggle-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: ${enabled ? 'var(--color-accent)' : 'var(--color-border)'}; border-radius: var(--r-2xl); transition: 0.2s;"></span>
           </label>
         </div>
  `).join('')}
@@ -526,7 +527,7 @@ async function createBackupSection() {
     <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">النسخ الاحتياطي والاستعادة</h2>
     
     <div style="display: grid; gap: 20px;">
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">إنشاء نسخ احتياطي</h3>
         <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 16px;">احفظ جميع بياناتك في ملف JSON</p>
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
@@ -537,7 +538,7 @@ async function createBackupSection() {
         </div>
       </div>
       
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">استعادة نسخ احتياطي</h3>
         <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 16px;">استعد بياناتك من ملف نسخ احتياطي. سيتم إنشاء نسخة آمنة قبل الاستعادة.</p>
         <input type="file" id="restore-file" accept=".json" style="margin-bottom: 12px;" />
@@ -545,11 +546,11 @@ async function createBackupSection() {
         <button id="restore-btn" class="btn btn-primary" disabled>استعادة</button>
       </div>
       
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">إحصائيات البيانات</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; font-size: 13px;">
  ${Object.entries(stats).map(([store, count]) => `
-            <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--color-card); border-radius: 6px;">
+            <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--color-card); border-radius: var(--r-sm);">
               <span>${store}</span>
               <span style="font-weight: 600;">${count}</span>
             </div>
@@ -577,7 +578,7 @@ async function createBackupSection() {
  pendingBackup = data;
       
  div.querySelector('#restore-info').innerHTML = `
-        <div style="background: var(--color-card); padding: 12px; border-radius: 8px; border: 1px solid var(--color-border);">
+        <div style="background: var(--color-card); padding: 12px; border-radius: var(--r-md); border: 1px solid var(--color-border);">
           <div style="font-weight: 500; margin-bottom: 8px;">معلومات النسخ الاحتياطي:</div>
           <div style="display: grid; gap: 4px; font-size: 12px;">
             <div>الإصدار: ${info.schemaVersion}</div>
@@ -643,22 +644,22 @@ function createAboutSection() {
         </ul>
       </div>
       
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">التقنيات</h3>
         <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px;">Electron.js</span>
-          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px;">Node.js</span>
-          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px;">Vite</span>
-          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px;">Vanilla JS ES2024</span>
-          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px;">SQLite</span>
-          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px;">IndexedDB</span>
-          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px;">TMDB API</span>
-          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px;">mpv Player</span>
-          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px;">Socket.IO</span>
+          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 12px;">Electron.js</span>
+          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 12px;">Node.js</span>
+          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 12px;">Vite</span>
+          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 12px;">Vanilla JS ES2024</span>
+          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 12px;">SQLite</span>
+          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 12px;">IndexedDB</span>
+          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 12px;">TMDB API</span>
+          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 12px;">mpv Player</span>
+          <span style="padding: 4px 8px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 12px;">Socket.IO</span>
         </div>
       </div>
       
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 8px;">نسب TMDB</h3>
         <p style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
  هذا المنتج يستخدم TMDB API لكنه غير معتمد أو مصدق من قبل TMDB.<br>

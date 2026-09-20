@@ -160,7 +160,7 @@ export async function ContinueWatchingPage() {
  const container = document.createElement('div');
  container.innerHTML = `
     <div class="container" style="padding-top: 24px;">
-      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 24px;">▶ متابعة المشاهدة</h1>
+      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 24px; display:flex; align-items:center; gap:10px;">${icon('play', 22, { weight: "bold" })} متابعة المشاهدة</h1>
       <div id="continue-grid" class="media-grid"></div>
     </div>
  `;
@@ -174,7 +174,7 @@ export async function ContinueWatchingPage() {
  if (inProgress.length === 0) {
  grid.innerHTML = `
         <div class="empty-state" style="grid-column: 1 / -1;">
-          <div class="empty-state-icon">▶</div>
+          ${icon('play', 40, { weight: 'duotone' })}
           <h3 class="empty-state-title">لا يوجد محتوى قيد المشاهدة</h3>
           <p class="empty-state-description">ابدأ بمشاهدة فيلم أو مسلسل وسيظهر هنا للمتابعة</p>
         </div>
@@ -183,7 +183,7 @@ export async function ContinueWatchingPage() {
  grid.innerHTML = inProgress.map(item => `
         <div class="media-card" style="cursor: pointer;" onclick="window.dispatchEvent(new CustomEvent('playmedia', {detail: {id: '${item.mediaId}', title: '${item.title}'}}))">
  ${item.poster_path ? `<img src="${getTMDBImageUrl(item.poster_path, 'poster', 'w342')}" style="width: 100%; height: 100%; object-fit: cover;" />` : ''}
-          <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 12px; color: white;">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 12px; color: var(--color-white);">
             <div style="font-weight: 600; font-size: 14px; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.title}</div>
             <div style="background: rgba(255,255,255,0.2); height: 4px; border-radius: 2px; overflow: hidden;">
               <div style="width: ${item.progress}%; height: 100%; background: var(--color-accent);"></div>
@@ -225,8 +225,8 @@ export async function PlatformsPage() {
  ];
 
  grid.innerHTML = platforms.map(platform => `
-    <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s;" onmouseenter="this.style.borderColor='var(--color-accent)'" onmouseleave="this.style.borderColor='var(--color-border)'">
-      <div style="width: 60px; height: 60px; background: ${platform.color}; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: white; font-weight: 700; font-size: 12px;">${platform.name.slice(0, 2).toUpperCase()}</div>
+    <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s;" onmouseenter="this.style.borderColor='var(--color-accent)'" onmouseleave="this.style.borderColor='var(--color-border)'">
+      <div style="width: 60px; height: 60px; background: ${platform.color}; border-radius: var(--r-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: var(--color-white); font-weight: 700; font-size: 12px;">${platform.name.slice(0, 2).toUpperCase()}</div>
       <h3 style="font-weight: 600; margin-bottom: 4px;">${platform.name}</h3>
       <p style="font-size: 12px; color: var(--color-text-secondary);">متاح في ${localStorage.getItem('zpopcorn-region') || 'SA'}</p>
       <div style="margin-top: 12px; font-size: 11px; color: var(--color-text-muted);">بيانات من TMDB • JustWatch</div>
@@ -252,7 +252,7 @@ export async function PersonPage(params) {
         
         <div style="display: grid; grid-template-columns: 300px 1fr; gap: 32px; align-items: start;">
           <div>
- ${profileUrl ? `<img src="${profileUrl}" style="width: 100%; border-radius: 16px; aspect-ratio: 2/3; object-fit: cover;" />` : `<div style="width: 100%; aspect-ratio: 2/3; background: var(--color-surface); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--color-text-faint)">${icon('users', 48, { stroke: 1.4 })}</div>`}
+ ${profileUrl ? `<img src="${profileUrl}" style="width: 100%; border-radius: var(--r-xl); aspect-ratio: 2/3; object-fit: cover;" />` : `<div style="width: 100%; aspect-ratio: 2/3; background: var(--color-surface); border-radius: var(--r-xl); display: flex; align-items: center; justify-content: center; color: var(--color-text-faint)">${icon('users', 48, { stroke: 1.4 })}</div>`}
           </div>
           
           <div>
@@ -260,8 +260,8 @@ export async function PersonPage(params) {
  ${person.birthday ? `<p style="color: var(--color-text-secondary); margin-bottom: 16px;">${person.birthday} • ${person.place_of_birth || ''}</p>` : ''}
             
             <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
-              <span style="background: var(--color-accent); color: white; padding: 4px 12px; border-radius: 16px; font-size: 13px;">${person.known_for_department || 'تمثيل'}</span>
- ${person.popularity ? `<span style="background: var(--color-card); border: 1px solid var(--color-border); padding: 4px 12px; border-radius: 16px; font-size: 13px;">شعبية: ${person.popularity.toFixed(1)}</span>` : ''}
+              <span style="background: var(--color-accent); color: var(--accent-contrast); padding: 4px 12px; border-radius: var(--r-xl); font-size: 13px;">${person.known_for_department || 'تمثيل'}</span>
+ ${person.popularity ? `<span style="background: var(--color-card); border: 1px solid var(--color-border); padding: 4px 12px; border-radius: var(--r-xl); font-size: 13px;">شعبية: ${person.popularity.toFixed(1)}</span>` : ''}
             </div>
             
  ${person.biography ? `
@@ -300,8 +300,8 @@ export async function AnalyticsPage() {
       <h1 class="page-title" style="margin-bottom: 6px;">الإحصائيات</h1><p class="page-subtitle" style="margin-bottom:24px">أرقام مكتبتك الحقيقية — لا شيء يغادر جهازك.</p>
       <div id="analytics-content">
         <div style="display: grid; gap: 20px;">
-          <div class="skeleton" style="height: 200px; border-radius: 12px;"></div>
-          <div class="skeleton" style="height: 300px; border-radius: 12px;"></div>
+          <div class="skeleton" style="height: 200px; border-radius: var(--r-lg);"></div>
+          <div class="skeleton" style="height: 300px; border-radius: var(--r-lg);"></div>
         </div>
       </div>
     </div>
@@ -316,46 +316,46 @@ export async function AnalyticsPage() {
 
  content.innerHTML = `
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
-        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px; text-align: center;">
+        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px; text-align: center;">
           <div style="font-size: 2rem; font-weight: 700; color: var(--color-accent);">${Math.floor(analytics.watchTime.total / 3600)}س</div>
           <div style="font-size: 13px; color: var(--color-text-secondary); margin-top: 4px;">إجمالي وقت المشاهدة</div>
         </div>
-        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px; text-align: center;">
+        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px; text-align: center;">
           <div style="font-size: 2rem; font-weight: 700; color: var(--color-accent);">${analytics.library.completed}</div>
           <div style="font-size: 13px; color: var(--color-text-secondary); margin-top: 4px;">أعمال مكتملة</div>
         </div>
-        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px; text-align: center;">
+        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px; text-align: center;">
           <div style="font-size: 2rem; font-weight: 700; color: var(--color-accent);">${analytics.ratings.total}</div>
           <div style="font-size: 13px; color: var(--color-text-secondary); margin-top: 4px;">تقييمات</div>
         </div>
-        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px; text-align: center;">
+        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px; text-align: center;">
           <div style="font-size: 2rem; font-weight: 700; color: var(--color-accent);">${achievements.unlocked.length}</div>
           <div style="font-size: 13px; color: var(--color-text-secondary); margin-top: 4px;">إنجازات</div>
         </div>
       </div>
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px;">
-        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
           <h3 style="font-weight: 600; margin-bottom: 16px;">الأنواع المفضلة</h3>
  ${analytics.genres.length > 0 ? analytics.genres.map(g => `
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--color-border-subtle);">
               <span>نوع ${g.id}</span>
-              <span style="background: var(--color-accent); color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px;">${g.count}</span>
+              <span style="background: var(--color-accent); color: var(--accent-contrast); padding: 2px 8px; border-radius: var(--r-lg); font-size: 12px;">${g.count}</span>
             </div>
  `).join('') : '<p style="color: var(--color-text-muted); font-size: 14px;">لا توجد بيانات بعد</p>'}
         </div>
         
-        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
           <h3 style="font-weight: 600; margin-bottom: 16px;">الإنجازات</h3>
           <div style="display: grid; gap: 8px;">
  ${achievements.unlocked.map(a => `
-              <div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: var(--color-surface); border-radius: 8px; border: 1px solid var(--color-border);">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: var(--color-surface); border-radius: var(--r-md); border: 1px solid var(--color-border);">
                 ${uiIcon(a.icon, 20)}
                 <div style="flex: 1;">
                   <div style="font-weight: 500; font-size: 14px;">${a.name}</div>
                   <div style="font-size: 12px; color: var(--color-text-secondary);">${a.description}</div>
                 </div>
-                <span style="color: var(--color-success);">✓</span>
+                <span style="color: var(--color-success);">${icon('check', 14)}</span>
               </div>
  `).join('')}
  ${achievements.unlocked.length === 0 ? '<p style="color: var(--color-text-muted); font-size: 14px;">ابدأ بالمشاهدة لفتح الإنجازات</p>' : ''}
@@ -363,7 +363,7 @@ export async function AnalyticsPage() {
         </div>
       </div>
 
-      <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">خريطة المشاهدة (24×7)</h3>
         <div style="overflow-x: auto;">
           <div style="display: grid; grid-template-columns: 60px repeat(24, 1fr); gap: 2px; min-width: 800px; font-size: 10px;">

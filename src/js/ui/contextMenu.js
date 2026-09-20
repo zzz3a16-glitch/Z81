@@ -70,8 +70,9 @@ async function openFor(media, x, y) {
       watchlistManager.isInList('favorites', media.id).catch(() => false),
       watchlistManager.isInList('watch-later', media.id).catch(() => false),
     ]).then(([f, l]) => {
-      menu.querySelector('[data-slot="fav"]').textContent = f ? '✓' : '—';
-      menu.querySelector('[data-slot="later"]').textContent = l ? '✓' : '—';
+      const slot = (on) => (on ? icon('check', 13) : `<span style="opacity:.35">${icon('minus', 13)}</span>`);
+      menu.querySelector('[data-slot="fav"]').innerHTML = slot(f);
+      menu.querySelector('[data-slot="later"]').innerHTML = slot(l);
     });
   }
 

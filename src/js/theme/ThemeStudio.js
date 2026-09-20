@@ -45,7 +45,7 @@ const toggle = (value, onChange) => {
   const b = document.createElement('button');
   b.type = 'button'; b.className = 'z-switch' + (value ? ' on' : '');
   b.setAttribute('role', 'switch'); b.setAttribute('aria-checked', String(!!value));
-  b.style.cssText = 'width:38px;height:22px;border-radius:999px;border:1px solid var(--color-border);background:var(--surface-4);position:relative;cursor:pointer;transition:background .15s';
+  b.style.cssText = 'width:38px;height:22px;border-radius: var(--r-full);border:1px solid var(--color-border);background:var(--surface-4);position:relative;cursor:pointer;transition:background .15s';
   const dot = document.createElement('i');
   dot.style.cssText = 'position:absolute;top:2px;inset-inline-start:2px;width:16px;height:16px;border-radius:50%;background:var(--color-text-muted);transition:.15s';
   const paint = (v) => { b.classList.toggle('on', v); b.style.background = v ? 'var(--accent)' : 'var(--surface-4)'; dot.style.insetInlineStart = v ? '18px' : '2px'; dot.style.background = v ? 'var(--accent-contrast)' : 'var(--color-text-muted)'; b.setAttribute('aria-checked', String(v)); };
@@ -432,7 +432,7 @@ function panelPages() {
     body.style.cssText = 'display:flex;gap:14px;flex-wrap:wrap;align-items:center';
     const acc = el('div', 'ts-color');
     acc.innerHTML = `<span style="font-size:var(--text-xs);color:var(--color-text-muted)">لهجة</span>`;
-    const accSw = el('button', 'sw'); accSw.type = 'button'; accSw.style.cssText = 'width:24px;height:24px;border-radius:7px;border:1px solid var(--color-border-strong);cursor:pointer;position:relative';
+    const accSw = el('button', 'sw'); accSw.type = 'button'; accSw.style.cssText = 'width:24px;height:24px;border-radius: var(--r-md);border:1px solid var(--color-border-strong);cursor:pointer;position:relative';
     const accFill = el('i'); accFill.style.cssText = 'position:absolute;inset:0;border-radius:inherit;display:block';
     accFill.style.background = ent.accent || 'transparent'; accFill.style.display = ent.accent ? 'block' : 'none';
     accSw.appendChild(accFill);
@@ -466,8 +466,8 @@ function previewPanel() {
       <div class="main">
         <div class="bar"><span class="btnp">تشغيل</span><span class="btng">إضافة</span><span class="inp">بحث…</span></div>
         <div class="cards">
-          <div class="cd"><div class="img" style="background:linear-gradient(140deg,var(--accent-soft),var(--surface-3))"></div><div class="t"><b>فيلم</b><span>2024 · ★ 8.1</span></div><div class="prog"><i></i></div></div>
-          <div class="cd"><div class="img" style="background:linear-gradient(140deg,var(--accent-2-soft, var(--accent-soft)),var(--surface-3))"></div><div class="t"><b>مسلسل</b><span>2023 · ★ 7.4</span></div></div>
+          <div class="cd"><div class="img" style="background:linear-gradient(140deg,var(--accent-soft),var(--surface-3))"></div><div class="t"><b>فيلم</b><span>2024 · ${icon('star',11,{weight:'fill'})} 8.1</span></div><div class="prog"><i></i></div></div>
+          <div class="cd"><div class="img" style="background:linear-gradient(140deg,var(--accent-2-soft, var(--accent-soft)),var(--surface-3))"></div><div class="t"><b>مسلسل</b><span>2023 · ${icon('star',11,{weight:'fill'})} 7.4</span></div></div>
           <div class="cd"><div class="img" style="background:var(--surface-4)"></div><div class="t"><b>أنمي</b><span>قيد البث</span></div></div>
         </div>
         <div class="row2">

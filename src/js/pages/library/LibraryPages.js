@@ -30,7 +30,7 @@ export class EraPage {
         <p class="page-subtitle">استكشف الأعمال حسب العقد</p>
       </div>
       <div class="era-selector" id="era-selector">
-        <div class="loading-skeleton">جاري التحميل...</div>
+        <div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>
       </div>
       <div class="media-grid" id="era-media">
         <div class="loading-grid">
@@ -106,7 +106,7 @@ export class EraPage {
         <div class="media-poster">
  ${poster ? `<img src="${poster}" alt="${title}" loading="lazy">` : `<div class="poster-placeholder" style="color:var(--color-text-faint)">${icon('image', 28, { stroke: 1.5 })}</div>`}
           <div class="media-overlay">
-            <button class="play-btn">▶</button>
+            <button class="play-btn" aria-label="تشغيل">${icon('play', 16, { weight: 'fill' })}</button>
           </div>
         </div>
         <div class="media-info">
@@ -130,7 +130,7 @@ export class FranchisesPage {
         <button class="btn btn-primary" id="create-franchise-btn">+ إنشاء سلسلة جديدة</button>
       </div>
       <div class="franchises-grid" id="franchises-grid">
-        <div class="loading-skeleton">جاري تحميل السلاسل...</div>
+        <div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>
       </div>
  `;
 
@@ -211,7 +211,7 @@ export class SmartCollectionsPage {
         <button class="btn btn-primary" id="create-collection-btn">+ مجموعة ذكية جديدة</button>
       </div>
       <div class="collections-grid" id="collections-grid">
-        <div class="loading-skeleton">جاري التحميل...</div>
+        <div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>
       </div>
  `;
 
@@ -224,7 +224,7 @@ export class SmartCollectionsPage {
  const defaults = [
  { name: 'أفلام عالية التقييم', icon: '', rule: 'تقييم 8+ مع 1000+ صوت', count: 156 },
  { name: 'أفلام 2024', icon: '', rule: 'إصدار 2024', count: 89 },
- { name: 'أفلام طويلة', icon: '⏱', rule: 'مدة 150+ دقيقة', count: 67 },
+ { name: 'أفلام طويلة', icon: icon('clock', 18), rule: 'مدة 150+ دقيقة', count: 67 },
  { name: 'أفلام قصيرة', icon: '', rule: 'مدة أقل من 90 دقيقة', count: 45 }
  ];
 
@@ -263,13 +263,13 @@ export class HealthCenterPage {
         <button class="btn btn-primary" id="run-health-check"> فحص الآن</button>
       </div>
       <div class="health-dashboard" id="health-dashboard">
-        <div class="loading-skeleton">جاري الفحص...</div>
+        <div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>
       </div>
  `;
 
  const runCheck = async () => {
  const dashboard = container.querySelector('#health-dashboard');
- dashboard.innerHTML = `<div class="loading-skeleton">يفحص المكتبة...</div>`;
+ dashboard.innerHTML = `<div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>`;
       
  try {
  const health = await healthCenter.checkHealth();
@@ -326,7 +326,7 @@ export class StoragePage {
         <p class="page-subtitle">تحليل استخدام التخزين والمساحة</p>
       </div>
       <div class="storage-dashboard" id="storage-dashboard">
-        <div class="loading-skeleton">جاري التحليل...</div>
+        <div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>
       </div>
  `;
 
@@ -345,14 +345,14 @@ export class StoragePage {
               </div>
             </div>
             <div class="stat-card">
-              <span class="stat-icon" style="display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:var(--surface-3);color:var(--accent-bright)">${icon('drive', 17)}</span>
+              <span class="stat-icon" style="display:grid;place-items:center;width:34px;height:34px;border-radius: var(--r-md);background:var(--surface-3);color:var(--accent-bright)">${icon('drive', 17)}</span>
               <div class="stat-info">
                 <span class="stat-value">${stats.totalSizeFormatted}</span>
                 <span class="stat-label">المساحة المستخدمة</span>
               </div>
             </div>
             <div class="stat-card">
-              <span class="stat-icon" style="display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:var(--surface-3);color:var(--accent-bright)">${icon('chart', 17)}</span>
+              <span class="stat-icon" style="display:grid;place-items:center;width:34px;height:34px;border-radius: var(--r-md);background:var(--surface-3);color:var(--accent-bright)">${icon('chart', 17)}</span>
               <div class="stat-info">
                 <span class="stat-value">${Object.keys(stats.byType || {}).length}</span>
                 <span class="stat-label">أنواع الملفات</span>
@@ -405,7 +405,7 @@ export class CommandCenterPage {
         <p class="page-subtitle">نظرة شاملة على مكتبتك</p>
       </div>
       <div class="command-dashboard" id="command-dashboard">
-        <div class="loading-skeleton">جاري تحميل لوحة التحكم...</div>
+        <div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>
       </div>
  `;
 
@@ -490,7 +490,7 @@ export class GenresPage {
         <p class="page-subtitle">تصفح حسب النوع</p>
       </div>
       <div class="genres-grid" id="genres-grid">
-        <div class="loading-skeleton">جاري التحميل...</div>
+        <div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>
       </div>
  `;
 
@@ -532,7 +532,7 @@ export class CountriesPage {
         <p class="page-subtitle">استكشف السينما العالمية</p>
       </div>
       <div class="countries-grid" id="countries-grid">
-        <div class="loading-skeleton">جاري التحميل...</div>
+        <div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>
       </div>
  `;
 
@@ -566,13 +566,13 @@ export class MissingPiecesPage {
         <button class="btn btn-primary" id="scan-missing"> فحص المفقود</button>
       </div>
       <div class="missing-dashboard" id="missing-dashboard">
-        <div class="loading-skeleton">جاري الفحص...</div>
+        <div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>
       </div>
  `;
 
  const scan = async () => {
  const dashboard = container.querySelector('#missing-dashboard');
- dashboard.innerHTML = `<div class="loading-skeleton">يفحص القطع المفقودة...</div>`;
+ dashboard.innerHTML = `<div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>`;
       
  try {
  const missing = await missingPiecesDetector.detectMissing();
@@ -626,13 +626,13 @@ export class DuplicatesPage {
         <button class="btn btn-primary" id="scan-duplicates"> فحص المكررات</button>
       </div>
       <div class="duplicates-dashboard" id="duplicates-dashboard">
-        <div class="loading-skeleton">جاهز للفحص</div>
+        <div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>
       </div>
  `;
 
  const scan = async () => {
  const dashboard = container.querySelector('#duplicates-dashboard');
- dashboard.innerHTML = `<div class="loading-skeleton">يفحص المكررات...</div>`;
+ dashboard.innerHTML = `<div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>`;
       
  try {
  const analysis = await duplicateLab.analyzeDuplicates();
@@ -705,7 +705,7 @@ export class AuditLogPage {
         <p class="page-subtitle">تتبع جميع التغييرات في مكتبتك</p>
       </div>
       <div class="audit-dashboard" id="audit-dashboard">
-        <div class="loading-skeleton">جاري التحميل...</div>
+        <div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>
       </div>
  `;
 
@@ -761,7 +761,7 @@ export class SnapshotsPage {
         <button class="btn btn-primary" id="create-snapshot"> إنشاء لقطة الآن</button>
       </div>
       <div class="snapshots-dashboard" id="snapshots-dashboard">
-        <div class="loading-skeleton">جاري التحميل...</div>
+        <div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>
       </div>
  `;
 
@@ -827,7 +827,7 @@ export class AwardsPage {
         <p class="page-subtitle">أفلام حائزة على جوائز عالمية</p>
       </div>
       <div class="awards-grid" id="awards-grid">
-        <div class="loading-skeleton">جاري التحميل...</div>
+        <div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>
       </div>
  `;
 
@@ -858,7 +858,7 @@ export class FormatsPage {
         <p class="page-subtitle">تصفح حسب الجودة والصيغة</p>
       </div>
       <div class="formats-grid" id="formats-grid">
-        <div class="loading-skeleton">جاري التحميل...</div>
+        <div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>
       </div>
  `;
 
@@ -890,7 +890,7 @@ export class ContentThemesPage {
         <p class="page-subtitle">استكشف الأفلام حسب الموضوع</p>
       </div>
       <div class="content-themes-grid" id="content-themes-grid">
-        <div class="loading-skeleton">جاري التحميل...</div>
+        <div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>
       </div>
  `;
 

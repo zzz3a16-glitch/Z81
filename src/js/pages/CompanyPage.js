@@ -12,7 +12,7 @@ export async function CompanyPage(params = {}) {
   const head = el('div', 'z-narrow');
   head.style.cssText = 'padding-top:34px';
   page.appendChild(head);
-  head.innerHTML = '<div class="sk" style="height:110px;border-radius:14px"></div>';
+  head.innerHTML = '<div class="sk" style="height:110px;border-radius: var(--r-xl)"></div>';
 
   let co = null;
   try {
@@ -30,7 +30,7 @@ export async function CompanyPage(params = {}) {
 
   head.innerHTML = `
     <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
-      ${co.logo_path ? `<div style="width:132px;height:72px;border-radius:var(--r-lg);background:#fff;display:grid;place-items:center;overflow:hidden;flex-shrink:0">
+      ${co.logo_path ? `<div style="width:132px;height:72px;border-radius:var(--r-lg);background:var(--color-white);display:grid;place-items:center;overflow:hidden;flex-shrink:0">
         <img src="${getTMDBImageUrl(co.logo_path, 'poster', 'w500')}" alt="${esc(co.name)}" style="max-width:88%;max-height:80%;object-fit:contain" loading="lazy">
       </div>` : `<div class="z-sb-mark" style="width:52px;height:52px">${icon('layers', 24)}</div>`}
       <div>

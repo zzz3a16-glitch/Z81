@@ -22,6 +22,7 @@ const SETTINGS_CATEGORIES = [
  { id: 'library', name: 'المكتبة', icon: 'database', desc: 'إدارة المكتبة' },
  { id: 'scanner', name: 'الفاحص', icon: 'search', desc: 'فحص الملفات' },
  { id: 'tmdb', name: 'TMDB', icon: 'key', desc: 'واجهة برمجة التطبيقات' },
+ { id: 'live', name: 'البث المباشر', icon: 'live', desc: 'مصادر IPTV والدليل' },
  { id: 'recommendations', name: 'التوصيات', icon: 'bulb', desc: 'ذكاء التوصيات' },
  { id: 'notifications', name: 'الإشعارات', icon: 'bell', desc: 'مركز الإشعارات' },
  { id: 'privacy', name: 'الخصوصية', icon: 'shield', desc: 'البيانات والخصوصية' },
@@ -30,6 +31,30 @@ const SETTINGS_CATEGORIES = [
  { id: 'advanced', name: 'متقدم', icon: 'slider', desc: 'إعدادات متقدمة' },
  { id: 'about', name: 'حول', icon: 'info', desc: 'معلومات التطبيق' }
 ];
+
+function createLiveSection() {
+  const box = document.createElement('div');
+  box.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <h3 style="font-size:18px;font-weight:600;margin:0">البث المباشر (LIVE)</h3>
+      <button class="btn btn-ghost btn-sm" data-open type="button" style="margin-inline-start:auto">إعدادات البث الكاملة</button>
+    </div>
+    <p style="color:var(--color-text-secondary);font-size:13px;margin-bottom:16px">منصة IPTV المحلية: قوائم M3U، دليل XMLTV، مفضلة وسجل مشاهدة — كلها محفوظة على جهازك. تُدار المصادر من صفحة المصادر.</p>
+    <div data-stats style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px"></div>`;
+  box.querySelector('[data-open]').addEventListener('click', () => { window.location.hash = '#/live/settings'; });
+  const grid = box.querySelector('[data-stats]');
+  const paint = (st) => {
+    grid.innerHTML = [
+      ['مصادر', st.sources], ['قنوات مفهرسة', (st.channels || 0).toLocaleString('ar-EG')],
+      ['مجموعات', st.groups], ['مفضلة', st.favs], ['في السجل', st.history],
+    ].map(([k, v]) => `<div style="padding:12px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--r-md);text-align:center">
+        <div style="font-size:20px;font-weight:700">${v}</div><div style="font-size:11px;color:var(--color-text-muted)">${k}</div></div>`).join('');
+  };
+  import('../services/live/LiveService.js').then(({ live }) => live.init().then(() => paint(live.stats()))).catch(() => {
+    grid.innerHTML = '<div style="font-size:12px;color:var(--color-text-muted)">تتعذر قراءة حالة البث الآن.</div>';
+  });
+  return box;
+}
 
 export async function EnhancedSettingsPage(params) {
  const section = params.section || 'general';
@@ -42,10 +67,10 @@ export async function EnhancedSettingsPage(params) {
       <p style="color: var(--color-text-secondary); margin-bottom: 24px;">إدارة جميع جوانب التطبيق</p>
       
       <div style="display: grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start;" class="settings-layout">
-        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 12px; position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto;" class="settings-sidebar">
+        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 12px; position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto;" class="settings-sidebar">
           <div style="display: flex; flex-direction: column; gap: 2px;">
  ${SETTINGS_CATEGORIES.map(cat => `
-              <a href="/settings/${cat.id}" data-router class="settings-nav-item ${section === cat.id ? 'active' : ''}" data-section="${cat.id}" style="padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 10px; transition: all 0.2s; ${section === cat.id ? 'background: var(--color-accent); color: white;' : 'background: transparent;'}">
+              <a href="/settings/${cat.id}" data-router class="settings-nav-item ${section === cat.id ? 'active' : ''}" data-section="${cat.id}" style="padding: 10px 12px; border-radius: var(--r-md); text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 10px; transition: all 0.2s; ${section === cat.id ? 'background: var(--color-accent); color: var(--accent-contrast);' : 'background: transparent;'}">
                 ${uiIcon(cat.icon, 15)}
                 <div style="flex: 1; min-width: 0;">
                   <div style="font-weight: 500; font-size: 14px;">${cat.name}</div>
@@ -56,8 +81,8 @@ export async function EnhancedSettingsPage(params) {
           </div>
         </div>
         
-        <div id="settings-content" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 24px; min-height: 500px;">
-          <div class="loading-skeleton">جاري التحميل...</div>
+        <div id="settings-content" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 24px; min-height: 500px;">
+          <div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>
         </div>
       </div>
     </div>
@@ -118,6 +143,9 @@ export async function EnhancedSettingsPage(params) {
  case 'advanced':
  sectionEl = await createAdvancedSection();
  break;
+ case 'live':
+ sectionEl = createLiveSection();
+ break;
  case 'about':
  sectionEl = createAboutSection();
  break;
@@ -146,7 +174,7 @@ function createGeneralSection() {
     <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">الإعدادات العامة</h2>
     
     <div style="display: flex; flex-direction: column; gap: 24px;">
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">المنطقة واللغة</h3>
         <div style="display: grid; gap: 16px;">
           <div>
@@ -192,17 +220,17 @@ function createGeneralSection() {
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">البيانات والتخزين</h3>
         <div style="display: grid; gap: 12px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--color-card); border-radius: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--color-card); border-radius: var(--r-md);">
             <div>
               <div style="font-weight: 500;">التخزين المؤقت</div>
               <div style="font-size: 12px; color: var(--color-text-muted);">بيانات TMDB المؤقتة</div>
             </div>
             <button id="clear-cache" class="btn btn-secondary btn-sm">مسح</button>
           </div>
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.2); border-radius: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: color-mix(in srgb, var(--color-danger) 5%, transparent); border: 1px solid color-mix(in srgb, var(--color-danger) 20%, transparent); border-radius: var(--r-md);">
             <div>
               <div style="font-weight: 500; color: var(--color-danger);">مسح جميع البيانات</div>
               <div style="font-size: 12px; color: var(--color-text-muted);">لا يمكن التراجع - سيتم حذف كل شيء</div>
@@ -291,23 +319,23 @@ async function createAppearanceSection() {
     
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 32px;" id="themes-grid">
  ${allThemes.map(theme => `
-        <div class="theme-card ${currentTheme === theme.id ? 'active' : ''}" data-theme="${theme.id}" style="border: 2px solid ${currentTheme === theme.id ? 'var(--color-accent)' : 'var(--color-border)'}; border-radius: 12px; overflow: hidden; cursor: pointer; transition: all 0.2s; background: var(--color-surface); position: relative;">
+        <div class="theme-card ${currentTheme === theme.id ? 'active' : ''}" data-theme="${theme.id}" style="border: 2px solid ${currentTheme === theme.id ? 'var(--color-accent)' : 'var(--color-border)'}; border-radius: var(--r-lg); overflow: hidden; cursor: pointer; transition: all 0.2s; background: var(--color-surface); position: relative;">
           <div style="height: 120px; background: ${theme.preview?.bg || '#1a1a1a'}; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
             <div style="position: absolute; inset: 0; background: linear-gradient(135deg, ${theme.preview?.accent || '#8b5cf6'}40, ${theme.preview?.accent2 || '#06b6d4'}40);"></div>
             <div style="position: relative; display: flex; gap: 8px;">
-              <div style="width: 40px; height: 40px; background: ${theme.preview?.accent || '#8b5cf6'}; border-radius: 8px; box-shadow: 0 4px 12px ${theme.preview?.accent || '#8b5cf6'}60;"></div>
-              <div style="width: 40px; height: 40px; background: ${theme.preview?.accent2 || '#06b6d4'}; border-radius: 8px;"></div>
+              <div style="width: 40px; height: 40px; background: ${theme.preview?.accent || '#8b5cf6'}; border-radius: var(--r-md); box-shadow: 0 4px 12px ${theme.preview?.accent || '#8b5cf6'}60;"></div>
+              <div style="width: 40px; height: 40px; background: ${theme.preview?.accent2 || '#06b6d4'}; border-radius: var(--r-md);"></div>
             </div>
- ${currentTheme === theme.id ? '<div style="position: absolute; top: 8px; right: 8px; background: var(--color-accent); color: white; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">✓ نشط</div>' : ''}
+ ${currentTheme === theme.id ? '<div style="position: absolute; top: 8px; right: 8px; background: var(--color-accent); color: var(--accent-contrast); padding: 4px 10px; border-radius: var(--r-lg); font-size: 11px; font-weight: 600;">' + uiIcon('check', 11) + ' نشط</div>' : ''}
           </div>
           <div style="padding: 16px;">
             <h3 style="font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">${theme.name} </h3>
             <p style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 10px; line-height: 1.5;">${theme.description}</p>
             <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-              <span style="font-size: 10px; padding: 2px 6px; background: ${theme.isDark ? '#1a1a1a' : '#f0f0f0'}; color: ${theme.isDark ? 'white' : 'black'}; border-radius: 4px; border: 1px solid var(--color-border);">${theme.isDark ? 'داكن' : 'فاتح'}</span>
-              <span style="font-size: 10px; padding: 2px 6px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 4px;">${theme.category}</span>
- ${theme.effects?.includes('glow') ? '<span style="font-size: 10px; padding: 2px 6px; background: rgba(139,92,246,0.1); color: #8b5cf6; border-radius: 4px;">توهج</span>' : ''}
- ${theme.effects?.includes('glass') ? '<span style="font-size: 10px; padding: 2px 6px; background: rgba(6,182,214,0.1); color: #06b6d4; border-radius: 4px;"> زجاج</span>' : ''}
+              <span style="font-size: 10px; padding: 2px 6px; background: ${theme.isDark ? '#1a1a1a' : '#f0f0f0'}; color: ${theme.isDark ? 'white' : 'black'}; border-radius: var(--r-xs); border: 1px solid var(--color-border);">${theme.isDark ? 'داكن' : 'فاتح'}</span>
+              <span style="font-size: 10px; padding: 2px 6px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-xs);">${theme.category}</span>
+ ${theme.effects?.includes('glow') ? '<span style="font-size: 10px; padding: 2px 6px; background: color-mix(in srgb, var(--accent) 10%, transparent); color: #8b5cf6; border-radius: var(--r-xs);">توهج</span>' : ''}
+ ${theme.effects?.includes('glass') ? '<span style="font-size: 10px; padding: 2px 6px; background: rgba(6,182,214,0.1); color: #06b6d4; border-radius: var(--r-xs);"> زجاج</span>' : ''}
             </div>
           </div>
         </div>
@@ -315,14 +343,14 @@ async function createAppearanceSection() {
     </div>
     
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:20px">
-      <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:16px">
+      <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius: var(--r-lg);padding:16px">
         <b style="font-size:13px;display:block;margin-bottom:10px">كثافة الواجهة</b>
         <div style="display:flex;gap:6px" id="density-picker">
           <button class="btn btn-sm density-opt" data-density="comfortable">مريحة</button>
           <button class="btn btn-sm density-opt" data-density="compact">مضغوطة</button>
         </div>
       </div>
-      <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:16px">
+      <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius: var(--r-lg);padding:16px">
         <b style="font-size:13px;display:block;margin-bottom:10px">الشريط الجانبي</b>
         <div style="display:flex;gap:6px" id="sidebar-pref">
           <button class="btn btn-sm sb-opt" data-sb="full">عريض</button>
@@ -330,7 +358,7 @@ async function createAppearanceSection() {
         </div>
       </div>
     </div>
-    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px; margin-bottom: 20px;">
       <h3 style="font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">منشئ المظاهر المخصص</h3>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 16px;">
         <div>
@@ -364,7 +392,7 @@ async function createAppearanceSection() {
       </div>
     </div>
 
-    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
       <h3 style="font-weight: 600; margin-bottom: 12px;">إعدادات الحركة والعرض</h3>
       <div style="display: grid; gap: 16px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -399,7 +427,7 @@ async function createAppearanceSection() {
       
  card.style.borderColor = 'var(--color-accent)';
  const badge = document.createElement('div');
- badge.style.cssText = 'position: absolute; top: 8px; right: 8px; background: var(--color-accent); color: white; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;';
+ badge.style.cssText = 'position: absolute; top: 8px; right: 8px; background: var(--color-accent); color: var(--accent-contrast); padding: 4px 10px; border-radius: var(--r-lg); font-size: 11px; font-weight: 600;';
  badge.textContent = 'نشط'; badge.dataset.state = 'active';
  card.querySelector('[style*="height: 120px"]').appendChild(badge);
       
@@ -503,9 +531,9 @@ async function createAppearanceSection() {
 
 
 const playerPhaseBanner = () => `
-  <div style="display:flex;gap:10px;align-items:center;padding:12px 16px;margin-bottom:20px;border-radius:12px;
- background:color-mix(in srgb, var(--color-warning, #f59e0b) 10%, transparent);
- border:1px solid color-mix(in srgb, var(--color-warning, #f59e0b) 40%, transparent);
+  <div style="display:flex;gap:10px;align-items:center;padding:12px 16px;margin-bottom:20px;border-radius: var(--r-lg);
+ background:color-mix(in srgb, var(--color-warning) 10%, transparent);
+ border:1px solid color-mix(in srgb, var(--color-warning) 40%, transparent);
  font-size:13px;color:var(--color-text-secondary);">
     ${'<span style="color:var(--color-warning);flex-shrink:0;display:inline-flex">' + icon('info', 18, { stroke: 1.8 }) + '</span>'}
     <span>تُحفظ هذه الإعدادات وتُطبَّق تلقائياً عند إضافة محرك التشغيل — المشغّل مرحلة قادمة منفصلة، ولن تعمل هذه الخيارات قبلها.</span>
@@ -521,7 +549,7 @@ function createPlaybackSection() {
  ${createToggle('preload-next', 'تحميل الحلقة التالية مسبقاً', 'تحميل مسبق لتجربة سلسة', localStorage.getItem('zpopcorn-preload-next') !== 'false')}
  ${createToggle('skip-intro', 'تخطي المقدمة', 'تخطي مقدمة المسلسل عند توفر البيانات', localStorage.getItem('zpopcorn-skip-intro') === 'true')}
       
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">مستوى الصوت</h3>
         <div style="display: flex; align-items: center; gap: 16px;">
           <span></span>
@@ -531,7 +559,7 @@ function createPlaybackSection() {
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">متابعة المشاهدة</h3>
         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
           <label style="font-size: 14px; min-width: 180px;">عتبة متابعة المشاهدة</label>
@@ -541,7 +569,7 @@ function createPlaybackSection() {
         <div style="font-size: 12px; color: var(--color-text-muted);">إذا شاهدت أقل من هذه النسبة، سيبدأ من البداية</div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">جودة التشغيل</h3>
         <select id="quality-pref" class="input" style="max-width: 300px;">
           <option value="auto">تلقائي (حسب الشبكة)</option>
@@ -573,7 +601,7 @@ function createSubtitlesSection() {
  ${playerPhaseBanner()}
     <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">إعدادات الترجمة</h2>
     <div style="display: grid; gap: 20px;">
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">المظهر</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
           <div>
@@ -605,7 +633,7 @@ function createSubtitlesSection() {
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">الموضع والتوقيت</h3>
         <div style="display: grid; gap: 16px;">
           <div style="display: flex; align-items: center; gap: 16px;">
@@ -621,7 +649,7 @@ function createSubtitlesSection() {
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">اللغة الافتراضية</h3>
         <select id="sub-lang" class="input" style="max-width: 300px;">
           <option value="ar">العربية</option>
@@ -646,7 +674,7 @@ function createAudioSection() {
  ${playerPhaseBanner()}
     <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">إعدادات الصوت</h2>
     <div style="display: grid; gap: 20px;">
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">المسارات الصوتية</h3>
         <div style="display: grid; gap: 16px;">
           <div>
@@ -666,7 +694,7 @@ function createAudioSection() {
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">التحكم</h3>
         <div style="display: grid; gap: 12px;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -699,21 +727,21 @@ function createLibrarySection() {
  div.innerHTML = `
     <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">إعدادات المكتبة</h2>
     <div style="display: grid; gap: 20px;">
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">مصادر المكتبة</h3>
         <div id="library-sources" style="display: grid; gap: 8px; margin-bottom: 16px;">
-          <div style="padding: 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+          <div style="padding: 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-md); display: flex; justify-content: space-between; align-items: center;">
             <div>
               <div style="font-weight: 500;">المجلد الافتراضي</div>
               <div style="font-size: 12px; color: var(--color-text-muted);">/home/user/Videos</div>
             </div>
-            <span style="font-size: 11px; padding: 2px 8px; background: var(--color-success, #10b981); color: white; border-radius: 12px;">نشط</span>
+            <span style="font-size: 11px; padding: 2px 8px; background: var(--color-success); color: var(--color-text-inverse); border-radius: var(--r-lg);">نشط</span>
           </div>
         </div>
         <button class="btn btn-secondary" id="add-source">+ إضافة مصدر</button>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">العرض</h3>
         <div style="display: grid; gap: 16px;">
           <div>
@@ -736,7 +764,7 @@ function createLibrarySection() {
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">الأرشيف</h3>
         <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px;">الأرشيف لا يحذف الملفات، فقط ينظمها منطقياً</p>
         <div style="display: flex; gap: 8px;">
@@ -759,7 +787,7 @@ function createScannerSection() {
  ${createToggle('incremental-scan', 'فحص تدريجي', 'فحص الملفات الجديدة/المتغيرة فقط', true)}
  ${createToggle('parallel-scan', 'فحص متوازي', 'استخدام معالجة متوازية (أسرع)', true)}
       
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">الجدولة</h3>
         <div style="display: grid; gap: 12px;">
           <div>
@@ -779,7 +807,7 @@ function createScannerSection() {
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">حالة الفحص</h3>
         <div style="display: grid; gap: 8px; font-size: 13px;">
           <div style="display: flex; justify-content: space-between;"><span>آخر فحص:</span><span>منذ ساعتين</span></div>
@@ -806,9 +834,9 @@ async function createTMDBSection() {
  div.innerHTML = `
     <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">إعدادات TMDB</h2>
     
-    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px; margin-bottom: 20px;">
       <h3 style="font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-        <span style="width: 10px; height: 10px; background: var(--color-success, #10b981); border-radius: 50%; display: inline-block; animation: pulse 2s infinite;"></span>
+        <span style="width: 10px; height: 10px; background: var(--color-success); border-radius: 50%; display: inline-block; animation: pulse 2s infinite;"></span>
  حالة الاتصال
       </h3>
       <div style="display: grid; gap: 8px; font-size: 14px;">
@@ -822,7 +850,7 @@ async function createTMDBSection() {
       <div id="connection-result" style="margin-top: 12px; font-size: 13px;"></div>
     </div>
     
-    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px; margin-bottom: 20px;">
       <h3 style="font-weight: 600; margin-bottom: 12px;"> مفتاح TMDB API</h3>
       <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px;">احصل على مفتاح مجاني من <a href="https://www.themoviedb.org/settings/api" target="_blank" style="color: var(--color-accent);">themoviedb.org</a> - مطلوب لبيانات حقيقية</p>
       <div style="display: flex; gap: 8px;">
@@ -833,12 +861,12 @@ async function createTMDBSection() {
       <div style="font-size: 11px; color: var(--color-text-muted); margin-top: 8px;">المفتاح الحالي: ${apiKey ? apiKey.slice(0, 8) + '...' + apiKey.slice(-4) : 'غير محدد (يستخدم مفتاح تجريبي)'} • التخزين: localStorage</div>
     </div>
     
-    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
       <h3 style="font-weight: 600; margin-bottom: 12px;">التخزين المؤقت</h3>
       <div style="display: grid; gap: 8px; font-size: 14px; margin-bottom: 16px;">
-        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--color-card); border-radius: 6px;"><span>البيانات الوصفية:</span><span style="font-weight: 600;">${stats.cache.metadata.size} عنصر</span></div>
-        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--color-card); border-radius: 6px;"><span>البحث:</span><span style="font-weight: 600;">${stats.cache.search.size} عنصر</span></div>
-        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--color-card); border-radius: 6px;"><span>عام:</span><span style="font-weight: 600;">${stats.cache.general.size} عنصر</span></div>
+        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--color-card); border-radius: var(--r-sm);"><span>البيانات الوصفية:</span><span style="font-weight: 600;">${stats.cache.metadata.size} عنصر</span></div>
+        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--color-card); border-radius: var(--r-sm);"><span>البحث:</span><span style="font-weight: 600;">${stats.cache.search.size} عنصر</span></div>
+        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--color-card); border-radius: var(--r-sm);"><span>عام:</span><span style="font-weight: 600;">${stats.cache.general.size} عنصر</span></div>
       </div>
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
         <button id="clear-tmdb-cache" class="btn btn-secondary">مسح تخزين TMDB</button>
@@ -855,7 +883,7 @@ async function createTMDBSection() {
  const { tmdbClient } = await import('../services/tmdb/TMDBClient.js');
  const config = await tmdbClient.getConfiguration();
  if (config) {
- resultDiv.innerHTML = '<span style="color: var(--color-success, #10b981); font-weight: 600;">TMDB متصل بنجاح</span> • الصور: ' + (config.images?.secure_base_url || 'متاح');
+ resultDiv.innerHTML = '<span style="color: var(--color-success); font-weight: 600;">TMDB متصل بنجاح</span> • الصور: ' + (config.images?.secure_base_url || 'متاح');
  } else {
  resultDiv.innerHTML = '<span style="color: #ef4444;">فشل الاتصال</span>';
  }
@@ -898,7 +926,7 @@ function createRecommendationsSection() {
  div.innerHTML = `
     <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">إعدادات التوصيات</h2>
     <div style="display: grid; gap: 20px;">
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">شدة التوصيات</h3>
         <div style="display: grid; gap: 16px;">
           <div>
@@ -918,7 +946,7 @@ function createRecommendationsSection() {
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">الفلاتر</h3>
         <div style="display: grid; gap: 12px;">
  ${createToggle('hide-watched', 'إخفاء ما شاهدته', 'عدم عرض الأعمال المكتملة في التوصيات', false)}
@@ -927,19 +955,19 @@ function createRecommendationsSection() {
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">الأنواع المستبعدة</h3>
         <p style="font-size: 12px; color: var(--color-text-muted); margin-bottom: 12px;">اختر الأنواع التي لا تريد ظهورها في التوصيات</p>
         <div style="display: flex; flex-wrap: wrap; gap: 8px;">
  ${['أكشن', 'كوميديا', 'رعب', 'رومانسي', 'خيال علمي', 'دراما'].map(g => `
-            <label style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px; cursor: pointer;">
+            <label style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 12px; cursor: pointer;">
               <input type="checkbox" data-genre="${g}" /> ${g}
             </label>
  `).join('')}
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">ملف الذوق</h3>
         <div style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px;">يتم بناء ملف ذوقك تلقائياً من سلوك المشاهدة</div>
         <div style="display: flex; gap: 8px;">
@@ -976,14 +1004,14 @@ function createNotificationsSection() {
     <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">إعدادات الإشعارات</h2>
     <div style="display: grid; gap: 12px;">
  ${Object.entries(prefs).map(([type, enabled]) => `
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg);">
           <div style="flex: 1;">
             <div style="font-weight: 500; font-size: 14px; margin-bottom: 2px;">${getNotificationTypeName(type)}</div>
             <div style="font-size: 11px; color: var(--color-text-muted);">${getNotificationTypeDesc(type)}</div>
           </div>
           <label style="position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; cursor: pointer;">
             <input type="checkbox" data-type="${type}" ${enabled ? 'checked' : ''} style="opacity: 0; width: 0; height: 0;">
-            <span class="toggle-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: ${enabled ? 'var(--color-accent)' : 'var(--color-border)'}; border-radius: 24px; transition: 0.2s;"></span>
+            <span class="toggle-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: ${enabled ? 'var(--color-accent)' : 'var(--color-border)'}; border-radius: var(--r-2xl); transition: 0.2s;"></span>
           </label>
         </div>
  `).join('')}
@@ -1059,7 +1087,7 @@ function createPrivacySection() {
  div.innerHTML = `
     <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">الخصوصية والأمان</h2>
     <div style="display: grid; gap: 20px;">
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">مبادئ الخصوصية</h3>
         <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.8;">
           <p style="margin-bottom: 12px;">zPopcorn هو <strong>Local-First</strong> - جميع بياناتك الشخصية تبقى على جهازك:</p>
@@ -1070,14 +1098,14 @@ function createPrivacySection() {
             <li>ملف الذوق والتفضيلات - محلي فقط</li>
             <li>الإحصائيات والإنجازات - محلي فقط</li>
           </ul>
-          <p style="margin-top: 12px; padding: 12px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); border-radius: 8px;">
+          <p style="margin-top: 12px; padding: 12px; background: color-mix(in srgb, var(--color-success) 10%, transparent); border: 1px solid color-mix(in srgb, var(--color-success) 20%, transparent); border-radius: var(--r-md);">
  TMDB يستخدم فقط للبيانات الوصفية العامة (عناوين، صور، تقييمات عامة)<br>
  لا يتم إرسال سلوك المشاهدة أو البيانات الشخصية إلى TMDB أو أي خدمة خارجية
           </p>
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">الإعدادات</h3>
         <div style="display: grid; gap: 12px;">
  ${createToggle('analytics', 'جمع بيانات التحليلات المحلية', 'حفظ الإحصائيات محلياً (لا يتم إرسالها)', true)}
@@ -1086,7 +1114,7 @@ function createPrivacySection() {
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">إدارة البيانات</h3>
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
           <button class="btn btn-secondary" id="export-data"> تصدير جميع بياناتي</button>
@@ -1127,7 +1155,7 @@ async function createBackupSection() {
     <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">النسخ الاحتياطي والاستعادة</h2>
     
     <div style="display: grid; gap: 20px;">
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">إنشاء نسخ احتياطي</h3>
         <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 16px;">احفظ جميع بياناتك في ملف JSON آمن. جميع البيانات محلية.</p>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
@@ -1140,10 +1168,10 @@ async function createBackupSection() {
         <div style="font-size: 11px; color: var(--color-text-muted); margin-top: 12px;">التنسيق: JSON مع schemaVersion وفحص سلامة • الملف: zpopcorn-backup-YYYY-MM-DD.json</div>
       </div>
       
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">استعادة نسخ احتياطي</h3>
         <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 16px;">استعد بياناتك من ملف نسخ احتياطي. سيتم إنشاء نسخة آمنة تلقائياً قبل الاستعادة.</p>
-        <div style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); border-radius: 8px; padding: 12px; margin-bottom: 16px; font-size: 12px;">
+        <div style="background: color-mix(in srgb, var(--color-warning) 10%, transparent); border: 1px solid color-mix(in srgb, var(--color-warning) 20%, transparent); border-radius: var(--r-md); padding: 12px; margin-bottom: 16px; font-size: 12px;">
           <strong>عملية آمنة:</strong><br>
  1. إنشاء نسخة أمان تلقائية<br>
  2. التحقق من صحة الملف<br>
@@ -1153,16 +1181,16 @@ async function createBackupSection() {
  6. التحقق من السلامة<br>
  7. في حالة الفشل: استرجاع تلقائي
         </div>
-        <input type="file" id="restore-file" accept=".json" style="margin-bottom: 12px; padding: 8px; border: 1px solid var(--color-border); border-radius: 8px; width: 100%;" />
+        <input type="file" id="restore-file" accept=".json" style="margin-bottom: 12px; padding: 8px; border: 1px solid var(--color-border); border-radius: var(--r-md); width: 100%;" />
         <div id="restore-info" style="font-size: 13px; margin-bottom: 12px;"></div>
         <button id="restore-btn" class="btn btn-primary" disabled>استعادة</button>
       </div>
       
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">إحصائيات البيانات</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; font-size: 13px;">
  ${Object.entries(stats).map(([store, count]) => `
-            <div style="display: flex; justify-content: space-between; padding: 10px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; padding: 10px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-md);">
               <span style="font-size: 12px;">${store}</span>
               <span style="font-weight: 700; font-family: monospace;">${count}</span>
             </div>
@@ -1170,7 +1198,7 @@ async function createBackupSection() {
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">النسخ التلقائي</h3>
         <div style="display: grid; gap: 12px;">
  ${createToggle('auto-backup', 'نسخ احتياطي تلقائي', 'إنشاء نسخة يومياً تلقائياً', false)}
@@ -1201,8 +1229,8 @@ async function createBackupSection() {
  const info = await backupManager.getBackupInfo(data);
  pendingBackup = data;
  div.querySelector('#restore-info').innerHTML = `
-        <div style="background: var(--color-card); padding: 12px; border-radius: 8px; border: 1px solid var(--color-border);">
-          <div style="font-weight: 600; margin-bottom: 8px; color: var(--color-success, #10b981);">✓ ملف صالح</div>
+        <div style="background: var(--color-card); padding: 12px; border-radius: var(--r-md); border: 1px solid var(--color-border);">
+          <div style="font-weight: 600; margin-bottom: 8px; color: var(--color-success);">ملف صالح</div>
           <div style="display: grid; gap: 4px; font-size: 12px; font-family: monospace;">
             <div>الإصدار: ${info.schemaVersion} | التطبيق: ${info.appVersion || 'غير محدد'}</div>
             <div>التاريخ: ${new Date(info.createdAt || info.timestamp).toLocaleString('ar-SA')}</div>
@@ -1213,7 +1241,7 @@ async function createBackupSection() {
  `;
  div.querySelector('#restore-btn').disabled = false;
  } catch (error) {
- div.querySelector('#restore-info').innerHTML = `<div style="color: var(--color-danger); background: rgba(239,68,68,0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(239,68,68,0.2);">خطأ: ${error.message}</div>`;
+ div.querySelector('#restore-info').innerHTML = `<div style="color: var(--color-danger); background: color-mix(in srgb, var(--color-danger) 10%, transparent); padding: 12px; border-radius: var(--r-md); border: 1px solid color-mix(in srgb, var(--color-danger) 20%, transparent);">خطأ: ${error.message}</div>`;
  div.querySelector('#restore-btn').disabled = true;
  }
  });
@@ -1238,7 +1266,7 @@ function createKeyboardSection() {
  div.innerHTML = `
     <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">اختصارات لوحة المفاتيح</h2>
     <div style="display: grid; gap: 20px;">
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">التشغيل</h3>
         <div style="display: grid; gap: 8px; font-size: 13px;">
  ${createShortcut('Space', 'تشغيل/إيقاف')}
@@ -1253,7 +1281,7 @@ function createKeyboardSection() {
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;"> التنقل</h3>
         <div style="display: grid; gap: 8px; font-size: 13px;">
  ${createShortcut('Ctrl + K', 'البحث السريع')}
@@ -1265,7 +1293,7 @@ function createKeyboardSection() {
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">تخصيص</h3>
         <p style="font-size: 12px; color: var(--color-text-muted); margin-bottom: 12px;">يمكنك تخصيص الاختصارات قريباً</p>
         <button class="btn btn-secondary" disabled>تخصيص الاختصارات (قريباً)</button>
@@ -1278,9 +1306,9 @@ function createKeyboardSection() {
 
 function createShortcut(keys, desc) {
  return `
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 8px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-md);">
       <span>${desc}</span>
-      <kbd style="padding: 4px 8px; background: var(--color-surface); border: 1px solid var(--color-border); border-bottom-width: 2px; border-radius: 4px; font-family: monospace; font-size: 11px; font-weight: 600;">${keys}</kbd>
+      <kbd style="padding: 4px 8px; background: var(--color-surface); border: 1px solid var(--color-border); border-bottom-width: 2px; border-radius: var(--r-xs); font-family: monospace; font-size: 11px; font-weight: 600;">${keys}</kbd>
     </div>
  `;
 }
@@ -1297,11 +1325,11 @@ async function createAdvancedSection() {
  div.innerHTML = `
     <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">الإعدادات المتقدمة</h2>
     <div style="display: grid; gap: 20px;">
-      <div style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); border-radius: 12px; padding: 16px; font-size: 13px;">
+      <div style="background: color-mix(in srgb, var(--color-warning) 10%, transparent); border: 1px solid color-mix(in srgb, var(--color-warning) 30%, transparent); border-radius: var(--r-lg); padding: 16px; font-size: 13px;">
         <strong>تحذير:</strong> هذه إعدادات متقدمة للمطورين. التغيير الخاطئ قد يؤثر على التطبيق.
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">وضع المطور</h3>
         <div style="display: grid; gap: 12px;">
  ${createToggle('dev-mode', 'تفعيل وضع المطور', 'عرض سجلات إضافية وأدوات التطوير', localStorage.getItem('zpopcorn-dev-mode') === 'true')}
@@ -1310,13 +1338,13 @@ async function createAdvancedSection() {
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;">الأداء</h3>
         <div style="display: grid; gap: 8px; font-size: 12px; font-family: monospace;">
-          <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--color-card); border-radius: 6px;"><span>FCP:</span><span>${perfReport.metrics.fcp ? perfReport.metrics.fcp.toFixed(2) + 'ms' : 'غير متاح'}</span></div>
-          <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--color-card); border-radius: 6px;"><span>LCP:</span><span>${perfReport.metrics.lcp ? perfReport.metrics.lcp.toFixed(2) + 'ms' : 'غير متاح'}</span></div>
-          <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--color-card); border-radius: 6px;"><span>CLS:</span><span>${perfReport.metrics.cls?.toFixed(4) || '0'}</span></div>
-          <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--color-card); border-radius: 6px;"><span>الذاكرة:</span><span>${perfReport.memory ? (perfReport.memory.used / 1024 / 1024).toFixed(1) + ' MB' : 'غير متاح'}</span></div>
+          <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--color-card); border-radius: var(--r-sm);"><span>FCP:</span><span>${perfReport.metrics.fcp ? perfReport.metrics.fcp.toFixed(2) + 'ms' : 'غير متاح'}</span></div>
+          <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--color-card); border-radius: var(--r-sm);"><span>LCP:</span><span>${perfReport.metrics.lcp ? perfReport.metrics.lcp.toFixed(2) + 'ms' : 'غير متاح'}</span></div>
+          <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--color-card); border-radius: var(--r-sm);"><span>CLS:</span><span>${perfReport.metrics.cls?.toFixed(4) || '0'}</span></div>
+          <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--color-card); border-radius: var(--r-sm);"><span>الذاكرة:</span><span>${perfReport.memory ? (perfReport.memory.used / 1024 / 1024).toFixed(1) + ' MB' : 'غير متاح'}</span></div>
         </div>
         <div style="display: flex; gap: 8px; margin-top: 16px;">
           <button class="btn btn-secondary" id="perf-report">تقرير أداء</button>
@@ -1324,7 +1352,7 @@ async function createAdvancedSection() {
         </div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 16px;"> قاعدة البيانات</h3>
         <div style="display: grid; gap: 8px; margin-bottom: 16px;">
           <button class="btn btn-secondary" id="check-integrity">فحص سلامة قاعدة البيانات</button>
@@ -1334,13 +1362,13 @@ async function createAdvancedSection() {
         <div id="db-check-result" style="font-size: 12px;"></div>
       </div>
 
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;">الأمان</h3>
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
           <button class="btn btn-secondary" id="view-sec-logs">عرض سجلات الأمان</button>
           <button class="btn btn-ghost" id="clear-sec-logs">مسح سجلات الأمان</button>
         </div>
-        <div id="sec-logs" style="margin-top: 12px; font-size: 11px; font-family: monospace; max-height: 200px; overflow-y: auto; background: var(--color-card); padding: 12px; border-radius: 8px; display: none;"></div>
+        <div id="sec-logs" style="margin-top: 12px; font-size: 11px; font-family: monospace; max-height: 200px; overflow-y: auto; background: var(--color-card); padding: 12px; border-radius: var(--r-md); display: none;"></div>
       </div>
     </div>
  `;
@@ -1395,14 +1423,14 @@ function createAboutSection() {
       <p style="color: var(--color-text-secondary); margin-bottom: 8px; font-size: 16px;">منصة الوسائط الذكية المتكاملة - مساعد شخصي ذكي</p>
       <p style="font-size: 13px; color: var(--color-text-muted);">الإصدار 2.0.0 • Production-Grade • Local-First • SA Default</p>
       <div style="display: inline-flex; gap: 8px; margin-top: 16px;">
-        <span style="padding: 4px 12px; background: var(--color-success, #10b981); color: white; border-radius: 16px; font-size: 11px; font-weight: 600;">✓ Production Ready</span>
-        <span style="padding: 4px 12px; background: var(--color-accent); color: white; border-radius: 16px; font-size: 11px; font-weight: 600;">✓ Real TMDB</span>
-        <span style="padding: 4px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; font-size: 11px;"> SA</span>
+        <span style="padding: 4px 12px; background: var(--color-success); color: var(--color-text-inverse); border-radius: var(--r-xl); font-size: 11px; font-weight: 600;">جاهز للإنتاج</span>
+        <span style="padding: 4px 12px; background: var(--color-accent); color: var(--accent-contrast); border-radius: var(--r-xl); font-size: 11px; font-weight: 600;">${uiIcon('check', 11)} TMDB حقيقي</span>
+        <span style="padding: 4px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 11px;"> SA</span>
       </div>
     </div>
     
     <div style="display: grid; gap: 20px;">
-      <div style="background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(6,182,214,0.1)); border: 1px solid rgba(139,92,246,0.2); border-radius: 12px; padding: 20px;">
+      <div style="background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, transparent), rgba(6,182,214,0.1)); border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">الرؤية</h3>
         <p style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.8;">
  تحويل zPopcorn من مكتبة وسائط محلية ذكية إلى <strong>مساعد وسائط شخصي ذكي متكامل</strong> يفهم تفضيلاتك، يتنبأ بسلوك المشاهدة، ويقدم تجربة سينمائية فاخرة مع قدرة عمل كاملة دون اتصال.
@@ -1434,29 +1462,29 @@ function createAboutSection() {
  'PWA مع Service Worker ووضع Offline',
  'SQLite + IndexedDB + localStorage مع ترحيل آمن'
  ].map(f => `
-            <div style="display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; font-size: 12px;">
-              <span style="color: var(--color-success, #10b981); font-weight: 700; flex-shrink: 0;">✓</span>
+            <div style="display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-md); font-size: 12px;">
+              <span style="color: var(--color-success); flex-shrink: 0; display:grid; place-items:center;">${uiIcon('check', 14)}</span>
               <span style="color: var(--color-text-secondary); line-height: 1.5;">${f}</span>
             </div>
  `).join('')}
         </div>
       </div>
       
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
         <h3 style="font-weight: 600; margin-bottom: 12px;"> التقنيات</h3>
         <div style="display: flex; flex-wrap: wrap; gap: 8px;">
  ${['Electron.js', 'Node.js', 'Vite 5.2', 'Vanilla JS ES2024', 'SQLite', 'IndexedDB', 'TMDB API', 'mpv Player', 'Socket.IO 4.7', 'PWA', 'RTL', 'CSS Variables', 'Design Tokens'].map(t => `
-            <span style="padding: 6px 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 20px; font-size: 11px; font-weight: 500; font-family: monospace;">${t}</span>
+            <span style="padding: 6px 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-2xl); font-size: 11px; font-weight: 500; font-family: monospace;">${t}</span>
  `).join('')}
         </div>
       </div>
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
           <h3 style="font-weight: 600; margin-bottom: 8px; font-size: 14px;">الأرشفة</h3>
           <p style="font-size: 12px; color: var(--color-text-secondary); line-height: 1.6;">المنصة المحلية الأولى - جميع البيانات الشخصية محلية. TMDB للبيانات الوصفية فقط.</p>
         </div>
-        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px;">
+        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
           <h3 style="font-weight: 600; margin-bottom: 8px; font-size: 14px;">TMDB Attribution</h3>
           <p style="font-size: 11px; color: var(--color-text-secondary); line-height: 1.6;">
  يستخدم TMDB API لكنه غير معتمد من TMDB.<br>
@@ -1465,14 +1493,14 @@ function createAboutSection() {
         </div>
       </div>
       
-      <div style="text-align: center; padding: 24px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px;">
+      <div style="text-align: center; padding: 24px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg);">
         <p style="font-size: 14px; font-weight: 600; margin-bottom: 4px;">صُنع بحبٍّ للمجتمع العربي</p>
         <p style="font-size: 12px; color: var(--color-text-muted);">المنطقة الافتراضية: السعودية (SA) • اللغة: العربية RTL • تصميم: Apple-Level</p>
         <p style="font-size: 11px; color: var(--color-text-muted); margin-top: 12px; font-family: monospace;">© 2026 zPopcorn Ultimate v2.0.0 • Production-Grade Media Intelligence Platform<br>Architecture: Electron + Node + Vite + Vanilla JS ES2024 + mpv + Socket.IO</p>
         <div style="margin-top: 16px; display: flex; justify-content: center; gap: 8px;">
-          <a href="https://github.com" target="_blank" style="padding: 6px 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; font-size: 11px; text-decoration: none; color: var(--color-text-secondary);">GitHub</a>
-          <a href="https://www.themoviedb.org/" target="_blank" style="padding: 6px 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; font-size: 11px; text-decoration: none; color: var(--color-text-secondary);">TMDB</a>
-          <span style="padding: 6px 12px; background: var(--color-success, #10b981); color: white; border-radius: 16px; font-size: 11px; font-weight: 600;">Production Ready ✓</span>
+          <a href="https://github.com" target="_blank" style="padding: 6px 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 11px; text-decoration: none; color: var(--color-text-secondary);">GitHub</a>
+          <a href="https://www.themoviedb.org/" target="_blank" style="padding: 6px 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 11px; text-decoration: none; color: var(--color-text-secondary);">TMDB</a>
+          <span style="padding: 6px 12px; background: var(--color-success); color: var(--color-text-inverse); border-radius: var(--r-xl); font-size: 11px; font-weight: 600;">جاهز للإنتاج</span>
         </div>
       </div>
     </div>
@@ -1482,14 +1510,14 @@ function createAboutSection() {
 
 function createToggle(id, title, desc, checked) {
  return `
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg);">
       <div style="flex: 1;">
         <div style="font-weight: 500; font-size: 14px;">${title}</div>
         <div style="font-size: 11px; color: var(--color-text-muted); margin-top: 2px;">${desc}</div>
       </div>
       <label style="position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; cursor: pointer; margin-right: 12px;">
         <input type="checkbox" id="${id}" ${checked ? 'checked' : ''} style="opacity: 0; width: 0; height: 0;">
-        <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: ${checked ? 'var(--color-accent)' : 'var(--color-border)'}; border-radius: 24px; transition: 0.2s;"></span>
+        <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: ${checked ? 'var(--color-accent)' : 'var(--color-border)'}; border-radius: var(--r-2xl); transition: 0.2s;"></span>
       </label>
     </div>
  `;

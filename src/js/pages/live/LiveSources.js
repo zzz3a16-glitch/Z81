@@ -175,6 +175,7 @@ export async function LiveSourcesPage() {
       ['حجم الاستجابة', g.bytes ? `${Math.max(1, Math.round(g.bytes / 1024))} KB${g.truncated ? ' (مقطوعة عند السقف)' : ''}` : '—'],
       ['نوع المحتوى', g.contentType || '—'],
       ['الصيغة المكتشفة', g.format || g.test?.format || '—'],
+      ['زمن التحليل', g.parseMs != null ? `${Math.max(0, g.parseMs)} ms` : '—'],
       ['أسطر البث', g.lines ?? g.test?.streamLines ?? '—'],
       ['آخر نجاح', src.lastSuccessAt ? new Date(src.lastSuccessAt).toLocaleString('ar-EG') : src.lastUpdate ? ago(src.lastUpdate) : 'لا يوجد'],
       ['مسار الاتصال', g.via === 'desktop' ? 'طبقة النظام (Electron)' : g.via === 'dev-proxy' ? 'وسيط المطوّرين (QA)' : g.via === 'direct' ? 'مباشر (CORS مسموح)' : g.via === 'browser' ? 'متصفح' : '—'],

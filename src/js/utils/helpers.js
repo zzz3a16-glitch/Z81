@@ -87,12 +87,6 @@ export function getMediaYear(media) {
   return getYear(date) || media.year || null;
 }
 
-export function getRatingColor(rating) {
-  if (rating >= 8) return '#10b981';
-  if (rating >= 6) return '#f59e0b';
-  if (rating >= 4) return '#f97316';
-  return '#ef4444';
-}
 
 export function sanitizeHTML(str) {
   const div = document.createElement('div');

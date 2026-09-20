@@ -24,6 +24,9 @@ export async function LiveChannelsPage(params, query = {}) {
     fav: query.fav === '1', recent: query.recent === '1',
     sort: query.sort || 'name',
     view: localStorage.getItem('zpopcn-live-view') || 'grid',
+    quality: query.q0 === '4k' ? '4k' : query.q0 === 'hd' ? 'hd' : '', // spec 33
+    live: query.live === '1', lang: query.lang || '',
+    budget: 1200,                    // spec 31/32: first page is bounded, grows progressively
   };
 
   if (!live.stats().sources) {
@@ -45,13 +48,17 @@ export async function LiveChannelsPage(params, query = {}) {
     <div class="zlv-chips">
       <button class="chip ${state.fav ? 'on' : ''}" data-special="fav">${icon('heart', 13)} المفضلة</button>
       <button class="chip ${state.recent ? 'on' : ''}" data-special="recent">${icon('clock', 13)} شوهد مؤخرًا</button>
+      <button class="chip ${state.quality === 'hd' ? 'on' : ''}" data-quality="hd">${icon('hd', 13)} HD</button>
+      <button class="chip ${state.quality === '4k' ? 'on' : ''}" data-quality="4k">${icon('hd', 13)} 4K</button>
+      <button class="chip ${state.live ? 'on' : ''}" data-live>${icon('bolt', 13)} على الهواء الآن</button>
       ${catChips.map(([k, l]) => `<button class="chip ${state.cat === k && k ? 'on' : ''}" data-cat="${k}">${esc(l)}${k ? ` <b>${cats.get(k)}</b>` : ''}</button>`).join('')}
     </div>
     <div class="zlv-filters">
       <select data-f="group" aria-label="المجموعة"><option value="">كل المجموعات</option>${live.groups().slice(0, 300).map((g) => `<option value="${esc(g.label)}" ${state.group === g.label ? 'selected' : ''}>${esc(g.label)} (${g.count})</option>`).join('')}</select>
       <select data-f="country" aria-label="الدولة"><option value="">كل الدول</option>${live.countries().map((c) => `<option value="${c.key}" ${state.country === c.key ? 'selected' : ''}>${esc(COUNTRY_NAMES[c.key] || c.key)} (${c.count})</option>`).join('')}</select>
       <select data-f="source" aria-label="المصدر"><option value="">كل المصادر</option>${live.sources.map((s) => `<option value="${s.id}" ${state.source === s.id ? 'selected' : ''}>${esc(s.name)} (${s.channelCount || 0})</option>`).join('')}</select>
-      <select data-f="sort" aria-label="الترتيب">
+${live.languages().length > 1 ? `<select data-f="lang" aria-label="اللغة"><option value="">كل اللغات</option>${live.languages().map((l) => `<option value="${esc(l.label)}" ${state.lang === l.label ? 'selected' : ''}>${esc(l.label)} (${l.count})</option>`).join('')}</select>` : ''}
+            <select data-f="sort" aria-label="الترتيب">
         <option value="name" ${state.sort === 'name' ? 'selected' : ''}>أبجدي</option>
         <option value="recent" ${state.sort === 'recent' ? 'selected' : ''}>الأحدث مشاهدة</option>
         <option value="fav" ${state.sort === 'fav' ? 'selected' : ''}>المفضلة أولاً</option>
@@ -60,6 +67,21 @@ export async function LiveChannelsPage(params, query = {}) {
     </div>
   `;
   const countEl = el('div', 'zlv-count');
+  const noRes = stateBlock({
+    anim: 'empty', title: 'لا نتائج مطابقة',
+    desc: 'جرّب كلمات أقل، أو أزل بعض المرشحات — البحث يفحص الاسم والمجموعة والدولة واللغة والمصدر والتصنيف.',
+    primary: { label: 'مسح كل المرشحات', icon: 'x', onClick: () => {
+      Object.assign(state, { q: '', cat: '', group: '', country: '', source: '', lang: '', quality: '', live: false, fav: false, recent: false, budget: 1200 });
+      bar.querySelector('input').value = '';
+      bar.querySelectorAll('.chip.on').forEach((x) => x.classList.remove('on'));
+      bar.querySelectorAll('select[data-f]').forEach((x) => { x.value = ''; });
+      applyFilters();
+    } },
+  });
+  noRes.hidden = true;
+  const moreFoot = el('div', 'zlv-morefoot');
+  moreFoot.innerHTML = `<button class="btn btn-ghost btn-sm" data-more type="button">تحميل المزيد</button>`;
+  moreFoot.hidden = true;
   main.appendChild(bar);
   main.appendChild(countEl);
 
@@ -70,14 +92,17 @@ export async function LiveChannelsPage(params, query = {}) {
   spacer.appendChild(win);
   scroller.appendChild(spacer);
   main.appendChild(scroller);
+  main.appendChild(noRes);
+  main.appendChild(moreFoot);
 
   let list = [];
   let cols = 6, rows = 0, rowH = TILE_H + TILE_GAP;
 
+  let totalRef = 0;
   const applyFilters = () => {
     list = live.channels({
       q: state.q, cat: state.cat, group: state.group, country: state.country,
-      source: state.source, sort: state.sort,
+      source: state.source, sort: state.sort, quality: state.quality, liveNow: state.live, lang: state.lang,
     });
     if (state.fav) {
       const favIds = new Set(live.favChannels().map((f) => f.chanId || f.id));
@@ -87,9 +112,15 @@ export async function LiveChannelsPage(params, query = {}) {
       const seen = new Set(live.recent(200).map((h) => h.chanId));
       list = list.filter((c) => seen.has(c.id));
     }
+    totalRef = list.length;
+    if (state.budget < totalRef) list = list.slice(0, state.budget); // §32: offset window, never duplicated entries
+    const filtered = !!(state.q || state.cat || state.group || state.country || state.source || state.lang || state.quality || state.live || state.fav || state.recent);
     countEl.innerHTML = list.length
-      ? `${icon('signal', 12)} <b>${list.length.toLocaleString('ar-EG')}</b> قناة${(state.q || state.cat || state.group || state.country || state.source) ? ` من ${live.visible().length.toLocaleString('ar-EG')}` : ''}`
+      ? `${icon('signal', 12)} <b>${list.length.toLocaleString('ar-EG')}</b> قناة${filtered ? ` من ${totalRef.toLocaleString('ar-EG')}` : ''}`
       : '';
+    noRes.hidden = list.length > 0;
+    moreFoot.hidden = state.budget >= totalRef;
+    if (!moreFoot.hidden) moreFoot.querySelector('[data-more]').innerHTML = `${icon('chevD', 14)} تحميل المزيد (بقي ${(totalRef - state.budget).toLocaleString('ar-EG')})`;
     layout();
   };
 
@@ -123,7 +154,13 @@ export async function LiveChannelsPage(params, query = {}) {
       fragL.appendChild(rowEl);
     }
     win.appendChild(fragL);
+    // §31 infinite extend: nearing the window end with more available → grow once, safely
+    if (!extending && rows > 0 && last >= rows - 3 && state.budget < totalRef) {
+      extending = true;
+      setTimeout(() => { extending = false; state.budget = Math.min(totalRef, state.budget + 1200); applyFilters(); }, 0);
+    }
   };
+  let extending = false;
 
   function rowTile(chan) {
     const t = el('button', 'zlv-rowt');
@@ -169,6 +206,18 @@ export async function LiveChannelsPage(params, query = {}) {
     b.classList.toggle('on', state[k]);
     applyFilters();
   }));
+  bar.querySelectorAll('[data-quality]').forEach((b) => b.addEventListener('click', () => {
+    state.quality = state.quality === b.dataset.quality ? '' : b.dataset.quality;
+    bar.querySelectorAll('[data-quality]').forEach((x) => x.classList.toggle('on', x.dataset.quality === state.quality));
+    applyFilters();
+  }));
+  bar.querySelector('[data-live]').addEventListener('click', (e) => {
+    state.live = !state.live;
+    e.currentTarget.classList.toggle('on', state.live);
+    if (state.live && !live.epgMem.size) toast('info', 'يتطلب الدليل', 'مرشّح «على الهواء الآن» يحتاج بيانات EPG محمّلة — حدّث الدليل من صفحة المصادر.');
+    applyFilters();
+  });
+  moreFoot.querySelector('[data-more]').addEventListener('click', () => { state.budget += 1200; applyFilters(); });
   bar.querySelectorAll('select[data-f]').forEach((sel) => sel.addEventListener('change', () => {
     state[sel.dataset.f] = sel.value;
     if (sel.dataset.f === 'sort') localStorage.setItem('zpopcn-live-sort', sel.value);

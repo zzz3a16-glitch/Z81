@@ -189,7 +189,7 @@ export function createSidebar() {
     if (!b) return;
     b.textContent = n > 99 ? '99+' : String(n);
     b.style.display = n > 0 ? 'grid' : 'none';
-    if (warn) { b.style.background = 'var(--color-warning)'; b.style.color = '#141005'; }
+    if (warn) { b.style.background = 'var(--color-warning)'; b.style.color = 'var(--color-text-inverse)'; }
   };
   const refreshBadges = async () => {
     try {

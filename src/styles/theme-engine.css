@@ -143,7 +143,7 @@ a { color: var(--z-link); }
 .z-qts button { display: flex; align-items: center; gap: 10px; padding: 8px; border: 0; background: transparent; color: var(--color-text-primary); font: inherit; font-size: var(--text-sm); border-radius: var(--r-md); cursor: pointer; text-align: start; }
 .z-qts button:hover { background: var(--surface-3); }
 .z-qts button.on { background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent-line); }
-.z-qts .sw { width: 26px; height: 26px; border-radius: 8px; border: 1px solid var(--color-border); flex: none; display: grid; place-items: center; gap: 2px; grid-template-columns: 1fr 1fr; overflow: hidden; }
+.z-qts .sw { width: 26px; height: 26px; border-radius: var(--r-md); border: 1px solid var(--color-border); flex: none; display: grid; place-items: center; gap: 2px; grid-template-columns: 1fr 1fr; overflow: hidden; }
 .z-qts .sw i { width: 100%; height: 100%; }
 .z-qts .sep { height: 1px; background: var(--color-hairline); margin: 6px 4px; }
 .z-qts .more { justify-content: center; color: var(--accent-bright); font-weight: 600; }
@@ -194,7 +194,7 @@ a { color: var(--z-link); }
 .ts-pop .grid4 label { display: grid; gap: 3px; font-size: 10px; color: var(--color-text-muted); }
 .ts-pop .grid4 input { width: 100%; height: 26px; font-size: var(--text-xs); text-align: center; padding: 0 4px; }
 .ts-swatchrow { display: flex; gap: 6px; flex-wrap: wrap; }
-.ts-swatchrow button { width: 22px; height: 22px; border-radius: 7px; border: 1px solid var(--color-border); cursor: pointer; }
+.ts-swatchrow button { width: 22px; height: 22px; border-radius: var(--r-md); border: 1px solid var(--color-border); cursor: pointer; }
 .ts-slider { display: flex; align-items: center; gap: 10px; }
 .ts-slider input { flex: 1; }
 .ts-slider output { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); min-width: 44px; text-align: end; }
@@ -206,7 +206,7 @@ a { color: var(--z-link); }
 .ts-themecard .prev .sbw i { height: 7px; border-radius: 3px; opacity: .5; }
 .ts-themecard .prev .sbw i:first-child { opacity: 1; }
 .ts-themecard .prev .mw { flex: 1; display: grid; gap: 6px; }
-.ts-themecard .prev .bar { border-radius: 5px; }
+.ts-themecard .prev .bar { border-radius: var(--r-sm); }
 .ts-themecard .foot { padding: 10px 12px; display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--color-hairline); }
 .ts-themecard .foot b { font-size: var(--text-sm); }
 .ts-themecard .foot small { color: var(--color-text-muted); font-size: var(--text-3xs); display: block; }
@@ -220,7 +220,7 @@ a { color: var(--z-link); }
 .ts-preview .cap { padding: 8px 12px; font-size: var(--text-2xs); color: var(--color-text-muted); letter-spacing: var(--tracking-caps); text-transform: uppercase; border-bottom: 1px solid var(--color-hairline); display: flex; align-items: center; gap: 6px; }
 .ts-app { display: grid; grid-template-columns: 64px 1fr; min-height: 300px; font-size: 11px; }
 .ts-app .sb { background: var(--z-sb-bg); border-inline-end: 1px solid var(--color-border); padding: 8px 6px; display: grid; gap: 4px; align-content: start; }
-.ts-app .sb i { height: 16px; border-radius: 5px; display: block; }
+.ts-app .sb i { height: 16px; border-radius: var(--r-sm); display: block; }
 .ts-app .sb i.on { background: var(--accent-soft); box-shadow: inset 2px 0 0 var(--accent); }
 .ts-app .main { display: grid; gap: 8px; padding: 10px; }
 .ts-app .bar { display: flex; gap: 6px; align-items: center; }
@@ -237,7 +237,7 @@ a { color: var(--z-link); }
 .ts-app .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .ts-app .dlg { background: var(--z-modal-bg); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 8px; }
 .ts-app .ntc { display: flex; gap: 6px; align-items: center; background: var(--surface-3); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 6px; }
-.ts-app .ntc .ic { width: 18px; height: 18px; border-radius: 6px; background: var(--accent-soft); color: var(--accent-bright); display: grid; place-items: center; flex: none; }
+.ts-app .ntc .ic { width: 18px; height: 18px; border-radius: var(--r-sm); background: var(--accent-soft); color: var(--accent-bright); display: grid; place-items: center; flex: none; }
 .ts-app .prog { height: 4px; background: var(--surface-5); border-radius: 2px; overflow: hidden; }
 .ts-app .prog i { display: block; height: 100%; width: 62%; background: var(--accent); border-radius: 2px; }
 :root[data-z-accent-mode="gradient"] .ts-app .prog i { background-image: var(--accent-grad); }

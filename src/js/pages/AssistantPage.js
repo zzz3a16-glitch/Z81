@@ -17,10 +17,10 @@ export async function AssistantPage() {
         <p style="color: var(--color-text-secondary);">اسألني عن مكتبتك، سجل المشاهدة، التوصيات، والإحصائيات</p>
       </div>
 
-      <div id="chat-container" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; min-height: 400px; max-height: 600px; overflow-y: auto; padding: 20px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 16px;">
+      <div id="chat-container" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-xl); min-height: 400px; max-height: 600px; overflow-y: auto; padding: 20px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 16px;">
         <div class="assistant-message" style="display: flex; gap: 12px; align-items: flex-start;">
           <div style="width: 36px; height: 36px; background: var(--color-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"></div>
-          <div style="background: var(--color-surface); padding: 12px 16px; border-radius: 16px 16px 16px 4px; max-width: 80%; line-height: 1.6;">
+          <div style="background: var(--color-surface); padding: 12px 16px; border-radius: var(--r-xl) 16px 16px 4px; max-width: 80%; line-height: 1.6;">
             <div style="font-weight: 500; margin-bottom: 4px;">مرحباً! أنا مساعد zPopcorn</div>
             <div style="font-size: 14px; color: var(--color-text-secondary);">يمكنني مساعدتك في:</div>
             <ul style="font-size: 14px; color: var(--color-text-secondary); margin: 8px 0; padding-right: 16px; list-style: disc;">
@@ -34,14 +34,14 @@ export async function AssistantPage() {
         </div>
       </div>
 
-      <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 12px; display: flex; gap: 12px; align-items: flex-end; position: sticky; bottom: 20px;">
+      <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 12px; display: flex; gap: 12px; align-items: flex-end; position: sticky; bottom: 20px;">
         <div style="flex: 1;">
-          <textarea id="assistant-input" placeholder="اكتب سؤالك هنا... مثال: آخر فيلم شاهدته" style="width: 100%; min-height: 44px; max-height: 120px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; padding: 12px; font-family: inherit; font-size: 14px; color: var(--color-text-primary); resize: none; outline: none;"></textarea>
+          <textarea id="assistant-input" placeholder="اكتب سؤالك هنا... مثال: آخر فيلم شاهدته" style="width: 100%; min-height: 44px; max-height: 120px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-md); padding: 12px; font-family: inherit; font-size: 14px; color: var(--color-text-primary); resize: none; outline: none;"></textarea>
           <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
-            <button class="quick-query" data-query="آخر فيلم شاهدته" style="padding: 6px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px; cursor: pointer; color: var(--color-text-secondary);">آخر فيلم شاهدته</button>
-            <button class="quick-query" data-query="اقترح فيلم أكشن" style="padding: 6px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px; cursor: pointer; color: var(--color-text-secondary);">اقترح فيلم أكشن</button>
-            <button class="quick-query" data-query="أكثر الأنواع التي أشاهدها" style="padding: 6px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px; cursor: pointer; color: var(--color-text-secondary);">إحصائياتي</button>
-            <button class="quick-query" data-query="ابحث عن Interstellar" style="padding: 6px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px; cursor: pointer; color: var(--color-text-secondary);">ابحث عن Interstellar</button>
+            <button class="quick-query" data-query="آخر فيلم شاهدته" style="padding: 6px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 12px; cursor: pointer; color: var(--color-text-secondary);">آخر فيلم شاهدته</button>
+            <button class="quick-query" data-query="اقترح فيلم أكشن" style="padding: 6px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 12px; cursor: pointer; color: var(--color-text-secondary);">اقترح فيلم أكشن</button>
+            <button class="quick-query" data-query="أكثر الأنواع التي أشاهدها" style="padding: 6px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 12px; cursor: pointer; color: var(--color-text-secondary);">إحصائياتي</button>
+            <button class="quick-query" data-query="ابحث عن Interstellar" style="padding: 6px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-xl); font-size: 12px; cursor: pointer; color: var(--color-text-secondary);">ابحث عن Interstellar</button>
           </div>
         </div>
         <button id="send-btn" class="btn btn-primary" style="height: 44px; padding: 0 20px; flex-shrink: 0;">إرسال</button>
@@ -57,7 +57,7 @@ export async function AssistantPage() {
  const div = document.createElement('div');
  div.style.cssText = 'display: flex; gap: 12px; align-items: flex-start; justify-content: flex-end;';
  div.innerHTML = `
-      <div style="background: var(--color-accent); color: white; padding: 12px 16px; border-radius: 16px 16px 4px 16px; max-width: 80%; line-height: 1.6; font-size: 14px;">${text}</div>
+      <div style="background: var(--color-accent); color: var(--accent-contrast); padding: 12px 16px; border-radius: var(--r-xl) 16px 4px 16px; max-width: 80%; line-height: 1.6; font-size: 14px;">${text}</div>
       <div style="width: 36px; height: 36px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;color:var(--color-text-muted)">${icon('users', 18)}</div>
  `;
  chatContainer.appendChild(div);
@@ -69,7 +69,7 @@ export async function AssistantPage() {
  div.style.cssText = 'display: flex; gap: 12px; align-items: flex-start;';
     
  let content = `
-      <div style="background: var(--color-surface); padding: 12px 16px; border-radius: 16px 16px 16px 4px; max-width: 80%; line-height: 1.6;">
+      <div style="background: var(--color-surface); padding: 12px 16px; border-radius: var(--r-xl) 16px 16px 4px; max-width: 80%; line-height: 1.6;">
         <div style="font-size: 14px; white-space: pre-wrap;">${response.message || 'لا توجد إجابة'}</div>
  `;
 
@@ -78,7 +78,7 @@ export async function AssistantPage() {
  content += `<div style="margin-top: 12px; display: grid; gap: 8px;">`;
  response.data.slice(0, 3).forEach(item => {
  const title = item.title || item.name || item.mediaId || 'عنصر';
- content += `<div style="padding: 8px 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 8px; font-size: 13px;">${title}</div>`;
+ content += `<div style="padding: 8px 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-md); font-size: 13px;">${title}</div>`;
  });
  content += `</div>`;
  }
@@ -87,7 +87,7 @@ export async function AssistantPage() {
  if (response.actions && response.actions.length > 0) {
  content += `<div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">`;
  response.actions.forEach(action => {
- content += `<button class="assistant-action" data-action='${JSON.stringify(action).replace(/'/g, "&#39;")}' style="padding: 6px 12px; background: var(--color-accent); color: white; border: none; border-radius: 16px; font-size: 12px; cursor: pointer;">${action.label}</button>`;
+ content += `<button class="assistant-action" data-action='${JSON.stringify(action).replace(/'/g, "&#39;")}' style="padding: 6px 12px; background: var(--color-accent); color: var(--accent-contrast); border: none; border-radius: var(--r-xl); font-size: 12px; cursor: pointer;">${action.label}</button>`;
  });
  content += `</div>`;
  }
@@ -138,7 +138,7 @@ export async function AssistantPage() {
  div.style.cssText = 'display: flex; gap: 12px; align-items: flex-start;';
  div.innerHTML = `
       <div style="width: 36px; height: 36px; background: var(--color-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"></div>
-      <div style="background: var(--color-surface); padding: 12px 16px; border-radius: 16px 16px 16px 4px;">
+      <div style="background: var(--color-surface); padding: 12px 16px; border-radius: var(--r-xl) 16px 16px 4px;">
         <div style="display: flex; gap: 4px;">
           <span style="width: 8px; height: 8px; background: var(--color-text-muted); border-radius: 50%; animation: bounce 1.4s infinite;"></span>
           <span style="width: 8px; height: 8px; background: var(--color-text-muted); border-radius: 50%; animation: bounce 1.4s infinite 0.2s;"></span>

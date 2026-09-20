@@ -84,9 +84,10 @@ export function guessCountry({ tvgCountry, group, name } = {}) {
     }
   }
   const up = `${group || ''} ${name || ''}`.toUpperCase();
-  const lead = /^\s*([A-Z]{2,3})\s*[|/-]/.exec(up); // "UK| Sports" dialect
+  // leading "UK | Sports" / "SA-Drama" dialects first, before the padded word scan
+  const lead = /^\s*([A-Z]{2,3})\s*(?:[|/\\-]|$)/.exec(up);
   if (lead) for (const [k, list] of Object.entries(COUNTRIES)) if (list.includes(lead[1])) return k;
-  for (const [k, list] of Object.entries(COUNTRIES)) if (list.some((t) => up.includes(` ${t} `) || up.startsWith(`${t} `) || up.endsWith(` ${t}`))) return k;
+  for (const [k, list] of Object.entries(COUNTRIES)) if (list.some((t) => ` ${up} `.includes(` ${t} `))) return k;
   return null;
 }
 
@@ -108,6 +109,24 @@ export function classify(group = '', name = '') {
   if (ADULT.some((t) => bag.includes(t))) return 'adult';
   for (const [cat, keys] of CATS) if (keys.some((k) => bag.includes(normText(k)))) return cat;
   return 'general';
+}
+
+/** quality tier from raw naming conventions (spec 33): 2=4K/UHD, 1=HD, 0=— */
+export function qualityOf(...fields) {
+  const t = fields.filter(Boolean).join(' ');
+  if (/\b(?:4k|uhd|2160p)\b/i.test(t)) return 2;
+  if (/\b(?:fhd|fullhd|1080p|720p|hd)\b/i.test(t)) return 1;
+  return 0;
+}
+
+/** one normalized haystack per channel, built at index time — never per keystroke (spec 34) */
+export function buildHay(c, sourceName = '') {
+  return [
+    normText(c.name), normText(c.group), normText(c.raw || ''),
+    normText(c.epg || ''), normText(c.lang || ''), normText(sourceName),
+    c.country ? normText(COUNTRY_NAMES[c.country] || '') + ' ' + c.country : '',
+    normText(c.cat || ''),
+  ].filter(Boolean).join(' ');
 }
 
 /* ───────────────────────── M3U / M3U8 ───────────────────────── */
@@ -178,6 +197,7 @@ export async function parseM3U(text, { sourceId, yieldEvery = 5000, onProgress, 
         cat: classify(group, name),
         opts: meta?.opts || {},
       };
+      chan._q = qualityOf(rawName, group); // tier BEFORE cleanTitle strips the tag
       seenStreams.set(url, chan);
       out.push(chan);
       chan.i = out.length - 1;
@@ -254,6 +274,7 @@ export function parseJSONPlaylist(text, { sourceId } = {}) {
       cat: classify(group, name),
       opts: { ...(it?.user_agent ? { 'http-user-agent': String(it.user_agent) } : {}) },
     };
+    chan._q = qualityOf(rawName, group);
     seen.set(url, chan);
     out.push(chan);
     chan.i = out.length - 1;

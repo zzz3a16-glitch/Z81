@@ -121,6 +121,20 @@ export async function LiveSettingsPage() {
 
   /* ── البيانات ── */
   let statsBox;
+  let memBox = null;
+  const paintMem = () => {
+    if (!memBox) return;
+    const m = live.memStats();
+    const dom = document.querySelectorAll('.z-page *').length;
+    memBox.innerHTML = `
+      <span title='${esc("إدخالات الفهرس")}'><b>${m.indexed.toLocaleString('ar-EG')}</b> مُفهرسة</span>
+      <span title='channels held in playlist docs'>~<b>${Math.max(1, Math.round(m.estBytes / 1024)).toLocaleString('ar-EG')}</b> KB قوائم</span>
+      <span><b>${m.epgWindows.toLocaleString('ar-EG')}</b> برنامج في ذاكرة الدليل</span>
+      <span><b>${m.logoCache}</b> شعار بالكاش</span>
+      <span title='virtualized: mounted nodes, not total'><b>${dom.toLocaleString('ar-EG')}</b> عقدة DOM</span>
+      <button class="btn btn-ghost btn-sm" data-mem>${icon('refresh', 13)} إعادة القياس</button>`;
+    memBox.querySelector('[data-mem]')?.addEventListener('click', paintMem);
+  };
   const paintStats = async () => {
     const [pl, fh, hc, ep] = await Promise.all([
       db.getAll('live_playlists').catch(() => []), db.getAll('live_favs').catch(() => []),
@@ -137,6 +151,7 @@ export async function LiveSettingsPage() {
   };
   block('البيانات', 'database', [
     row({ title: 'محتوى قسم LIVE', desc: 'محلي بالكامل — لا يُرسل أي شيء لأي خدمة.', control: (() => { statsBox = el('div', 'zlv-stats'); return statsBox; })() }),
+    row({ title: 'الذاكرة والعقد (قياس حي)', desc: 'الفهرس موحد لكل المصادر؛ الصفحة الافتراضية تركّب ما تراه فقط (§42).', control: (() => { memBox = el('div', 'zlv-stats zlv-mem'); return memBox; })() }),
     row({
       title: 'إعادة تحليل كل القوائم',
       desc: 'يُعيد تشغيل خط الأنابيب: جلب → تحليل → تطبيع → تصنيف → تخزين. المصادر تُحدَّث واحدة تلو الأخرى.',
@@ -207,8 +222,8 @@ export async function LiveSettingsPage() {
     }),
   ]);
 
-  paintStats();
-  const onEv = (e) => { if (['imported', 'sources', 'epg', 'reset'].includes(e.detail?.type)) paintStats(); };
+  paintStats().then(paintMem);
+  const onEv = (e) => { if (['imported', 'sources', 'epg', 'reset', 'progress'].includes(e.detail?.type)) paintStats().then(paintMem); };
   window.addEventListener('zpopcn-live', onEv);
   root.__zpopCleanup = () => window.removeEventListener('zpopcn-live', onEv);
   return root;

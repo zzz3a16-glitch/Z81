@@ -155,9 +155,11 @@ export function statusPill(src) {
     error: ['err', 'فشل', 'alert'], empty: ['warn', 'فارغ', 'inbox'], new: ['dim', 'جديد', 'sparkle'],
     invalid: ['err', 'صيغة غير صالحة', 'warning'],
     expired: ['warn', 'منتهية الصلاحية', 'clock'],
+    updated: ['ok', 'حُدّثت الآن', 'check'],
   };
   let key = src.status;
   if (key === 'ok' && src.stale) key = 'expired';
+  else if (key === 'ok' && src.lastSuccessAt && Date.now() - src.lastSuccessAt < 120000) key = 'updated';
   const [cls, label, ic] = map[key] || map.new;
   return `<span class="zlv-pill ${cls}">${icon(ic, 12)} ${esc(label)}</span>`;
 }

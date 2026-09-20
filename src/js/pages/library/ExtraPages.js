@@ -15,7 +15,7 @@ export class MediaTypesPage {
         <p class="page-subtitle">نظم مكتبتك بأنواع مخصصة</p>
         <button class="btn btn-primary" id="create-type">+ نوع مخصص</button>
       </div>
-      <div class="types-grid" id="types-grid"><div class="loading-skeleton">جاري التحميل...</div></div>
+      <div class="types-grid" id="types-grid"><div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div></div>
  `;
 
  setTimeout(async () => {
@@ -28,7 +28,7 @@ export class MediaTypesPage {
               <span style="display:block;margin-bottom:8px;color:var(--accent-bright)">${uiIcon(t.icon, 26)}</span>
               <h4>${t.name}</h4>
               <span style="display: inline-block; width: 12px; height: 12px; background: ${t.color}; border-radius: 50%; margin-top: 8px;"></span>
- ${t.custom ? '<span style="font-size: 0.7rem; background: var(--color-accent); color: white; padding: 2px 6px; border-radius: 999px; margin-right: 8px;">مخصص</span>' : ''}
+ ${t.custom ? '<span style="font-size: 0.7rem; background: var(--color-accent); color: var(--accent-contrast); padding: 2px 6px; border-radius: var(--r-full); margin-right: 8px;">مخصص</span>' : ''}
             </div>
  `).join('')}
         </div>
@@ -41,7 +41,7 @@ export class MediaTypesPage {
  const icon = prompt('أيقونة (emoji):', '') || '';
  await mediaTypeManager.createCustomType(name, icon);
  window.dispatchEvent(new CustomEvent('toast', { detail: { message: `تم إنشاء النوع "${name}"`, type: 'success' } }));
- container.querySelector('#types-grid').innerHTML = '<div class="loading-skeleton">جاري التحديث...</div>';
+ container.querySelector('#types-grid').innerHTML = '<div class="loading-skeleton" aria-busy="true" role="status" aria-label="جارٍ التحميل"><i></i><i style="width:78%"></i><i style="width:56%"></i><i style="width:66%"></i></div>';
  setTimeout(() => window.location.reload(), 500);
  });
 
@@ -111,7 +111,7 @@ export class CollectionBuilderPage {
  try {
  const col = await smartCollectionManager.createCollection(name, rules, { description: desc, icon: '' });
  container.querySelector('#builder-result').innerHTML = `
-            <div style="padding: 16px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: var(--radius-lg);">
+            <div style="padding: 16px; background: color-mix(in srgb, var(--color-success) 10%, transparent); border: 1px solid color-mix(in srgb, var(--color-success) 30%, transparent); border-radius: var(--radius-lg);">
  تم إنشاء المجموعة "${col.name}" مع ${col.items?.length || 0} عنصر
             </div>
  `;
@@ -160,7 +160,7 @@ export class LibraryHubPage {
  TOOLS.forEach(([id, ic, name, desc]) => {
  const a = el('button', 'z-toolcard');
  a.style.cssText = 'cursor:pointer;text-align:start;font:inherit;color:inherit;display:flex;gap:12px;align-items:center;padding:16px;background:var(--surface-2);border:1px solid var(--color-border);border-radius:var(--r-lg);transition:border-color .15s,transform .15s';
- a.innerHTML = `<span style="display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--surface-3);color:var(--accent-bright);flex-shrink:0">${icon(ic, 17)}</span>
+ a.innerHTML = `<span style="display:grid;place-items:center;width:36px;height:36px;border-radius: var(--r-lg);background:var(--surface-3);color:var(--accent-bright);flex-shrink:0">${icon(ic, 17)}</span>
         <span><b style="display:block;font-size:14px">${name}</b><span style="font-size:12px;color:var(--color-text-muted)">${desc}</span></span>
         <span style="margin-inline-start:auto;color:var(--color-text-faint)">${icon('chevL', 15)}</span>`;
  a.addEventListener('mouseenter', () => { a.style.borderColor = 'var(--accent-line)'; a.style.transform = 'translateY(-2px)'; });

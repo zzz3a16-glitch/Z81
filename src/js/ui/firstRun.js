@@ -118,7 +118,7 @@ function openFirstRun(router) {
             <div class="prev" style="background:${bg}">
               <div class="sbw" style="background:color-mix(in srgb, #fff 4%, ${bg})"></div>
               <div class="main">
-                <div class="bar" style="background:linear-gradient(90deg, ${accent}, color-mix(in srgb, ${accent} 35%, transparent));height:34px;border-radius:5px"></div>
+                <div class="bar" style="background:linear-gradient(90deg, ${accent}, color-mix(in srgb, ${accent} 35%, transparent));height:34px;border-radius: var(--r-sm)"></div>
                 <div style="display:flex;gap:5px">
                   <div class="bar" style="flex:1;height:34px;background:#161616;border:1px solid rgba(255,255,255,.07)"></div>
                   <div class="bar" style="flex:1;height:34px;background:#161616;border:1px solid rgba(255,255,255,.07)"></div>
