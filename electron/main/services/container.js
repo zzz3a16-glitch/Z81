@@ -20,6 +20,7 @@ import { BackupService } from '../services/BackupService.js';
 import { FavoritesService, HistoryService, CollectionsService } from '../services/ProfileServices.js';
 import { RecommendationService } from '../services/RecommendationService.js';
 import { PlayerService, SystemService } from '../services/SystemService.js';
+import { LiveService } from '../services/LiveService.js';
 
 export async function createContainer({ app, shell, dialog, windows }) {
   const paths = createPaths(app);
@@ -47,6 +48,7 @@ export async function createContainer({ app, shell, dialog, windows }) {
   const collections = new CollectionsService({ store, db, events });
   const recommendations = new RecommendationService({ store, db, tmdb, settings });
   const player = new PlayerService({ log });
+  const live = new LiveService({ store, paths, log, events, shell });
   const system = new SystemService({
     paths, db, log, settings, tmdb, images, app, shell,
   });
@@ -55,6 +57,6 @@ export async function createContainer({ app, shell, dialog, windows }) {
     app, shell, dialog, windows,
     paths, log, events, db, store, settings, tmdb, images, fs,
     library, imports, health, dupes, backup, favorites, history,
-    collections, recommendations, player, system,
+    collections, recommendations, player, system, live,
   };
 }

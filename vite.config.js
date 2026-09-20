@@ -39,11 +39,11 @@ export default defineConfig({
       apply: 'build',
       transformIndexHtml(html) {
         const csp = [
-          "default-src 'self' zpopcorn-media:",
+          "default-src 'self' zpopcorn-media: zpopcorn-live:",
           "script-src 'self'",
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
           "font-src 'self' https://fonts.gstatic.com",
-          "img-src 'self' data: blob: zpopcorn-media: https://image.tmdb.org",
+          "img-src 'self' data: blob: zpopcorn-media: zpopcorn-live: https://image.tmdb.org http: https:",
           "connect-src 'self'",
           "object-src 'none'",
           "frame-src 'none'",

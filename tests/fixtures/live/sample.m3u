@@ -1,0 +1,19 @@
+#EXTM3U
+#EXTINF:-1 tvg-id="al.jazeera.qa" tvg-name="قناة الجزيرة" tvg-logo="https://example.test/logos/jazeera.png" group-title="2- إخبارية",قناة الجزيرة [HD]
+http://stream.test/live/jazeera/index.m3u8
+#EXTINF:-1 tvg-id="mbc1.sa" tvg-name="MBC 1" tvg-country="SA" tvg-language="Arabic" tvg-logo="https://example.test/logos/mbc1.png" group-title="General",03. MBC 1 Iraq (SD)
+#EXTVLCOPT:http-user-agent=ZPopcorn/1.0
+#EXTHTTP:{"cookie":"sess=abc"}
+http://stream.test/live/mbc1/playlist.m3u8
+#EXTINF:-1,beIN SPORTS 1 HD
+#EXTGRP:رياضة
+http://stream.test/live/bein1/index.m3u8
+#EXTINF:-1 tvg-id="dup.stream",Duplicate Entry (1080p)
+http://stream.test/live/bein1/index.m3u8
+#EXTINF:-1 tvg-id="" this-line-is-malformed-attrs,
+http://stream.test/live/unamed/stream.ts
+#EXTINF:-1 tvg-id="news.us" group-title="US | News",CNN International
+http://stream.test/live/cnn/index.m3u8
+garbage line that is not a url
+#EXTINF:-1 tvg-id="orphan.end",Orphan at EOF
+not-a-url-here

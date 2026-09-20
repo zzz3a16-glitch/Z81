@@ -36,6 +36,12 @@ const DEFS = {
   tasteProfile:  { keyPath: 'id', indexes: {} },
   notifications: { keyPath: 'id', ref1: 'type', ref2: 'read',
                    indexes: { type: 'ref1', read: 'ref2' } },
+  // ---- LIVE platform (local-first IPTV) ----
+  live_sources:   { keyPath: 'id', ref1: 'name', indexes: { name: 'ref1' } },
+  live_playlists: { keyPath: 'sourceId', indexes: {} },
+  live_favs:      { keyPath: 'chanId', ref1: 'sourceId', indexes: { sourceId: 'ref1' } },
+  live_history:   { keyPath: 'chanId', ref1: 'sourceId', indexes: { sourceId: 'ref1' } },
+  live_epg:       { keyPath: 'key', ref1: 'sourceId', indexes: { sourceId: 'ref1' } },
   metadata:      { keyPath: 'key', indexes: {} },
   // 'settings' store is handled by SettingsService / settings table
 };

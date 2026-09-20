@@ -1,0 +1,10 @@
+#EXTINF:-1 broken comma
+#EXTHTTP:not json at all {
+http://stream.test/live/plain/index.m3u8
+random text here
+#EXTVLCOPT:http-user-agent=only-header
+#EXTINF:-1 tvg-id="x.y",No stream follows
+#EXTM3U appended in middle of file
+#EXTINF:-1 tvg-id="rel.z",Relative Child
+./child/stream.m3u8
+http://stream.test/live/late/index.m3u8

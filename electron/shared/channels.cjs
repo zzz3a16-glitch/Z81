@@ -166,6 +166,14 @@ const INVOKE_CHANNELS = {
     exportLegacy: 'zpopcorn:backup.exportLegacy',
     importLegacy: 'zpopcorn:backup.importLegacy',
   },
+  live: {
+    // IPTV plumbing: main owns network + external launch (renderer never touches sockets).
+    fetchText: 'zpopcorn:live.fetchText',
+    launch: 'zpopcorn:live.launch',
+    logoPath: 'zpopcorn:live.logoPath',
+    purge: 'zpopcorn:live.purge',
+    endSession: 'zpopcorn:live.endSession',
+  },
   player: {
     // Abstraction only this phase — see spec section 02 / 73. NO engine installed.
     capability: 'zpopcorn:player.capability',
@@ -207,6 +215,9 @@ const STORE_NAMES = [
   'movies', 'tvshows', 'episodes', 'people', 'watchHistory', 'watchProgress',
   'favorites', 'watchlists', 'watchlistItems', 'ratings', 'behaviorEvents',
   'tasteProfile', 'notifications', 'settings', 'metadata',
+  // LIVE platform (spec 04–12): sources registry, parsed playlists, favorites,
+  // watch history, EPG cache (one doc per source+day). All local-first.
+  'live_sources', 'live_playlists', 'live_favs', 'live_history', 'live_epg',
 ];
 
 const MASKED_SETTING_KEYS = ['tmdbApiKey'];

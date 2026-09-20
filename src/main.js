@@ -19,6 +19,7 @@ import './styles/identity.css';
 import './styles/theme-engine.css';
 import './styles/mobile.css';
 import './styles/assistant.css';
+import './styles/live.css';
 // Themes - All 8 themes + custom builder support
 import './styles/themes/midnight-neon.css';
 import './styles/themes/neon-lime.css';
@@ -119,3 +120,10 @@ window.addEventListener('unhandledrejection', (event) => {
 
 // Icon FX — hydrate the animated register (lord-icon engine, offline-safe fallbacks)
 import('./js/ui/IconFX.js').then((m) => { m.watchIconFX(); m.hydrateIconFX(document); }).catch(() => {});
+
+// Live Dock — companion for the external player; idle-mounted, hidden without a session
+{
+  const mount = () => import('./js/ui/live/LiveDock.js').then((m) => m.mountLiveDock()).catch(() => {});
+  if (window.requestIdleCallback) window.requestIdleCallback(mount, { timeout: 4000 });
+  else setTimeout(mount, 1800);
+}

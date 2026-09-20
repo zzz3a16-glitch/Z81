@@ -14,7 +14,7 @@ import { isDesktop, api } from '../../bridge.js';
 
 /* --------------------------- browser mode (legacy) --------------------------- */
 class IndexedDBStore {
-  constructor(name = 'zpopcorn-db', version = 1) {
+  constructor(name = 'zpopcorn-db', version = 2) {
     this.name = name;
     this.version = version;
     this.db = null;
@@ -34,6 +34,12 @@ class IndexedDBStore {
       { name: 'notifications', keyPath: 'id', indexes: [{ name: 'type', keyPath: 'type' }, { name: 'read', keyPath: 'read' }] },
       { name: 'settings', keyPath: 'key' },
       { name: 'metadata', keyPath: 'key' },
+      // LIVE platform stores (mirror of the desktop doc_store definitions)
+      { name: 'live_sources', keyPath: 'id', indexes: [{ name: 'name', keyPath: 'name' }] },
+      { name: 'live_playlists', keyPath: 'sourceId' },
+      { name: 'live_favs', keyPath: 'chanId', indexes: [{ name: 'sourceId', keyPath: 'sourceId' }] },
+      { name: 'live_history', keyPath: 'chanId', indexes: [{ name: 'sourceId', keyPath: 'sourceId' }] },
+      { name: 'live_epg', keyPath: 'key', indexes: [{ name: 'sourceId', keyPath: 'sourceId' }] },
     ];
   }
 

@@ -187,6 +187,13 @@ export function registerHandlers(S, broadcast) {
   on('zpopcorn:collections.items', (id) => str(id), (id, opts) => S.collections.items(id, opts || {}));
   on('zpopcorn:collections.evaluateRules', (rules) => json(rules), (rules) => S.collections.evaluateRules(rules));
 
+  // ---------------- live (IPTV platform) ----------------
+  on('zpopcorn:live.fetchText', (o) => { o && json(o); }, (o) => S.live.fetchText(o));
+  on('zpopcorn:live.launch', (o) => { o && json(o); }, (o) => S.live.launch(o));
+  on('zpopcorn:live.logoPath', (o) => { o && json(o); }, (o) => S.live.logoPath(o));
+  on('zpopcorn:live.purge', (o) => { o && json(o); }, (o) => S.live.purge(o));
+  on('zpopcorn:live.endSession', (o) => { o && json(o); }, (o) => S.live.endSession(o));
+
   // ---------------- inbox ----------------
   on('zpopcorn:inbox.list', (opts) => { opts && json(opts); }, (opts = {}) => S.imports.list(opts));
   on('zpopcorn:inbox.stats', () => {}, () => S.imports.stats());

@@ -261,6 +261,12 @@ export class App {
       '/analytics': () => this.renderPage(AnalyticsPage),
       '/recommendations': () => this.renderPage(RecommendationsPage),
       '/trending': () => this.renderPage(TrendingPage),
+      // LIVE — IPTV (lazy: whole module tree is route-split)
+      '/live': () => this.renderPage(() => import('./js/pages/live/LiveHome.js').then((m) => m.LiveHomePage())),
+      '/live/channels': (params, query) => this.renderPage(() => import('./js/pages/live/LiveChannels.js').then((m) => m.LiveChannelsPage(params, query))),
+      '/live/guide': () => this.renderPage(() => import('./js/pages/live/LiveGuide.js').then((m) => m.LiveGuidePage())),
+      '/live/sources': () => this.renderPage(() => import('./js/pages/live/LiveSources.js').then((m) => m.LiveSourcesPage())),
+      '/live/settings': () => this.renderPage(() => import('./js/pages/live/LiveSettings.js').then((m) => m.LiveSettingsPage())),
       // Advanced Library - Era & Time
       '/eras': () => this.renderPage(() => new EraPage().render()),
       '/era/:era': (params) => this.renderPage(() => new EraPage().render(params)),
@@ -349,6 +355,8 @@ export class App {
     if (!this.mainContent) return;
 
     try {
+      // Page teardown hook — pages may attach __zpopCleanup() for listeners/timers
+      try { this.mainContent.firstElementChild?.__zpopCleanup?.(); } catch { /* page owns its errors */ }
       // Clear current content
       this.mainContent.innerHTML = `
         <div style="display: flex; align-items: center; justify-content: center; min-height: 60vh;">

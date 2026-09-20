@@ -44,6 +44,11 @@ function boot() {
       scheme: 'zpopcorn-media',
       privileges: { standard: true, secure: true, supportFetchAPI: false, stream: true },
     },
+    {
+      // cached IPTV channel logos — files under <userData>/live/logos ONLY
+      scheme: 'zpopcorn-live',
+      privileges: { standard: true, secure: true, supportFetchAPI: false, stream: false },
+    },
   ]);
 
   app.on('second-instance', () => {
@@ -146,6 +151,20 @@ async function onReady() {
         'cache-control': 'public, max-age=604800, immutable',
       },
     });
+  });
+
+  // ---- live logo protocol: zpopcorn-live://<file> (strict filename allowlist) ----
+  protocol.handle('zpopcorn-live', async (request) => {
+    const name = decodeURIComponent(request.url.replace(/^zpopcorn-live:\/\//, '')).split('/')[0];
+    if (!/^[a-zA-Z0-9_.-]{1,80}\.(png|jpg|jpeg|webp|gif|svg|ico)$/.test(name) || name.includes('..')) {
+      return new Response('bad request', { status: 400 });
+    }
+    const file = path.join(S.paths.root, 'live', 'logos', name);
+    if (!fs.existsSync(file)) return new Response('not found', { status: 404 });
+    const ext = path.extname(file).toLowerCase();
+    const mime = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.gif': 'image/gif', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' }[ext] || 'application/octet-stream';
+    const buf = fs.readFileSync(file);
+    return new Response(buf, { status: 200, headers: { 'content-type': mime, 'content-length': String(buf.length), 'cache-control': 'public, max-age=86400' } });
   });
 
   // ---- window ----

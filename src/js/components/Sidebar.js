@@ -22,6 +22,14 @@ const GROUPS = [
     ['/awards', 'award', 'الجوائز'],
     ['/formats', 'hd', 'الصيغ والجودات'],
   ] },
+  { id: 'live', label: 'مباشر', items: [
+    ['/live', 'live', 'البث المباشر'],
+    ['/live/channels', 'grid', 'كل القنوات'],
+  ], more: [
+    ['/live/guide', 'guide', 'دليل القنوات'],
+    ['/live/sources', 'sources', 'مصادر IPTV'],
+    ['/live/settings', 'gear', 'إعدادات البث'],
+  ] },
   { id: 'library', label: 'مكتبتي', items: [
     ['/library', 'database', 'المكتبة'],
     ['/favorites', 'heart', 'المفضلة', 'favorites-badge'],
