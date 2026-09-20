@@ -8,6 +8,7 @@ import { tmdbClient } from '../services/tmdb/TMDBClient.js';
 import { backupManager } from '../services/backup/BackupManager.js';
 import { notificationService } from '../services/notification/NotificationService.js';
 import { db } from '../services/storage/Database.js';
+import { el } from '../ui/primitives.js';
 import { uiIcon } from '../ui/primitives.js';
 import { securityManager } from '../services/security/SecurityManager.js';
 import { performanceManager } from '../services/performance/PerformanceManager.js';
@@ -273,6 +274,13 @@ function createGeneralSection() {
 }
 
 async function createAppearanceSection() {
+ // Theme Studio (engine v2) — full visual control surface
+ try {
+  const { ThemeStudio } = await import('../theme/ThemeStudio.js');
+  const studio = el('div', '');
+  studio.appendChild(ThemeStudio());
+  return studio;
+ } catch (e) { console.warn('Theme Studio unavailable, legacy picker', e); }
  const div = document.createElement('div');
  const currentTheme = themeManager.getTheme();
  const allThemes = themeManager.getThemeList();

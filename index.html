@@ -18,6 +18,28 @@
       if (typeof t === 'string') document.documentElement.setAttribute('data-theme', t);
       var d = localStorage.getItem('zpopcorn-density'); if (d) document.documentElement.setAttribute('data-density', d);
       if (localStorage.getItem('zpopcorn-sb-rail') === '1') document.documentElement.setAttribute('data-sidebar', 'rail');
+      /* theme-engine v2: pre-paint density/scale/accent/canvas from saved config */
+      var ap = JSON.parse(localStorage.getItem('zpopcorn-appearance') || 'null');
+      if (ap && ap.enabled !== false) {
+        var R = document.documentElement;
+        if (ap.density) R.setAttribute('data-density', ap.density);
+        if (ap.glass) R.setAttribute('data-z-glass', ap.glass);
+        if (ap.cards && ap.cards.style) R.setAttribute('data-z-card', ap.cards.style);
+        if (ap.accentMode) R.setAttribute('data-z-accent-mode', ap.accentMode);
+        if (ap.uiScale && ap.uiScale !== 1) R.style.zoom = ap.uiScale;
+        if (ap.background && ap.background.type === 'gradient') {
+          var g = ap.background.gradient || {};
+          R.style.setProperty('--z-bg-gradient', 'linear-gradient(' + (g.angle || 160) + 'deg,' + (g.from || '#0B0B0D') + ',' + (g.to || '#141417') + ')');
+          R.setAttribute('data-z-bg', 'gradient');
+        } else if (ap.background && ap.background.type) R.setAttribute('data-z-bg', ap.background.type);
+        var c = (ap.colors || {}); var A = ap.accent || {};
+        if (c['bg-app']) R.style.setProperty('--surface-0', c['bg-app']);
+        if (A.primary) { R.style.setProperty('--accent', A.primary); }
+        if (A.secondary) R.style.setProperty('--accent-2', A.secondary);
+        if (ap.accentMode === 'gradient' && A.primary)
+          R.style.setProperty('--accent-grad', 'linear-gradient(' + (A.angle || 135) + 'deg,' + A.primary + ',' + (A.secondary || A.primary) + ')');
+        if (ap.radius && ap.radius.base != null && ap.radius.preset !== 'sharp') R.style.setProperty('--r-lg', ap.radius.base + 'px');
+      }
     } catch (e) { /* defaults */ }
   </script>
 </head>

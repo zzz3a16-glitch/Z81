@@ -166,28 +166,27 @@ function buildHero(mount, items) {
 
 /* =================== SECTIONS (each hides when empty) =================== */
 async function renderSections(body) {
-  const tasks = [
-    ['continue', loadContinue],
-    ['recent', loadRecentlyAdded],
-    ['watched', loadRecentlyWatched],
-    ['top10', loadTop10],
-    ['later', loadWatchLater],
-    ['recs', loadRecommended],
-    ['trending', loadTrending],
-    ['health', loadHealthStrip],
-  ];
+  const FNS = {
+    continue: loadContinue, recent: loadRecentlyAdded, watched: loadRecentlyWatched,
+    top10: loadTop10, later: loadWatchLater, recs: loadRecommended,
+    trending: loadTrending, health: loadHealthStrip,
+  };
+  let eng = null;
+  try { eng = (await import('../theme/ThemeEngine.js')).themeEngine; } catch { /* defaults */ }
+  const order = eng ? eng.homeOrder().filter((id) => FNS[id]) : Object.keys(FNS);
+  const tasks = order.map((id) => [id, FNS[id]]);
   // reserve skeleton placeholders per section while resolving, then swap/remove
   const mounts = new Map();
-  for (const [id, fn] of tasks) {
+  for (const [id] of tasks) {
     const holder = el('div', '');
-    holder.appendChild(elRailSkeleton());
+    if (id !== 'hero') holder.appendChild(elRailSkeleton());
     mounts.set(id, holder);
     body.appendChild(holder);
   }
   await Promise.all(tasks.map(async ([id, fn]) => {
     const holder = mounts.get(id);
     try {
-      const node = await fn();
+      const node = await fn(eng ? eng.sectionCount(id) : undefined);
       holder.replaceChildren(...(node ? [node] : []));
       if (!node) holder.remove();
     } catch { holder.remove(); }
@@ -212,7 +211,7 @@ function railSection(title, cards, opts = {}) {
   return s.root;
 }
 
-async function loadContinue() {
+async function loadContinue(n = 12) {
   let rows = [];
   if (isDesktop) {
     try {
@@ -225,7 +224,7 @@ async function loadContinue() {
     rows = (prog || []).filter((p) => p.percentage > 2 && p.percentage < 96).slice(-12).reverse();
   }
   if (!rows.length) return null;
-  const cards = rows.slice(0, 12).map((p) => {
+  const cards = rows.slice(0, n).map((p) => {
     const media = {
       id: p.mediaId || p.media_id || p.id, title: p.title || '', media_type: p.mediaType || p.media_type || 'movie',
       backdrop_path: p.backdrop_path, poster_path: p.poster_path,
@@ -238,23 +237,23 @@ async function loadContinue() {
   return railSection('متابعة المشاهدة', cards, { subtitle: 'من حيث توقفت', more: '/continue-watching' });
 }
 
-async function loadRecentlyAdded() {
+async function loadRecentlyAdded(n = 14) {
   const [movies, tv] = await Promise.all([
     db.getAll('movies', 500).catch(() => []),
     db.getAll('tvshows', 500).catch(() => []),
   ]);
   const rows = [...(movies || []), ...(tv || [])]
     .sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0))
-    .slice(0, 14);
+    .slice(0, n);
   if (!rows.length) return null;
   return railSection('أضيف حديثاً', rows.map((m) => createMediaCard(normalize(m), { variant: 'wide' })), { wide: true, more: '/library' });
 }
 
-async function loadRecentlyWatched() {
+async function loadRecentlyWatched(n = 12) {
   let rows = [];
   try {
     const hist = await db.getAll('watchHistory', 24).catch(() => []);
-    rows = (hist || []).slice(-12).reverse();
+    rows = (hist || []).slice(-n).reverse();
   } catch { rows = []; }
   if (!rows.length) return null;
   const cards = rows.map((h) => createMediaCard({
@@ -282,28 +281,28 @@ async function loadTop10() {
   return s.root;
 }
 
-async function loadWatchLater() {
+async function loadWatchLater(n = 14) {
   let items = [];
   try {
     const { watchlistManager } = await import('../services/watchlist/WatchlistManager.js');
     const list = await watchlistManager.getList('watch-later');
-    items = (list?.items || []).slice(-14).reverse();
+    items = (list?.items || []).slice(-n).reverse();
   } catch { items = []; }
   if (!items.length) return null;
   return railSection('المشاهدة لاحقاً', items.map((m) => createMediaCard(normalize({ ...m, ...m.data }), { variant: 'poster' })), { more: '/watch-later' });
 }
 
-async function loadRecommended() {
+async function loadRecommended(n = 14) {
   let recs = [];
-  try { recs = (await recommendationEngine.getRecommendations(14)) || []; } catch { recs = []; }
+  try { recs = (await recommendationEngine.getRecommendations(n)) || []; } catch { recs = []; }
   if (!recs.length) return null;
   return railSection('موصى به لذوقك', recs.map((m) => createMediaCard(normalize(m), { variant: 'poster' })), { subtitle: 'يتعلّم من مشاهداتك' });
 }
 
-async function loadTrending() {
+async function loadTrending(n = 14) {
   let tr = null;
   try { tr = await tmdbClient.trending('all', 'week').catch(() => null); } catch { tr = null; }
-  const results = (tr?.results || []).filter((m) => m.media_type !== 'person').slice(0, 14);
+  const results = (tr?.results || []).filter((m) => m.media_type !== 'person').slice(0, n);
   if (!results.length) return null;
   return railSection('رائج هذا الأسبوع', results.map((m) => createMediaCard(normalize(m), { variant: 'poster' })));
 }

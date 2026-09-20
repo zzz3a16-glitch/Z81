@@ -7,6 +7,7 @@ import { notificationService } from '../services/notification/NotificationServic
 import { themeManager } from '../services/theme/ThemeManager.js';
 import { icon } from '../ui/icons.js';
 import { esc } from '../ui/primitives.js';
+import { themeEngine, PRESETS } from '../theme/ThemeEngine.js';
 
 const ROUTE_TITLES = [
   ['/', 'الرئيسية'], ['/movies', 'أفلام'], ['/tv', 'مسلسلات'], ['/anime', 'أنمي'],
@@ -205,7 +206,60 @@ export function createHeader() {
   header.querySelector('#tb-nclear').addEventListener('click', async () => { await notificationService.clear?.(); paintBadge(); panel.classList.remove('open'); });
 
   /* theme quick cycle → jump to appearance (spec 34 owns switching) */
-  header.querySelector('#tb-theme').addEventListener('click', () => router.navigate('/settings/appearance'));
+  /* ---- quick theme switcher popover (spec 39) ---- */
+  let qts = null;
+  const qtsClose = () => { qts?.remove(); qts = null; document.removeEventListener('pointerdown', qtsOutside, true); };
+  const qtsOutside = (e) => { if (qts && !qts.contains(e.target) && !e.target.closest('#tb-theme')) qtsClose(); };
+  function qtsOpen(anchor) {
+    qtsClose();
+    qts = document.createElement('div');
+    qts.className = 'z-qts'; qts.setAttribute('role', 'menu');
+    const c = themeEngine.get();
+    const all = [...PRESETS, ...c.customThemes.map((t) => ({ ...t, custom: true }))];
+    const activeId = themeEngine.activePresetId();
+    qts.innerHTML = '<div data-role="title">مظاهر zPopcorn</div>';
+    all.forEach((t) => {
+      const conf = t.config || {};
+      const bg = conf.colors?.['bg-app'] || '#0B0B0D';
+      const acc = conf.accent?.primary || '#7B6CF6';
+      const acc2 = conf.accent?.secondary || '#3FDCF2';
+      const b = document.createElement('button');
+      b.type = 'button';
+      if (activeId === t.id) b.classList.add('on');
+      b.innerHTML = `<span class="sw" style="background:${bg}"><i style="background:${acc}"></i><i style="background:${acc2}"></i></span><span>${esc(t.name)}</span>${t.custom ? '<span class="z-pill" style="margin-inline-start:auto;font-size:9px">مخصص</span>' : ''}`;
+      b.addEventListener('click', () => {
+        themeEngine.applyPreset(t.id);
+        window.dispatchEvent(new CustomEvent('showtoast', { detail: { message: `طُبِّق «${t.name}»`, type: 'success' } }));
+        qtsClose();
+      });
+      qts.appendChild(b);
+    });
+    qts.insertAdjacentHTML('beforeend', `<div class="sep"></div><button type="button" class="more">${icon('sliders', 14)} استوديو المظهر الكامل</button>`);
+    qts.querySelector('.more').addEventListener('click', () => { qtsClose(); router.navigate('/settings/appearance'); });
+    document.body.appendChild(qts);
+    const r = anchor.getBoundingClientRect();
+    qts.style.top = `${r.bottom + 8}px`;
+    qts.style.left = `${Math.max(8, Math.min(r.left, innerWidth - 312))}px`;
+    qts.style.right = 'auto';
+    setTimeout(() => document.addEventListener('pointerdown', qtsOutside, true), 0);
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') qtsClose(); }, { once: true });
+  }
+  header.querySelector('#tb-theme').addEventListener('click', (e) => {
+    if (qts) { qtsClose(); return; }
+    qtsOpen(e.currentTarget);
+  });
+  window.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 't') {
+      e.preventDefault();
+      const c = themeEngine.get();
+      const all = [...PRESETS, ...c.customThemes];
+      if (!all.length) return;
+      const cur = all.findIndex((x) => x.id === themeEngine.activePresetId());
+      const next = all[(cur + 1) % all.length];
+      themeEngine.applyPreset(next.id);
+      window.dispatchEvent(new CustomEvent('showtoast', { detail: { message: `السمة: «${next.name}»`, type: 'info', duration: 1400 } }));
+    }
+  });
 
   /* Ctrl+K focuses (native menu also emits navigate on desktop) */
   const focusSearch = () => { input.focus(); input.select(); };

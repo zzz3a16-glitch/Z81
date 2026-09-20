@@ -16,6 +16,7 @@ import './styles/components.css';
 import './styles/library.css';
 import './styles/shell.css';
 import './styles/identity.css';
+import './styles/theme-engine.css';
 import './styles/mobile.css';
 import './styles/assistant.css';
 // Themes - All 8 themes + custom builder support
@@ -98,6 +99,10 @@ __bridgeReady.then(() => {
     if (t) document.documentElement.setAttribute('data-theme', typeof t === 'string' ? t : t.id || 'midnight-neon');
   } catch { /* keep initial */ }
 });
+// Theme engine v2 — load config, custom fonts, and paint before first render
+import { themeEngine } from './js/theme/ThemeEngine.js';
+themeEngine.init().catch(() => { /* defaults remain */ });
+
 // Start when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initApp);

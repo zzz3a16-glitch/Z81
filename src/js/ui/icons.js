@@ -49,6 +49,8 @@ const P = {
   folderOpen: '<path d="M3.5 17.5V6.5a2 2 0 0 1 2-2h4l2 2h5a2 2 0 0 1 2 2v1M3.2 10.5h17.2l-2.2 7.7a1.6 1.6 0 0 1-1.6 1.1H7a1.6 1.6 0 0 1-1.6-1.2z"/>',
   snap: '<rect x="3.5" y="6.5" width="17" height="13" rx="2.5"/><path d="m8.2 6.5 1.4-2.2h4.8l1.4 2.2"/><circle cx="12" cy="13" r="3.4"/>',
   menu: '<path d="M4 7h16M4 12h16M4 17h10"/>',
+  type: '<path d="M5 7V5.5h14V7M12 5.5V19m-2.2 0h4.4"/>',
+  eyeOff: '<path d="m4 4 16 16M9.9 5.2A9.6 9.6 0 0 1 12 5c5 0 8.5 4.2 9.6 6.2a12 12 0 0 1-2.2 2.8M6.4 7.3C4.6 8.6 3.3 10.3 2.4 11.9 3.5 13.9 7 18 12 18a9.4 9.4 0 0 0 3.5-.7"/><path d="M9.9 10a3 3 0 0 0 4.2 4.2"/>',
   list: '<path d="M8.5 6.5h11M8.5 12h11M8.5 17.5h11M4.2 6.5h.6M4.2 12h.6M4.2 17.5h.6"/>',
   grid: '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
   rows: '<rect x="4" y="5" width="16" height="4.5" rx="1.5"/><rect x="4" y="14.5" width="16" height="4.5" rx="1.5"/>',

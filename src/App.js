@@ -7,6 +7,7 @@ import { router } from './js/router.js';
 import { themeManager } from './js/services/theme/ThemeManager.js';
 import { createSidebar } from './js/components/Sidebar.js';
 import { icon } from './js/ui/icons.js';
+import { themeEngine } from './js/theme/ThemeEngine.js';
 import { createHeader } from './js/components/Header.js';
 import { db } from './js/services/storage/Database.js';
 import bridge from './js/bridge.js';
@@ -313,6 +314,36 @@ export class App {
     router.init();
   }
 
+  /** Page-specific appearance overrides (spec 36/37) */
+  applyPageAppearance() {
+    const main = this.mainContent;
+    if (!main) return;
+    if (this.__ovProps) for (const prop of this.__ovProps) main.style.removeProperty(prop);
+    this.__ovProps = null;
+    main.removeAttribute('data-density-ov');
+    main.removeAttribute('data-z-card');
+    this.__ovChip?.remove(); this.__ovChip = null;
+    let path = '/';
+    try { path = window.router?.currentRoute?.path || '/'; } catch { /* */ }
+    let ent = null;
+    try { ent = themeEngine.pageOverride(path); } catch { return; }
+    if (!ent) return;
+    const vars = themeEngine.varsForOverride(ent);
+    this.__ovProps = Object.keys(vars);
+    for (const [k, v] of Object.entries(vars)) if (v) main.style.setProperty(k, v);
+    if (ent.density) main.setAttribute('data-density-ov', ent.density);
+    if (ent.cardStyle) main.setAttribute('data-z-card', ent.cardStyle);
+    const chip = document.createElement('div');
+    chip.className = 'z-ovchip';
+    chip.innerHTML = `${icon('layers', 13)}<span>تجاوز مظهر خاص بهذه الصفحة</span><button type="button">${icon('x', 11)} إلغاء التجاوز</button>`;
+    chip.querySelector('button').addEventListener('click', () => {
+      try { themeEngine.clearPageOverride(path); } catch { /* */ }
+      this.applyPageAppearance();
+    });
+    document.body.appendChild(chip);
+    this.__ovChip = chip;
+  }
+
   async renderPage(pageFactory) {
     if (!this.mainContent) return;
 
@@ -333,6 +364,7 @@ export class App {
       if (page?.classList) page.classList.add('z-page');
       this.mainContent.appendChild(page);
       window.scrollTo({ top: 0 });
+      this.applyPageAppearance();
 
       // Trigger animations
       requestAnimationFrame(() => {
