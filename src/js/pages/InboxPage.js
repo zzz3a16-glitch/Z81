@@ -7,22 +7,13 @@
 import { isDesktop, api } from '../bridge.js';
 import { notificationService } from '../services/notification/NotificationService.js';
 import { getTMDBImageUrl } from '../services/tmdb/TMDBImage.js';
+import { icon } from '../ui/icons.js';
 
 const toast = (o) => notificationService.showToast(o);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const svgIcon = (paths, size = 15) =>
-  `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
-
-const ICONS = {
-  inbox: '<path d="M3 12l3-7h12l3 7v6a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18z"/><path d="M3 12h5l1.5 2.5h5L16 12h5"/>',
-  scan: '<path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M4 12h16"/>',
-  ok: '<path d="M5 13l4 4L19 7"/>',
-  no: '<path d="M6 6l12 12M18 6L6 18"/>',
-  folder: '<path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
-  refresh: '<path d="M20 11a8 8 0 1 0-2.3 6.3"/><path d="M20 5v6h-6"/>',
-  defer: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
-  match: '<circle cx="12" cy="12" r="4.5"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/>',
-};
+// zPopcorn icon family — InboxPage never ships its own glyphs (spec: one icon language)
+const FAM = { inbox: 'inbox', scan: 'scan', ok: 'check', no: 'x', folder: 'folder', refresh: 'refresh', defer: 'clock', match: 'match', edit: 'edit' };
+const svgIcon = (key, size = 15) => icon(FAM[key] || 'disc', size, { stroke: 1.8 });
 
 const needsReview = (it) => !it.tmdb_id || !!it.duplicate_of || Number(it.confidence || 0) < 60;
 const fmtSE = (s, e) => (s == null ? '' : `S${String(s).padStart(2, '0')}E${String(e ?? 0).padStart(2, '0')}`);
@@ -52,7 +43,7 @@ class InboxView {
     this.root.innerHTML = `
       <div class="inbox-head">
         <div>
-          <h1 class="inbox-title">${svgIcon(ICONS.inbox, 21)} صندوق الوارد</h1>
+          <h1 class="inbox-title">${svgIcon('inbox', 21)} صندوق الوارد</h1>
           <p class="inbox-sub" id="inbox-summary">لا شيء معلّق بعد</p>
         </div>
         <div class="inbox-actions" id="inbox-actions"></div>
@@ -95,8 +86,8 @@ class InboxView {
 
     this.root.querySelector('#inbox-actions').innerHTML = `
       <select id="inbox-source" class="input input-sm" aria-label="مصدر الفحص" style="min-width:180px"></select>
-      <button class="btn btn-secondary btn-sm" id="inbox-scan-btn">${svgIcon(ICONS.scan, 14)} فحص الآن</button>
-      <button class="btn btn-ghost btn-sm" id="inbox-clear-btn">${svgIcon(ICONS.refresh, 14)} تنظيف المؤكَّد</button>
+      <button class="btn btn-secondary btn-sm" id="inbox-scan-btn">${svgIcon('scan', 14)} فحص الآن</button>
+      <button class="btn btn-ghost btn-sm" id="inbox-clear-btn">${svgIcon('refresh', 14)} تنظيف المؤكَّد</button>
     `;
 
     this.root.insertAdjacentHTML('beforeend', '<div class="inbox-sources" id="inbox-sources"></div>');
@@ -176,7 +167,7 @@ class InboxView {
     if (!strip || !isDesktop) return;
     const chips = this.sources.map((s) => `
       <span class="src-chip${s.enabled === false ? ' off' : ''}" data-id="${s.id}">
-        ${svgIcon(ICONS.folder, 13)}
+        ${svgIcon('folder', 13)}
         <b>${esc(s.label || s.name || s.path.split(/[\\/]/).pop())}</b>
         <em dir="ltr" title="${esc(s.path)}">${esc(s.path)}</em>
         ${s.enabled === false ? '<i class="src-off">معطّل</i>' : ''}
@@ -334,7 +325,7 @@ class InboxView {
             <span class="muted">· ${kindLabel}</span>
           </h3>
           <div class="inbox-file" dir="ltr" title="${esc(it.path)}">${esc(shortPath(it.filename))}${it.size_bytes ? ` · ${fmtSize(it.size_bytes)}` : ''}</div>
-          ${match ? `<div class="inbox-match">${svgIcon(ICONS.match, 13)} TMDB: ${esc(match.title || match.name || '')}${match.release_date ? ` (${String(match.release_date).slice(0, 4)})` : ''}</div>` : '<div class="inbox-nomatch">لا توجد مطابقة TMDB — يمكن البحث مجدداً أو التأكيد يدوياً</div>'}
+          ${match ? `<div class="inbox-match">${svgIcon('match', 13)} TMDB: ${esc(match.title || match.name || '')}${match.release_date ? ` (${String(match.release_date).slice(0, 4)})` : ''}</div>` : '<div class="inbox-nomatch">لا توجد مطابقة TMDB — يمكن البحث مجدداً أو التأكيد يدوياً</div>'}
           <div class="inbox-flags">${flags.join('')}</div>
         </div>
         <div class="inbox-side">
@@ -349,15 +340,15 @@ class InboxView {
           </div>
           <div class="inbox-card-actions">
             ${this.status === 'pending' ? `
-              <button class="btn btn-primary btn-sm" data-act="confirm" data-id="${it.id}">${svgIcon(ICONS.ok, 13)} تأكيد</button>
-              <button class="btn btn-ghost btn-sm" data-act="defer" data-id="${it.id}" title="تأجيل">${svgIcon(ICONS.defer, 13)}</button>
-              <button class="btn btn-ghost btn-sm" data-act="ignore" data-id="${it.id}" title="رفض">${svgIcon(ICONS.no, 13)}</button>
+              <button class="btn btn-primary btn-sm" data-act="confirm" data-id="${it.id}">${svgIcon('ok', 13)} تأكيد</button>
+              <button class="btn btn-ghost btn-sm" data-act="defer" data-id="${it.id}" title="تأجيل">${svgIcon('defer', 13)}</button>
+              <button class="btn btn-ghost btn-sm" data-act="ignore" data-id="${it.id}" title="رفض">${svgIcon('no', 13)}</button>
             ` : `
-              <button class="btn btn-secondary btn-sm" data-act="confirm" data-id="${it.id}">${svgIcon(ICONS.ok, 13)} تأكيد الآن</button>
+              <button class="btn btn-secondary btn-sm" data-act="confirm" data-id="${it.id}">${svgIcon('ok', 13)} تأكيد الآن</button>
             `}
             ${!it.tmdb_id ? `<button class="btn btn-ghost btn-sm" data-act="rematch" data-id="${it.id}">بحث TMDB</button>` : ''}
-            <button class="btn btn-ghost btn-sm" data-act="edit" data-id="${it.id}" title="تصحيح">${svgIcon(ICONS.edit, 13)}</button>
-            <button class="btn btn-ghost btn-sm" data-act="show" data-id="${it.id}" title="موقع الملف">${svgIcon(ICONS.folder, 13)}</button>
+            <button class="btn btn-ghost btn-sm" data-act="edit" data-id="${it.id}" title="تصحيح">${svgIcon('edit', 13)}</button>
+            <button class="btn btn-ghost btn-sm" data-act="show" data-id="${it.id}" title="موقع الملف">${svgIcon('folder', 13)}</button>
           </div>
         </div>
       </article>`;

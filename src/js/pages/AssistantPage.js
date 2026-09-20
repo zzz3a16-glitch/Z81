@@ -4,6 +4,7 @@
  */
 
 import { mediaAssistant } from '../services/assistant/MediaAssistant.js';
+import { icon } from '../ui/icons.js';
 
 export async function AssistantPage() {
  const container = document.createElement('div');
@@ -57,7 +58,7 @@ export async function AssistantPage() {
  div.style.cssText = 'display: flex; gap: 12px; align-items: flex-start; justify-content: flex-end;';
  div.innerHTML = `
       <div style="background: var(--color-accent); color: white; padding: 12px 16px; border-radius: 16px 16px 4px 16px; max-width: 80%; line-height: 1.6; font-size: 14px;">${text}</div>
-      <div style="width: 36px; height: 36px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;color:var(--color-text-muted)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></div>
+      <div style="width: 36px; height: 36px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;color:var(--color-text-muted)">${icon('users', 18)}</div>
  `;
  chatContainer.appendChild(div);
  chatContainer.scrollTop = chatContainer.scrollHeight;

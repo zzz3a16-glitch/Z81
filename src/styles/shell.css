@@ -371,3 +371,44 @@
   .z-detail .head { grid-template-columns: minmax(0,1fr) !important; }
   .z-detail .poster-fr { max-width: 160px; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   ICON STATE LANGUAGE — zPopcorn family (v2 icons)
+   One behavior contract for every .zi glyph across the app:
+   default → hover (accent-bright) → active (settle scale) →
+   pressed ripple-free, disabled fades, focus rides the parent ring.
+   Motion stays subtle: color + 0.9 scale only, never glow.
+   ═════════════════════════════════════════════════════════════════ */
+svg.zi {
+  transition: color var(--dur-1, 110ms) var(--ease-std, ease),
+              transform var(--dur-1, 110ms) var(--ease-out, ease),
+              opacity var(--dur-1, 110ms) linear;
+  flex-shrink: 0;
+}
+/* hover — the icon lifts into the accent */
+.z-iconbtn:hover:not(:disabled) .zi,
+.btn-ghost:hover:not(:disabled) .zi,
+.z-sb-item:hover .zi,
+.z-qts button:hover:not(:disabled) .zi,
+.card-link:hover .zi,
+a.z-ctl:hover:not(:disabled) .zi { color: var(--accent-bright, #B18CFF); }
+/* active / pressed — tiny optical settle, no glow, no bounce */
+.z-iconbtn:active:not(:disabled) .zi,
+.btn:not(.btn-primary):active:not(:disabled) .zi,
+button.z-ctl:active:not(:disabled) .zi { transform: scale(.9); }
+/* selected — the accent holds */
+.z-sb-item.active .zi, .chip.active .zi, .z-qts button.on .zi { color: var(--accent, #7B6CF6); }
+/* disabled — first thing to go quiet */
+.z-iconbtn:disabled .zi, .btn:disabled .zi, button:disabled .zi, a[aria-disabled="true"] .zi {
+  color: var(--color-text-faint, #55566b) !important;
+}
+/* focus — no separate icon treatment; parent's focus ring governs */
+.z-iconbtn:focus-visible, .btn:focus-visible { outline-color: var(--accent, #7B6CF6); }
+/* loading — self-spinning by convention (icon('loading') adds .spin) */
+svg.zi.spin { animation: zi-spin .9s linear infinite; transform-origin: 50% 50%; }
+@keyframes zi-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  svg.zi.spin { animation-duration: 3s; }
+  svg.zi { transition: none; }
+  .z-iconbtn:active:not(:disabled) .zi, .btn:not(.btn-primary):active:not(:disabled) .zi { transform: none; }
+}

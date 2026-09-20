@@ -162,7 +162,7 @@ export class LibraryHubPage {
  a.style.cssText = 'cursor:pointer;text-align:start;font:inherit;color:inherit;display:flex;gap:12px;align-items:center;padding:16px;background:var(--surface-2);border:1px solid var(--color-border);border-radius:var(--r-lg);transition:border-color .15s,transform .15s';
  a.innerHTML = `<span style="display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--surface-3);color:var(--accent-bright);flex-shrink:0">${icon(ic, 17)}</span>
         <span><b style="display:block;font-size:14px">${name}</b><span style="font-size:12px;color:var(--color-text-muted)">${desc}</span></span>
-        <span style="margin-inline-start:auto;color:var(--color-text-faint)">${icon('chevronL', 15)}</span>`;
+        <span style="margin-inline-start:auto;color:var(--color-text-faint)">${icon('chevL', 15)}</span>`;
  a.addEventListener('mouseenter', () => { a.style.borderColor = 'var(--accent-line)'; a.style.transform = 'translateY(-2px)'; });
  a.addEventListener('mouseleave', () => { a.style.borderColor = 'var(--color-border)'; a.style.transform = ''; });
  a.addEventListener('click', () => window.router.navigate('/' + id));

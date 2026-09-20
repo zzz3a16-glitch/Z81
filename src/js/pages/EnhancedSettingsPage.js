@@ -507,7 +507,7 @@ const playerPhaseBanner = () => `
  background:color-mix(in srgb, var(--color-warning, #f59e0b) 10%, transparent);
  border:1px solid color-mix(in srgb, var(--color-warning, #f59e0b) 40%, transparent);
  font-size:13px;color:var(--color-text-secondary);">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-warning,#f59e0b)" stroke-width="1.8" stroke-linecap="round" style="flex-shrink:0"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+    ${'<span style="color:var(--color-warning);flex-shrink:0;display:inline-flex">' + icon('info', 18, { stroke: 1.8 }) + '</span>'}
     <span>تُحفظ هذه الإعدادات وتُطبَّق تلقائياً عند إضافة محرك التشغيل — المشغّل مرحلة قادمة منفصلة، ولن تعمل هذه الخيارات قبلها.</span>
   </div>`;
 

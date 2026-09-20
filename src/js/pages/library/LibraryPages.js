@@ -7,6 +7,7 @@ import { eraManager, franchiseManager, smartCollectionManager, healthCenter, sto
 import { awardManager, formatManager, contentThemeManager, missingPiecesDetector, duplicateLab, auditLogManager, snapshotManager, commandCenter } from '../../services/library/AwardsAndFormats.js';
 import { mediaTypeManager } from '../../services/library/LibraryIntelligence.js';
 import { uiIcon } from '../../ui/primitives.js';
+import { icon } from '../../ui/icons.js';
 
 // ========== ERA PAGE ==========
 export class EraPage {
@@ -69,7 +70,7 @@ export class EraPage {
  if (this.media.length === 0) {
  mediaContainer.innerHTML = `
               <div class="empty-state">
-                <div class="empty-icon" style="color:var(--color-text-faint)"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M8 5v4m8-4v4"/></svg></div>
+                <div class="empty-icon" style="color:var(--color-text-faint)">${icon('film', 34, { stroke: 1.5 })}</div>
                 <h3>لا توجد أعمال لهذا العقد</h3>
                 <p>جرب عقداً آخر</p>
               </div>
@@ -102,7 +103,7 @@ export class EraPage {
  return `
       <div class="media-card" data-id="${media.id}" data-type="${media.media_type || 'movie'}">
         <div class="media-poster">
- ${poster ? `<img src="${poster}" alt="${title}" loading="lazy">` : `<div class="poster-placeholder" style="color:var(--color-text-faint)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/></svg></div>`}
+ ${poster ? `<img src="${poster}" alt="${title}" loading="lazy">` : `<div class="poster-placeholder" style="color:var(--color-text-faint)">${icon('image', 28, { stroke: 1.5 })}</div>`}
           <div class="media-overlay">
             <button class="play-btn">▶</button>
           </div>
@@ -140,7 +141,7 @@ export class FranchisesPage {
  if (franchises.length === 0) {
  grid.innerHTML = `
             <div class="empty-state">
-              <div class="empty-icon" style="color:var(--color-text-faint)"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M8 5v4m8-4v4"/></svg></div>
+              <div class="empty-icon" style="color:var(--color-text-faint)">${icon('film', 34, { stroke: 1.5 })}</div>
               <h3>لا توجد سلاسل بعد</h3>
               <p>أنشئ سلسلتك الأولى لتنظيم الأفلام المترابطة</p>
               <div class="empty-examples">
@@ -233,7 +234,7 @@ export class SmartCollectionsPage {
  } else {
  grid.innerHTML = allCollections.map(c => `
             <div class="collection-card ${c.isDefault ? 'default-collection' : ''}" data-id="${c.id}">
-              <div class="collection-icon" style="color:var(--accent-bright);display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="19" cy="18" r="2.2"/></svg></div>
+              <div class="collection-icon" style="color:var(--accent-bright);display:grid;place-items:center">${icon('layers', 20)}</div>
               <h3 class="collection-name">${c.name}</h3>
               <p class="collection-rule">${c.rule || c.description || `${c.items?.length || c.count || 0} عنصر`}</p>
               <span class="collection-count">${c.items?.length || c.count || 0} عنصر</span>
@@ -343,14 +344,14 @@ export class StoragePage {
               </div>
             </div>
             <div class="stat-card">
-              <span class="stat-icon" style="display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:var(--surface-3);color:var(--accent-bright)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7a2 2 0 0 1 2-2h9l5 5v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M8 3v5h7"/><rect x="8" y="14" width="8" height="6"/></svg></span>
+              <span class="stat-icon" style="display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:var(--surface-3);color:var(--accent-bright)">${icon('drive', 17)}</span>
               <div class="stat-info">
                 <span class="stat-value">${stats.totalSizeFormatted}</span>
                 <span class="stat-label">المساحة المستخدمة</span>
               </div>
             </div>
             <div class="stat-card">
-              <span class="stat-icon" style="display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:var(--surface-3);color:var(--accent-bright)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10m6 10V4m6 16v-8m4 8H2"/></svg></span>
+              <span class="stat-icon" style="display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:var(--surface-3);color:var(--accent-bright)">${icon('chart', 17)}</span>
               <div class="stat-info">
                 <span class="stat-value">${Object.keys(stats.byType || {}).length}</span>
                 <span class="stat-label">أنواع الملفات</span>
@@ -422,7 +423,7 @@ export class CommandCenterPage {
             </div>
             
             <div class="command-card storage-card">
-              <div class="card-icon" style="color:var(--accent-bright)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7a2 2 0 0 1 2-2h9l5 5v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M8 3v5h7"/></svg></div>
+              <div class="card-icon" style="color:var(--accent-bright)">${icon('storage', 24)}</div>
               <h3>التخزين</h3>
               <p class="card-value">${data.storage?.totalSizeFormatted || '0 B'}</p>
               <p class="card-sub">${data.storage?.totalFiles || 0} ملف</p>
@@ -430,7 +431,7 @@ export class CommandCenterPage {
             </div>
             
             <div class="command-card franchise-card">
-              <div class="card-icon" style="color:var(--accent-bright)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M8 5v4m8-4v4"/></svg></div>
+              <div class="card-icon" style="color:var(--accent-bright)">${icon('collection', 24)}</div>
               <h3>السلاسل</h3>
               <p class="card-value">${data.franchises || 0}</p>
               <a href="#/franchises" class="card-link">عرض السلاسل →</a>
@@ -578,7 +579,7 @@ export class MissingPiecesPage {
  if (missing.total === 0) {
  dashboard.innerHTML = `
             <div class="empty-state">
-              <span class="empty-icon" style="color:var(--color-success)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+              <span class="empty-icon" style="color:var(--color-success)">${icon('success', 26, { stroke: 1.9 })}</span>
               <h3>لا توجد قطع مفقودة!</h3>
               <p>جميع سلاسلك مكتملة</p>
             </div>
@@ -638,7 +639,7 @@ export class DuplicatesPage {
  if (analysis.total === 0) {
  dashboard.innerHTML = `
             <div class="empty-state">
-              <span class="empty-icon" style="color:var(--color-success)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+              <span class="empty-icon" style="color:var(--color-success)">${icon('success', 26, { stroke: 1.9 })}</span>
               <h3>لا توجد مكررات!</h3>
               <p>مكتبتك نظيفة ومنظمة</p>
             </div>

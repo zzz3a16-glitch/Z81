@@ -8,6 +8,7 @@ import { uiIcon } from '../ui/primitives.js';
 import { db } from '../services/storage/Database.js';
 import { tmdbClient } from '../services/tmdb/TMDBClient.js';
 import { getTMDBImageUrl } from '../services/tmdb/TMDBImage.js';
+import { icon } from '../ui/icons.js';
 
 export async function FavoritesPage() {
  return createWatchlistPage('favorites', 'المفضلة', 'الأعمال التي تحبها — تُثبَّت في كل مكان، وتُغذّي ملف ذوقك.');
@@ -251,7 +252,7 @@ export async function PersonPage(params) {
         
         <div style="display: grid; grid-template-columns: 300px 1fr; gap: 32px; align-items: start;">
           <div>
- ${profileUrl ? `<img src="${profileUrl}" style="width: 100%; border-radius: 16px; aspect-ratio: 2/3; object-fit: cover;" />` : '<div style="width: 100%; aspect-ratio: 2/3; background: var(--color-surface); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--color-text-faint)"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></div>'}
+ ${profileUrl ? `<img src="${profileUrl}" style="width: 100%; border-radius: 16px; aspect-ratio: 2/3; object-fit: cover;" />` : `<div style="width: 100%; aspect-ratio: 2/3; background: var(--color-surface); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--color-text-faint)">${icon('users', 48, { stroke: 1.4 })}</div>`}
           </div>
           
           <div>

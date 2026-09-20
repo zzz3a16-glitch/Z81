@@ -177,14 +177,14 @@ export class App {
       <div id="player-container" style="display: none;"></div>
       <div class="z-drop" id="z-drop">
         <div class="z-drop-card">
-          <span class="ic">${'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6.5a2 2 0 0 1 2-2h4l2 2h7a2 2 0 0 1 2 2v8.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/></svg>'}
+          <span class="ic">${icon('folderOpen', 24, { stroke: 1.8 })}
           </span>
           <span>أفلِت المجلد لإضافته إلى المكتبة</span>
           <small>لن تُنسخ أو تُنقل أي ملفات — يُضاف المسار كمصدر فحص فقط</small>
         </div>
       </div>
       <div class="z-offlinechip">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 3l18 18M8.5 8.6a13 13 0 0 1 3.5-1.6M2.8 9.5a13 13 0 0 1 4-2.7M15 6.5a13 13 0 0 1 6.2 3M6.4 12.6a8.5 8.5 0 0 1 2.6-1.5M17 12a8.5 8.5 0 0 0-1.6-.9M9.3 16a4 4 0 0 1 5.4 0"/><circle cx="12" cy="19.2" r=".8" fill="currentColor" stroke="none"/></svg>
+        ${icon('wifiOff', 14, { stroke: 1.8 })}
         غير متصل — مكتبتك المحلية تعمل كالمعتاد
       </div>
     `;
@@ -375,7 +375,7 @@ export class App {
       console.error('Failed to render page:', error);
       this.mainContent.innerHTML = `
         <div class="container" style="padding: 80px 24px; text-align: center;">
-          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--color-warning)" stroke-width="1.7" style="margin-bottom:14px"><path d="M12 3.5 2.6 20h18.8z"/><path d="M12 10v4m0 3h.01"/></svg>
+          ${'<span style="color:var(--color-warning);display:inline-block;margin-bottom:14px">' + icon('alert', 44, { stroke: 1.6 }) + '</span>'}
           <h2 style="margin-bottom: 8px;">حدث خطأ</h2>
           <p style="color: var(--color-text-secondary); margin-bottom: 24px;">${error.message || 'فشل تحميل الصفحة'}</p>
           <button class="btn btn-primary" onclick="window.router.navigate('/')">العودة للرئيسية</button>
