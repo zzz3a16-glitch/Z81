@@ -8,8 +8,8 @@ import { isDesktop, api } from '../bridge.js';
 import { themeManager } from '../services/theme/ThemeManager.js';
 
 const THEMES = [
-  { id: 'neon-lime', name: 'لايم النيون', hint: 'فحمي + نيون لايم — SaaS/قيمنق' },
-  { id: 'midnight-neon', name: 'ليل ميدناي', hint: 'نيلي هادئ' },
+  { id: 'midnight-neon', name: 'ليل ميدناي', hint: 'الافتراضية — نيلي مُتحكَّم به' },
+  { id: 'neon-lime', name: 'لايم النيون', hint: 'فحمي + نيون لايم' },
   { id: 'amoled', name: 'أسود نقي', hint: 'OLED — تباين مطلق' },
   { id: 'cinema-noir', name: 'نوار سينمائي', hint: 'كلاسيكي داكن' },
   { id: 'aurora', name: 'شفق', hint: 'لمسة سماوية' },
@@ -34,7 +34,7 @@ function openFirstRun(router) {
   overlay.className = 'z-onb';
   overlay.id = 'z-firstrun';
   let step = 0;
-  const chosen = { theme: 'neon-lime', paths: [], scan: null };
+  const chosen = { theme: 'midnight-neon', paths: [], scan: null };
 
   const steps = 4;
   const render = () => {

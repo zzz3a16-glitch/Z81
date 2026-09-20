@@ -167,15 +167,15 @@ export class AnalyticsEngine {
 export class AchievementEngine {
   constructor() {
     this.achievements = [
-      { id: 'first-movie', name: 'أول فيلم', description: 'شاهدت أول فيلم', icon: '🎬', condition: (stats) => stats.library.totalMovies >= 1 },
-      { id: '10-movies', name: '10 أفلام', description: 'شاهدت 10 أفلام', icon: '🍿', condition: (stats) => stats.library.completed >= 10 },
-      { id: '50-movies', name: '50 فيلم', description: 'شاهدت 50 فيلم', icon: '🎥', condition: (stats) => stats.library.completed >= 50 },
-      { id: '100-movies', name: '100 فيلم', description: 'شاهدت 100 فيلم', icon: '🏆', condition: (stats) => stats.library.completed >= 100 },
-      { id: 'night-owl', name: 'بومة الليل', description: 'تشاهد كثيراً في الليل', icon: '🦉', condition: (stats) => this.isNightOwl(stats.heatmap) },
-      { id: 'weekend-binger', name: 'مشاهد نهاية الأسبوع', description: 'تشاهد كثيراً في نهاية الأسبوع', icon: '📅', condition: (stats) => this.isWeekendBinger(stats.heatmap) },
-      { id: 'genre-explorer', name: 'مستكشف الأنواع', description: 'شاهدت 5 أنواع مختلفة', icon: '🗺️', condition: (stats) => stats.genres.length >= 5 },
-      { id: 'critic', name: 'الناقد', description: 'قيمت 10 أعمال', icon: '⭐', condition: (stats) => stats.ratings.total >= 10 },
-      { id: 'rewatcher', name: 'إعادة المشاهدة', description: 'أعدت مشاهدة 5 أعمال', icon: '🔄', condition: (stats) => stats.ratings.totalRewatches >= 5 }
+      { id: 'first-movie', name: 'أول فيلم', description: 'شاهدت أول فيلم', icon: 'film', condition: (stats) => stats.library.totalMovies >= 1 },
+      { id: '10-movies', name: '10 أفلام', description: 'شاهدت 10 أفلام', icon: 'sparkle', condition: (stats) => stats.library.completed >= 10 },
+      { id: '50-movies', name: '50 فيلم', description: 'شاهدت 50 فيلم', icon: 'film', condition: (stats) => stats.library.completed >= 50 },
+      { id: '100-movies', name: '100 فيلم', description: 'شاهدت 100 فيلم', icon: 'award', condition: (stats) => stats.library.completed >= 100 },
+      { id: 'night-owl', name: 'بومة الليل', description: 'تشاهد كثيراً في الليل', icon: 'moon', condition: (stats) => this.isNightOwl(stats.heatmap) },
+      { id: 'weekend-binger', name: 'مشاهد نهاية الأسبوع', description: 'تشاهد كثيراً في نهاية الأسبوع', icon: 'calendar', condition: (stats) => this.isWeekendBinger(stats.heatmap) },
+      { id: 'genre-explorer', name: 'مستكشف الأنواع', description: 'شاهدت 5 أنواع مختلفة', icon: 'compass', condition: (stats) => stats.genres.length >= 5 },
+      { id: 'critic', name: 'الناقد', description: 'قيمت 10 أعمال', icon: 'star', condition: (stats) => stats.ratings.total >= 10 },
+      { id: 'rewatcher', name: 'إعادة المشاهدة', description: 'أعدت مشاهدة 5 أعمال', icon: 'refresh', condition: (stats) => stats.ratings.totalRewatches >= 5 }
     ];
   }
 

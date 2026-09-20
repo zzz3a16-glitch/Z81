@@ -4,5 +4,5 @@
 }
 :root[data-theme="midnight-neon"] .z-hero,
 :root[data-theme="midnight-neon"] .hero {
-  --hero-overlay: linear-gradient(78deg, rgba(10,10,10,.96) 0%, rgba(10,10,10,.82) 38%, rgba(10,10,10,.28) 74%, rgba(10,10,10,.10) 100%);
+  --hero-overlay: linear-gradient(78deg, rgba(8,8,11,.97) 0%, rgba(9,9,12,.84) 38%, rgba(10,10,14,.30) 74%, rgba(11,11,15,.10) 100%);
 }

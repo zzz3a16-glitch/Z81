@@ -4,6 +4,7 @@
 
 import { watchlistManager } from '../services/watchlist/WatchlistManager.js';
 import { createMediaGrid } from '../components/MediaCard.js';
+import { uiIcon } from '../ui/primitives.js';
 import { db } from '../services/storage/Database.js';
 import { tmdbClient } from '../services/tmdb/TMDBClient.js';
 import { getTMDBImageUrl } from '../services/tmdb/TMDBImage.js';
@@ -24,7 +25,7 @@ export async function WatchlistPage(params) {
  return createNotFoundPage('قائمة غير موجودة');
  }
   
- return createWatchlistPage(listId, `${list.icon} ${list.name}`, list.description);
+ return createWatchlistPage(listId, list.name, list.description);
 }
 
 async function createWatchlistPage(listId, title, description) {
@@ -348,7 +349,7 @@ export async function AnalyticsPage() {
           <div style="display: grid; gap: 8px;">
  ${achievements.unlocked.map(a => `
               <div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: var(--color-surface); border-radius: 8px; border: 1px solid var(--color-border);">
-                <span style="font-size: 20px;">${a.icon}</span>
+                ${uiIcon(a.icon, 20)}
                 <div style="flex: 1;">
                   <div style="font-weight: 500; font-size: 14px;">${a.name}</div>
                   <div style="font-size: 12px; color: var(--color-text-secondary);">${a.description}</div>

@@ -77,7 +77,7 @@ export class AdvancedSearch {
         return; // Still fresh
       }
 
-      console.log('🔍 Building search index...');
+      console.log(' Building search index...');
       const [movies, tvShows, watchHistory] = await Promise.all([
         db.getAll('movies').catch(() => []),
         db.getAll('tvshows').catch(() => []),
@@ -102,7 +102,7 @@ export class AdvancedSearch {
       addToIndex(tvShows, 'tv');
 
       this.lastIndexUpdate = now;
-      console.log(`🔍 Index built: ${this.index.size} terms, ${movies.length + tvShows.length} items`);
+      console.log(` Index built: ${this.index.size} terms, ${movies.length + tvShows.length} items`);
     } catch (e) {
       console.warn('Index build failed:', e);
     }
@@ -323,7 +323,7 @@ export class AdvancedSearch {
     await this.buildIndex();
 
     const parsed = this.parseNaturalLanguage(query);
-    console.log('🔍 Parsed NL query:', parsed);
+    console.log(' Parsed NL query:', parsed);
 
     // Track behavior
     behaviorEngine.track('NATURAL_SEARCH', { query, parsed });

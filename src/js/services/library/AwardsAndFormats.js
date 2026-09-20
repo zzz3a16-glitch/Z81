@@ -9,11 +9,11 @@ import { tmdbClient } from '../tmdb/TMDBClient.js';
 export class AwardManager {
   constructor() {
     this.awards = [
-      { id: 'oscar-winner', name: 'فائز بالأوسكار', icon: '🏆', color: '#ffd700', query: { with_keywords: '1956' } },
-      { id: 'oscar-nominee', name: 'مرشح للأوسكار', icon: '🎖️', color: '#c0c0c0', query: {} },
-      { id: 'palme-dor', name: 'السعفة الذهبية', icon: '🌴', color: '#228b22', query: {} },
-      { id: 'golden-lion', name: 'الأسد الذهبي', icon: '🦁', color: '#ffd700', query: {} },
-      { id: 'emmy', name: 'جائزة إيمي', icon: '📺', color: '#8b5cf6', query: {} }
+      { id: 'oscar-winner', name: 'فائز بالأوسكار', icon: 'award', color: '#ffd700', query: { with_keywords: '1956' } },
+      { id: 'oscar-nominee', name: 'مرشح للأوسكار', icon: 'award', color: '#c0c0c0', query: {} },
+      { id: 'palme-dor', name: 'السعفة الذهبية', icon: 'award', color: '#228b22', query: {} },
+      { id: 'golden-lion', name: 'الأسد الذهبي', icon: 'award', color: '#ffd700', query: {} },
+      { id: 'emmy', name: 'جائزة إيمي', icon: 'tv', color: '#8b5cf6', query: {} }
     ];
   }
 
@@ -45,13 +45,13 @@ export class AwardManager {
 export class FormatManager {
   constructor() {
     this.formats = [
-      { id: '4k', name: '4K Ultra HD', icon: '📺', description: '2160p فائقة الدقة', filter: 'quality:2160p' },
-      { id: 'blu-ray', name: 'Blu-ray', icon: '💿', description: 'جودة Blu-ray الأصلية', filter: 'quality:blu-ray' },
-      { id: 'remux', name: 'Remux', icon: '🎬', description: 'نسخة غير مضغوطة من Blu-ray', filter: 'remux' },
-      { id: 'web-dl', name: 'WEB-DL', icon: '🌐', description: 'محملة من خدمات البث', filter: 'quality:web-dl' },
-      { id: 'hdr', name: 'HDR', icon: '✨', description: 'مدى ديناميكي عالي', filter: 'hdr' },
-      { id: 'dolby-vision', name: 'Dolby Vision', icon: '🌈', description: 'تقنية Dolby Vision', filter: 'dolby-vision' },
-      { id: 'imax', name: 'IMAX', icon: '🎥', description: 'نسبة عرض IMAX', filter: 'imax' }
+      { id: '4k', name: '4K Ultra HD', icon: 'tv', description: '2160p فائقة الدقة', filter: 'quality:2160p' },
+      { id: 'blu-ray', name: 'Blu-ray', icon: 'disc', description: 'جودة Blu-ray الأصلية', filter: 'quality:blu-ray' },
+      { id: 'remux', name: 'Remux', icon: 'film', description: 'نسخة غير مضغوطة من Blu-ray', filter: 'remux' },
+      { id: 'web-dl', name: 'WEB-DL', icon: 'users', description: 'محملة من خدمات البث', filter: 'quality:web-dl' },
+      { id: 'hdr', name: 'HDR', icon: 'sparkle', description: 'مدى ديناميكي عالي', filter: 'hdr' },
+      { id: 'dolby-vision', name: 'Dolby Vision', icon: 'sparkle', description: 'تقنية Dolby Vision', filter: 'dolby-vision' },
+      { id: 'imax', name: 'IMAX', icon: 'film', description: 'نسبة عرض IMAX', filter: 'imax' }
     ];
   }
 
@@ -69,16 +69,16 @@ export class FormatManager {
 export class ContentThemeManager {
   constructor() {
     this.themes = [
-      { id: 'time-travel', name: 'السفر عبر الزمن', icon: '⏰', keyword: 4379, description: 'قصص السفر عبر الزمن' },
-      { id: 'dystopia', name: 'الديستوبيا', icon: '🏚️', keyword: 4565, description: 'عوالم مستقبلية قاتمة' },
-      { id: 'superhero', name: 'الأبطال الخارقون', icon: '🦸', keyword: 9715, description: 'أفلام الأبطال الخارقين' },
-      { id: 'heist', name: 'السرقة', icon: '💰', keyword: 10090, description: 'أفلام السرقة والاحتيال' },
-      { id: 'space', name: 'الفضاء', icon: '🚀', keyword: 9882, description: 'استكشاف الفضاء' },
-      { id: 'zombie', name: 'الزومبي', icon: '🧟', keyword: 12377, description: 'أفلام الزومبي' },
-      { id: 'martial-arts', name: 'فنون القتال', icon: '🥋', keyword: 779, description: 'أفلام فنون القتال' },
-      { id: 'post-apocalyptic', name: 'ما بعد نهاية العالم', icon: '☢️', keyword: 4458, description: 'عوالم ما بعد الكارثة' },
-      { id: 'spy', name: 'التجسس', icon: '🕵️', keyword: 470, description: 'أفلام التجسس' },
-      { id: 'based-on-true', name: 'قصة حقيقية', icon: '📖', keyword: 9672, description: 'مبني على قصة حقيقية' }
+      { id: 'time-travel', name: 'السفر عبر الزمن', icon: 'clock', keyword: 4379, description: 'قصص السفر عبر الزمن' },
+      { id: 'dystopia', name: 'الديستوبيا', icon: 'alert', keyword: 4565, description: 'عوالم مستقبلية قاتمة' },
+      { id: 'superhero', name: 'الأبطال الخارقون', icon: 'sparkle', keyword: 9715, description: 'أفلام الأبطال الخارقين' },
+      { id: 'heist', name: 'السرقة', icon: 'key', keyword: 10090, description: 'أفلام السرقة والاحتيال' },
+      { id: 'space', name: 'الفضاء', icon: 'sparkle', keyword: 9882, description: 'استكشاف الفضاء' },
+      { id: 'zombie', name: 'الزومبي', icon: 'alert', keyword: 12377, description: 'أفلام الزومبي' },
+      { id: 'martial-arts', name: 'فنون القتال', icon: 'star', keyword: 779, description: 'أفلام فنون القتال' },
+      { id: 'post-apocalyptic', name: 'ما بعد نهاية العالم', icon: 'alert', keyword: 4458, description: 'عوالم ما بعد الكارثة' },
+      { id: 'spy', name: 'التجسس', icon: 'eye', keyword: 470, description: 'أفلام التجسس' },
+      { id: 'based-on-true', name: 'قصة حقيقية', icon: 'check', keyword: 9672, description: 'مبني على قصة حقيقية' }
     ];
   }
 

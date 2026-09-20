@@ -180,7 +180,7 @@ class InboxView {
         <b>${esc(s.label || s.name || s.path.split(/[\\/]/).pop())}</b>
         <em dir="ltr" title="${esc(s.path)}">${esc(s.path)}</em>
         ${s.enabled === false ? '<i class="src-off">معطّل</i>' : ''}
-        <button class="src-x" data-remove="${s.id}" title="إزالة المصدر (الملفات على القرص لا تُمسح)">×</button>
+        <button class="src-x" data-remove="${s.id}" title="إزالة المصدر (الملفات على القرص لا تُمسح)">${icon("x",14)}</button>
       </span>`).join('');
     strip.innerHTML = `
       <div class="src-list">${chips || '<span class="src-empty">لا توجد مجلدات مكتبة — أضِف مجلداً ليبدأ الفحص الذكي</span>'}</div>

@@ -180,7 +180,7 @@ export class MediaAssistant {
     const intent = this.intentDetector.detectIntent(query);
     const entities = this.intentDetector.extractEntities(query);
     
-    console.log('🤖 Assistant:', { query, intent, entities });
+    console.log(' Assistant:', { query, intent, entities });
 
     let response;
     

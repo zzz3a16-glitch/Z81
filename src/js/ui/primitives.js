@@ -169,3 +169,10 @@ export function fallbackArt(name = '', { big = false } = {}) {
     ${big ? `<span style="font-size:11px;max-width:80%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(name)}</span>` : ''}
   </div>`;
 }
+
+/** Resolve a data-layer icon token (or legacy emoji) into the zPopcorn icon system. */
+export function uiIcon(name, size = 16, cls = '') {
+  const n = typeof name === 'string' ? name.trim() : '';
+  const key = /^[a-z][a-z0-9]*$/i.test(n) ? n : 'disc';
+  return icon(key, size, cls ? { cls } : undefined);
+}

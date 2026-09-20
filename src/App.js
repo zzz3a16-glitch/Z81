@@ -6,6 +6,7 @@
 import { router } from './js/router.js';
 import { themeManager } from './js/services/theme/ThemeManager.js';
 import { createSidebar } from './js/components/Sidebar.js';
+import { icon } from './js/ui/icons.js';
 import { createHeader } from './js/components/Header.js';
 import { db } from './js/services/storage/Database.js';
 import bridge from './js/bridge.js';
@@ -49,7 +50,7 @@ export class App {
   async init() {
     if (this.initialized) return;
     
-    console.log('🍿 zPopcorn Ultimate - Initializing Production-Grade...');
+    console.log(' zPopcorn Ultimate - Initializing Production-Grade...');
 
     // Initialize performance monitoring
     try {
@@ -342,7 +343,7 @@ export class App {
       console.error('Failed to render page:', error);
       this.mainContent.innerHTML = `
         <div class="container" style="padding: 80px 24px; text-align: center;">
-          <div style="font-size: 48px; margin-bottom: 16px;">⚠️</div>
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--color-warning)" stroke-width="1.7" style="margin-bottom:14px"><path d="M12 3.5 2.6 20h18.8z"/><path d="M12 10v4m0 3h.01"/></svg>
           <h2 style="margin-bottom: 8px;">حدث خطأ</h2>
           <p style="color: var(--color-text-secondary); margin-bottom: 24px;">${error.message || 'فشل تحميل الصفحة'}</p>
           <button class="btn btn-primary" onclick="window.router.navigate('/')">العودة للرئيسية</button>
@@ -405,10 +406,10 @@ export class App {
     toast.className = `toast toast-${type}`;
     
     const icons = {
-      success: '✓',
-      error: '✕',
-      warning: '⚠',
-      info: 'ℹ'
+      success: icon('check', 15),
+      error: icon('x', 15),
+      warning: icon('alert', 15),
+      info: icon('info', 15)
     };
 
     toast.innerHTML = `
@@ -525,7 +526,7 @@ async function RecommendationsPage() {
   const container = document.createElement('div');
   container.innerHTML = `
     <div class="container" style="padding-top: 24px;">
-      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 8px;">💡 موصى به لك</h1>
+      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 8px;"> موصى به لك</h1>
       <p style="color: var(--color-text-secondary); margin-bottom: 24px;">توصيات ذكية بناءً على ذوقك وسلوك المشاهدة</p>
       <div id="recs-grid" class="media-grid"></div>
     </div>
@@ -555,7 +556,7 @@ async function TrendingPage() {
   const container = document.createElement('div');
   container.innerHTML = `
     <div class="container" style="padding-top: 24px;">
-      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 24px;">🔥 الرائج الآن</h1>
+      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 24px;"> الرائج الآن</h1>
       <div id="trending-grid" class="media-grid"></div>
     </div>
   `;
@@ -580,7 +581,7 @@ function NotFoundPage() {
   const div = document.createElement('div');
   div.innerHTML = `
     <div class="container" style="padding: 80px 24px; text-align: center;">
-      <div style="font-size: 64px; margin-bottom: 16px;">🔍</div>
+      <div style="font-size: 64px; margin-bottom: 16px;"></div>
       <h2 style="font-size: 1.5rem; margin-bottom: 8px;">الصفحة غير موجودة</h2>
       <p style="color: var(--color-text-secondary); margin-bottom: 24px;">الصفحة التي تبحث عنها غير موجودة أو تم نقلها</p>
       <button class="btn btn-primary" onclick="window.router.navigate('/')">العودة للرئيسية</button>

@@ -2,6 +2,7 @@
  * Extra Library Pages - Media Types, Custom Collections Builder, Library Hub
  */
 import { mediaTypeManager, smartCollectionManager } from '../../services/library/LibraryIntelligence.js';
+import { uiIcon } from '../../ui/primitives.js';
 import { snapshotManager } from '../../services/library/AwardsAndFormats.js';
 
 export class MediaTypesPage {
@@ -24,7 +25,7 @@ export class MediaTypesPage {
         <div class="types-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
  ${types.map(t => `
             <div class="type-card" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 20px; text-align: center;">
-              <span style="font-size: 2rem; display: block; margin-bottom: 8px;">${t.icon}</span>
+              <span style="display:block;margin-bottom:8px;color:var(--accent-bright)">${uiIcon(t.icon, 26)}</span>
               <h4>${t.name}</h4>
               <span style="display: inline-block; width: 12px; height: 12px; background: ${t.color}; border-radius: 50%; margin-top: 8px;"></span>
  ${t.custom ? '<span style="font-size: 0.7rem; background: var(--color-accent); color: white; padding: 2px 6px; border-radius: 999px; margin-right: 8px;">مخصص</span>' : ''}

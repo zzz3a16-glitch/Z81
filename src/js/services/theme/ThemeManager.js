@@ -280,7 +280,7 @@ export class ThemeManager {
     }
     
     // Default theme
-    this.currentTheme = 'neon-lime';
+    this.currentTheme = 'midnight-neon';
     this.applyTheme(this.currentTheme, false);
     return this.currentTheme;
   }
@@ -340,7 +340,7 @@ export class ThemeManager {
   }
 
   resetTheme() {
-    return this.setTheme('neon-lime');
+    return this.setTheme('midnight-neon');
   }
 
   saveTheme(themeName) {

@@ -25,7 +25,7 @@ export class PerformanceManager {
         for (const entry of list.getEntries()) {
           if (entry.name === 'first-contentful-paint') {
             this.metrics.fcp = entry.startTime;
-            console.log(`📊 FCP: ${entry.startTime.toFixed(2)}ms`);
+            console.log(` FCP: ${entry.startTime.toFixed(2)}ms`);
           }
         }
       });
@@ -39,7 +39,7 @@ export class PerformanceManager {
         const entries = list.getEntries();
         const lastEntry = entries[entries.length - 1];
         this.metrics.lcp = lastEntry.startTime;
-        console.log(`📊 LCP: ${lastEntry.startTime.toFixed(2)}ms`);
+        console.log(` LCP: ${lastEntry.startTime.toFixed(2)}ms`);
       });
       lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
       this.observers.push(lcpObserver);
@@ -275,7 +275,7 @@ export class PerformanceManager {
     const end = performance.now();
     
     if (end - start > 16) { // More than 1 frame
-      console.warn(`⚠️ Slow function ${name}: ${(end - start).toFixed(2)}ms`);
+      console.warn(`! Slow function ${name}: ${(end - start).toFixed(2)}ms`);
     }
 
     return result;
@@ -287,7 +287,7 @@ export class PerformanceManager {
     const end = performance.now();
     
     if (end - start > 100) {
-      console.warn(`⚠️ Slow async ${name}: ${(end - start).toFixed(2)}ms`);
+      console.warn(`! Slow async ${name}: ${(end - start).toFixed(2)}ms`);
     }
 
     return result;

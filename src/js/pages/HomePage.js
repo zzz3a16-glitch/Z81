@@ -129,7 +129,7 @@ function buildHero(mount, items) {
       m.year ? `<span class="num">${esc(String(m.year))}</span>` : '',
       (m.genres?.[0]?.name) ? esc(m.genres[0].name) : '',
       m.runtime ? `<span class="num">${fmtRuntime(m.runtime)}</span>` : '',
-      m.vote_average ? `<span class="num">★ ${Number(m.vote_average).toFixed(1)}</span>` : '',
+      m.vote_average ? `<span class="num rate">${icon('star',13)} ${Number(m.vote_average).toFixed(1)}</span>` : '',
     ].filter(Boolean).join('<span class="sep"></span>');
     hero.querySelector('.ov').textContent = m.overview || 'لا يوجد وصف متاح لهذا العمل.';
     const cta = hero.querySelector('.cta');

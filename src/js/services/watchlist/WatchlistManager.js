@@ -33,10 +33,10 @@ export class WatchlistManager {
 
   async createDefaultLists() {
     const defaults = [
-      { id: 'want-to-watch', name: 'أريد مشاهدته', description: 'أفلام ومسلسلات أريد مشاهدتها', icon: '🔖', color: '#8b5cf6', sortOrder: 0, isDefault: true },
-      { id: 'favorites', name: 'المفضلة', description: 'المحتوى المفضل لدي', icon: '❤️', color: '#ef4444', sortOrder: 1, isDefault: true },
-      { id: 'family', name: 'العائلة', description: 'للمشاهدة العائلية', icon: '👨‍👩‍👧‍👦', color: '#10b981', sortOrder: 2, isDefault: false },
-      { id: 'watch-later', name: 'المشاهدة لاحقاً', description: 'للمشاهدة في وقت لاحق', icon: '⏰', color: '#f59e0b', sortOrder: 3, isDefault: true }
+      { id: 'want-to-watch', name: 'أريد مشاهدته', description: 'أفلام ومسلسلات أريد مشاهدتها', icon: 'bookmark', color: '#8b5cf6', sortOrder: 0, isDefault: true },
+      { id: 'favorites', name: 'المفضلة', description: 'المحتوى المفضل لدي', icon: 'heart', color: '#ef4444', sortOrder: 1, isDefault: true },
+      { id: 'family', name: 'العائلة', description: 'للمشاهدة العائلية', icon: 'users', color: '#10b981', sortOrder: 2, isDefault: false },
+      { id: 'watch-later', name: 'المشاهدة لاحقاً', description: 'للمشاهدة في وقت لاحق', icon: 'clock', color: '#f59e0b', sortOrder: 3, isDefault: true }
     ];
 
     for (const list of defaults) {
@@ -63,7 +63,7 @@ export class WatchlistManager {
       id,
       name,
       description: options.description || '',
-      icon: options.icon || '📋',
+      icon: options.icon || 'list',
       color: options.color || '#8b5cf6',
       sortOrder: this.lists.size,
       createdAt: Date.now(),

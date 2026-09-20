@@ -10,13 +10,13 @@ import { tmdbClient } from '../tmdb/TMDBClient.js';
 export class EraManager {
   constructor() {
     this.eras = [
-      { id: '1960s', name: 'الستينيات', start: 1960, end: 1969, icon: '📼' },
-      { id: '1970s', name: 'السبعينيات', start: 1970, end: 1979, icon: '🎞️' },
-      { id: '1980s', name: 'الثمانينيات', start: 1980, end: 1989, icon: '📺' },
-      { id: '1990s', name: 'التسعينيات', start: 1990, end: 1999, icon: '💿' },
-      { id: '2000s', name: 'الألفينيات', start: 2000, end: 2009, icon: '📀' },
-      { id: '2010s', name: 'العقد 2010', start: 2010, end: 2019, icon: '🎬' },
-      { id: '2020s', name: 'العقد 2020', start: 2020, end: 2029, icon: '🍿' }
+      { id: '1960s', name: 'الستينيات', start: 1960, end: 1969, icon: 'film' },
+      { id: '1970s', name: 'السبعينيات', start: 1970, end: 1979, icon: 'film' },
+      { id: '1980s', name: 'الثمانينيات', start: 1980, end: 1989, icon: 'tv' },
+      { id: '1990s', name: 'التسعينيات', start: 1990, end: 1999, icon: 'disc' },
+      { id: '2000s', name: 'الألفينيات', start: 2000, end: 2009, icon: 'disc' },
+      { id: '2010s', name: 'العقد 2010', start: 2010, end: 2019, icon: 'film' },
+      { id: '2020s', name: 'العقد 2020', start: 2020, end: 2029, icon: 'sparkle' }
     ];
   }
 
@@ -54,7 +54,7 @@ export class EraManager {
     }
   }
 
-  async createCustomEra(name, start, end, icon = '📅') {
+  async createCustomEra(name, start, end, icon = 'calendar') {
     const era = {
       id: `custom-${Date.now()}`,
       name,
@@ -92,7 +92,7 @@ export class FranchiseManager {
       id: `franchise-${Date.now()}`,
       name,
       description: options.description || '',
-      icon: options.icon || '🎬',
+      icon: options.icon || 'film',
       color: options.color || '#8b5cf6',
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -173,17 +173,17 @@ export class FranchiseManager {
 export class MediaTypeManager {
   constructor() {
     this.defaultTypes = [
-      { id: 'movie', name: 'فيلم', icon: '🎬', color: '#8b5cf6' },
-      { id: 'tv', name: 'مسلسل', icon: '📺', color: '#06b6d4' },
-      { id: 'anime', name: 'أنمي', icon: '🎌', color: '#f59e0b' },
-      { id: 'mini-series', name: 'مسلسل قصير', icon: '📼', color: '#10b981' },
-      { id: 'ova', name: 'OVA', icon: '🎞️', color: '#ef4444' },
-      { id: 'ona', name: 'ONA', icon: '📡', color: '#8b5cf6' },
-      { id: 'special', name: 'حلقة خاصة', icon: '⭐', color: '#f59e0b' },
-      { id: 'documentary', name: 'وثائقي', icon: '📚', color: '#06b6d4' },
-      { id: 'short', name: 'فيلم قصير', icon: '🎥', color: '#10b981' },
-      { id: 'concert', name: 'حفل', icon: '🎤', color: '#ef4444' },
-      { id: 'music-video', name: 'فيديو موسيقي', icon: '🎵', color: '#8b5cf6' }
+      { id: 'movie', name: 'فيلم', icon: 'film', color: '#8b5cf6' },
+      { id: 'tv', name: 'مسلسل', icon: 'tv', color: '#06b6d4' },
+      { id: 'anime', name: 'أنمي', icon: 'users', color: '#f59e0b' },
+      { id: 'mini-series', name: 'مسلسل قصير', icon: 'film', color: '#10b981' },
+      { id: 'ova', name: 'OVA', icon: 'film', color: '#ef4444' },
+      { id: 'ona', name: 'ONA', icon: 'monitor', color: '#8b5cf6' },
+      { id: 'special', name: 'حلقة خاصة', icon: 'star', color: '#f59e0b' },
+      { id: 'documentary', name: 'وثائقي', icon: 'users', color: '#06b6d4' },
+      { id: 'short', name: 'فيلم قصير', icon: 'film', color: '#10b981' },
+      { id: 'concert', name: 'حفل', icon: 'cast', color: '#ef4444' },
+      { id: 'music-video', name: 'فيديو موسيقي', icon: 'image', color: '#8b5cf6' }
     ];
     this.customTypes = [];
   }
@@ -200,7 +200,7 @@ export class MediaTypeManager {
     return [...this.defaultTypes, ...this.customTypes];
   }
 
-  async createCustomType(name, icon = '📁', color = '#6b7280') {
+  async createCustomType(name, icon = 'folder', color = '#6b7280') {
     await this.init();
     
     const type = {
@@ -263,14 +263,14 @@ export class GenreManager {
 export class CountryManager {
   constructor() {
     this.countries = [
-      { code: 'SA', name: 'السعودية', nameEn: 'Saudi Arabia', flag: '🇸🇦', count: 45 },
-      { code: 'US', name: 'الولايات المتحدة', nameEn: 'United States', flag: '🇺🇸', count: 1234 },
-      { code: 'EG', name: 'مصر', nameEn: 'Egypt', flag: '🇪🇬', count: 123 },
-      { code: 'JP', name: 'اليابان', nameEn: 'Japan', flag: '🇯🇵', count: 456 },
-      { code: 'KR', name: 'كوريا الجنوبية', nameEn: 'South Korea', flag: '🇰🇷', count: 234 },
-      { code: 'GB', name: 'المملكة المتحدة', nameEn: 'United Kingdom', flag: '🇬🇧', count: 567 },
-      { code: 'IN', name: 'الهند', nameEn: 'India', flag: '🇮🇳', count: 345 },
-      { code: 'FR', name: 'فرنسا', nameEn: 'France', flag: '🇫🇷', count: 234 }
+      { code: 'SA', name: 'السعودية', nameEn: 'Saudi Arabia', flag: 'SA', count: 45 },
+      { code: 'US', name: 'الولايات المتحدة', nameEn: 'United States', flag: 'US', count: 1234 },
+      { code: 'EG', name: 'مصر', nameEn: 'Egypt', flag: 'EG', count: 123 },
+      { code: 'JP', name: 'اليابان', nameEn: 'Japan', flag: 'JP', count: 456 },
+      { code: 'KR', name: 'كوريا الجنوبية', nameEn: 'South Korea', flag: 'KR', count: 234 },
+      { code: 'GB', name: 'المملكة المتحدة', nameEn: 'United Kingdom', flag: 'GB', count: 567 },
+      { code: 'IN', name: 'الهند', nameEn: 'India', flag: 'IN', count: 345 },
+      { code: 'FR', name: 'فرنسا', nameEn: 'France', flag: 'FR', count: 234 }
     ];
   }
 
@@ -318,7 +318,7 @@ export class SmartCollectionManager {
       id: `smart-${Date.now()}`,
       name,
       description: options.description || '',
-      icon: options.icon || '📚',
+      icon: options.icon || 'layers',
       color: options.color || '#8b5cf6',
       type: options.type || 'smart', // manual or smart
       rules: rules || [], // Array of rule objects

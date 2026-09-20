@@ -362,9 +362,9 @@ async function createTMDBSection() {
  try {
  const config = await tmdbClient.getConfiguration();
  if (config) {
- resultDiv.innerHTML = '<span style="color: #10b981;">✅ TMDB متصل بنجاح</span>';
+ resultDiv.innerHTML = '<span style="color: #10b981;">TMDB متصل بنجاح</span>';
  } else {
- resultDiv.innerHTML = '<span style="color: #ef4444;">❌ فشل الاتصال</span>';
+ resultDiv.innerHTML = '<span style="color: #ef4444;">فشل الاتصال</span>';
  }
  } catch (e) {
  resultDiv.innerHTML = `<span style="color: #ef4444;">فشل: ${e.message}</span>`;

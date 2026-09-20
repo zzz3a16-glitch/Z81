@@ -8,25 +8,26 @@ import { tmdbClient } from '../services/tmdb/TMDBClient.js';
 import { backupManager } from '../services/backup/BackupManager.js';
 import { notificationService } from '../services/notification/NotificationService.js';
 import { db } from '../services/storage/Database.js';
+import { uiIcon } from '../ui/primitives.js';
 import { securityManager } from '../services/security/SecurityManager.js';
 import { performanceManager } from '../services/performance/PerformanceManager.js';
 
 const SETTINGS_CATEGORIES = [
- { id: 'general', name: 'عام', icon: '', desc: 'الإعدادات العامة' },
- { id: 'appearance', name: 'المظهر', icon: '', desc: 'الثيمات والعرض' },
- { id: 'playback', name: 'التشغيل', icon: '▶', desc: 'إعدادات المشغل' },
- { id: 'subtitles', name: 'الترجمات', icon: '', desc: 'الترجمة والنصوص' },
- { id: 'audio', name: 'الصوت', icon: '', desc: 'المسارات الصوتية' },
- { id: 'library', name: 'المكتبة', icon: '', desc: 'إدارة المكتبة' },
- { id: 'scanner', name: 'الفاحص', icon: '', desc: 'فحص الملفات' },
- { id: 'tmdb', name: 'TMDB', icon: '', desc: 'واجهة برمجة التطبيقات' },
- { id: 'recommendations', name: 'التوصيات', icon: '', desc: 'ذكاء التوصيات' },
- { id: 'notifications', name: 'الإشعارات', icon: '', desc: 'مركز الإشعارات' },
- { id: 'privacy', name: 'الخصوصية', icon: '', desc: 'البيانات والخصوصية' },
- { id: 'backup', name: 'النسخ الاحتياطي', icon: '', desc: 'حفظ واستعادة' },
- { id: 'keyboard', name: 'لوحة المفاتيح', icon: '⌨', desc: 'اختصارات' },
- { id: 'advanced', name: 'متقدم', icon: '', desc: 'إعدادات متقدمة' },
- { id: 'about', name: 'حول', icon: '', desc: 'معلومات التطبيق' }
+ { id: 'general', name: 'عام', icon: 'gear', desc: 'الإعدادات العامة' },
+ { id: 'appearance', name: 'المظهر', icon: 'palette', desc: 'الثيمات والعرض' },
+ { id: 'playback', name: 'التشغيل', icon: 'play', desc: 'إعدادات المشغل' },
+ { id: 'subtitles', name: 'الترجمات', icon: 'image', desc: 'الترجمة والنصوص' },
+ { id: 'audio', name: 'الصوت', icon: 'cast', desc: 'المسارات الصوتية' },
+ { id: 'library', name: 'المكتبة', icon: 'database', desc: 'إدارة المكتبة' },
+ { id: 'scanner', name: 'الفاحص', icon: 'search', desc: 'فحص الملفات' },
+ { id: 'tmdb', name: 'TMDB', icon: 'key', desc: 'واجهة برمجة التطبيقات' },
+ { id: 'recommendations', name: 'التوصيات', icon: 'bulb', desc: 'ذكاء التوصيات' },
+ { id: 'notifications', name: 'الإشعارات', icon: 'bell', desc: 'مركز الإشعارات' },
+ { id: 'privacy', name: 'الخصوصية', icon: 'shield', desc: 'البيانات والخصوصية' },
+ { id: 'backup', name: 'النسخ الاحتياطي', icon: 'save', desc: 'حفظ واستعادة' },
+ { id: 'keyboard', name: 'لوحة المفاتيح', icon: 'grid', desc: 'اختصارات' },
+ { id: 'advanced', name: 'متقدم', icon: 'slider', desc: 'إعدادات متقدمة' },
+ { id: 'about', name: 'حول', icon: 'info', desc: 'معلومات التطبيق' }
 ];
 
 export async function EnhancedSettingsPage(params) {
@@ -44,7 +45,7 @@ export async function EnhancedSettingsPage(params) {
           <div style="display: flex; flex-direction: column; gap: 2px;">
  ${SETTINGS_CATEGORIES.map(cat => `
               <a href="/settings/${cat.id}" data-router class="settings-nav-item ${section === cat.id ? 'active' : ''}" data-section="${cat.id}" style="padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: 10px; transition: all 0.2s; ${section === cat.id ? 'background: var(--color-accent); color: white;' : 'background: transparent;'}">
-                <span style="font-size: 1.1rem;">${cat.icon}</span>
+                ${uiIcon(cat.icon, 15)}
                 <div style="flex: 1; min-width: 0;">
                   <div style="font-weight: 500; font-size: 14px;">${cat.name}</div>
                   <div style="font-size: 11px; opacity: 0.7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${cat.desc}</div>

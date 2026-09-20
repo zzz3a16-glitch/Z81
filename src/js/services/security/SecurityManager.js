@@ -203,7 +203,7 @@ export class SecurityManager {
       localStorage.setItem('zpopcorn-security-logs', JSON.stringify(logs));
     } catch {}
 
-    console.warn('🔒 Security event:', event, details);
+    console.warn(' Security event:', event, details);
   }
 
   // Data export validation

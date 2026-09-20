@@ -6,6 +6,7 @@
 import { eraManager, franchiseManager, smartCollectionManager, healthCenter, storageIntelligence, genreManager, countryManager } from '../../services/library/LibraryIntelligence.js';
 import { awardManager, formatManager, contentThemeManager, missingPiecesDetector, duplicateLab, auditLogManager, snapshotManager, commandCenter } from '../../services/library/AwardsAndFormats.js';
 import { mediaTypeManager } from '../../services/library/LibraryIntelligence.js';
+import { uiIcon } from '../../ui/primitives.js';
 
 // ========== ERA PAGE ==========
 export class EraPage {
@@ -45,7 +46,7 @@ export class EraPage {
           <div class="era-chips">
  ${eras.map(era => `
               <button class="era-chip ${era.id === eraId ? 'active' : ''}" data-era="${era.id}">
-                <span class="era-icon">${era.icon}</span>
+                ${uiIcon(era.icon, 22)}
                 <span class="era-name">${era.name}</span>
                 <span class="era-years">${era.start}-${era.end}</span>
               </button>
@@ -153,7 +154,7 @@ export class FranchisesPage {
  grid.innerHTML = franchises.map(f => `
             <div class="franchise-card" data-id="${f.id}" style="--franchise-color: ${f.color}">
               <div class="franchise-header">
-                <span class="franchise-icon">${f.icon}</span>
+                ${uiIcon(f.icon, 22)}
                 <h3 class="franchise-name">${f.name}</h3>
                 <span class="franchise-count">${f.items?.length || 0} أفلام</span>
               </div>
@@ -834,7 +835,7 @@ export class AwardsPage {
       
  grid.innerHTML = awards.map(award => `
         <div class="award-card" data-id="${award.id}" style="--award-color: ${award.color}">
-          <span class="award-icon">${award.icon}</span>
+          ${uiIcon(award.icon, 20)}
           <h3 class="award-name">${award.name}</h3>
         </div>
  `).join('');
@@ -865,7 +866,7 @@ export class FormatsPage {
       
  grid.innerHTML = formats.map(f => `
         <div class="format-card" data-id="${f.id}">
-          <span class="format-icon">${f.icon}</span>
+          ${uiIcon(f.icon, 20)}
           <h3 class="format-name">${f.name}</h3>
           <p class="format-desc">${f.description}</p>
         </div>
@@ -897,7 +898,7 @@ export class ContentThemesPage {
       
  grid.innerHTML = themes.map(t => `
         <div class="content-theme-card" data-id="${t.id}">
-          <span class="theme-icon">${t.icon}</span>
+          ${uiIcon(t.icon, 20)}
           <h3 class="theme-name">${t.name}</h3>
           <p class="theme-desc">${t.description}</p>
         </div>

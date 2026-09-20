@@ -89,7 +89,7 @@ export class MigrationManager {
     const pending = this.migrations.filter(m => m.version > currentVersion).sort((a, b) => a.version - b.version);
 
     if (pending.length === 0) {
-      console.log('✓ Database up to date');
+      console.log('ok Database up to date');
       return { migrated: 0, currentVersion };
     }
 
@@ -101,7 +101,7 @@ export class MigrationManager {
     try {
       safetyBackup = await db.exportAll();
       localStorage.setItem('zpopcorn-migration-backup', JSON.stringify(safetyBackup));
-      console.log('✓ Safety backup created');
+      console.log('ok Safety backup created');
     } catch (e) {
       console.warn('Failed to create safety backup:', e);
     }
@@ -115,9 +115,9 @@ export class MigrationManager {
         await migration.up(db);
         await this.setCurrentVersion(migration.version);
         migrated++;
-        console.log(`✓ Migration ${migration.name} completed`);
+        console.log(`ok Migration ${migration.name} completed`);
       } catch (error) {
-        console.error(`✗ Migration ${migration.name} failed:`, error);
+        console.error(`x Migration ${migration.name} failed:`, error);
         failed = { migration, error };
         break;
       }
@@ -130,7 +130,7 @@ export class MigrationManager {
         if (safetyBackup) {
           await db.importAll(safetyBackup);
           await this.setCurrentVersion(currentVersion);
-          console.log('✓ Rollback completed');
+          console.log('ok Rollback completed');
         }
       } catch (rollbackError) {
         console.error('Rollback failed:', rollbackError);
@@ -142,12 +142,12 @@ export class MigrationManager {
     // Verify integrity after migration
     try {
       await this.verifyIntegrity();
-      console.log('✓ Database integrity verified');
+      console.log('ok Database integrity verified');
     } catch (e) {
       console.warn('Integrity check failed:', e);
     }
 
-    console.log(`✓ Migration completed: ${migrated} migrations applied`);
+    console.log(`ok Migration completed: ${migrated} migrations applied`);
 
     return {
       migrated,
@@ -253,7 +253,7 @@ export class MigrationManager {
           await db.clear(store.name).catch(() => {});
         }
         await this.setCurrentVersion(0);
-        console.log('✓ Database reset');
+        console.log('ok Database reset');
         window.location.reload();
       } catch (e) {
         console.error('Reset failed:', e);

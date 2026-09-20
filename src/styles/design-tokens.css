@@ -4,13 +4,13 @@
 :root {
   color-scheme: dark;
 
-  /* ================= SURFACE LADDER (spec 04) ================= */
-  --surface-0: #0a0a0a;   /* app canvas            */
-  --surface-1: #111111;   /* panels / sidebar      */
-  --surface-2: #161616;   /* cards                 */
-  --surface-3: #1c1c1c;   /* raised / hover cards  */
-  --surface-4: #222222;   /* controls, inputs      */
-  --surface-5: #2b2b2b;   /* pressed / scrollbars  */
+  /* ================= SURFACE LADDER (spec 05 — cool layered charcoal) ==== */
+  --surface-0: #0b0b0d;   /* app canvas            */
+  --surface-1: #101013;   /* panels / sidebar      */
+  --surface-2: #16161a;   /* cards                 */
+  --surface-3: #1b1b20;   /* raised / hover cards  */
+  --surface-4: #202026;   /* controls, inputs      */
+  --surface-5: #25252c;   /* pressed / scrollbars  */
 
   /* Semantic aliases (theme files may retint) */
   --color-background: var(--surface-0);
@@ -19,25 +19,27 @@
   --color-surface-elevated: var(--surface-2);
   --color-card: var(--surface-2);
   --color-card-hover: var(--surface-3);
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-strong: rgba(255, 255, 255, 0.14);
-  --color-border-subtle: rgba(255, 255, 255, 0.05);
+  --color-border: rgba(255, 255, 255, 0.09);
+  --color-border-strong: rgba(255, 255, 255, 0.12);
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
   --color-hairline: rgba(255, 255, 255, 0.06);
 
-  --color-text-primary: #f4f4f5;
-  --color-text-secondary: rgba(244, 244, 245, 0.68);
-  --color-text-muted: rgba(244, 244, 245, 0.44);
-  --color-text-faint: rgba(244, 244, 245, 0.28);
-  --color-text-inverse: #0a0a0a;
+  --color-text-primary: #f5f5f5;
+  --color-text-secondary: #a7a7af;
+  --color-text-muted: #707079;
+  --color-text-faint: rgba(112, 112, 121, 0.6);
+  --color-text-inverse: #0b0b0d;
 
-  /* ================= ACCENT (single controlled hue per theme) ============ */
+  /* ================= ACCENT — the single dominant hue (spec 05) ============ */
+  /* Electric indigo. One accent identifies: primary actions, active nav,
+     focus, progress, selection. Nothing else glows. */
   --accent: #7b6cf6;                 /* indigo-violet — the zPopcorn signature */
   --accent-bright: #9d92ff;
   --accent-deep: #5a4bd6;
-  --accent-contrast: #0a0a0a;        /* text on accent fill */
-  --accent-soft: rgba(123, 108, 246, 0.14);
+  --accent-contrast: #0b0b0d;        /* text on accent fill */
+  --accent-soft: rgba(123, 108, 246, 0.13);
   --accent-line: rgba(123, 108, 246, 0.42);
-  --accent-glow: rgba(123, 108, 246, 0.22);
+  --accent-glow: rgba(123, 108, 246, 0.16);
   --color-accent: var(--accent);              /* legacy aliases → new system */
   --color-accent-secondary: var(--accent-bright);
   --color-accent-tertiary: var(--accent-deep);
@@ -53,16 +55,16 @@
   --danger-soft: rgba(248, 113, 113, 0.12);
   --info-soft: rgba(96, 165, 250, 0.12);
 
-  /* legacy primitives (kept for stragglers) */
-  --color-true-black: #000000;
-  --color-black-900: #111111; --color-black-800: #161616; --color-black-700: #1c1c1c;
-  --color-black-600: #222222; --color-black-500: #2b2b2b; --color-black-400: #525252;
-  --color-black-300: #6b6b6b; --color-black-200: #8a8a8a; --color-black-100: #a3a3a3;
-  --color-white: #fafafa;
+  /* legacy primitives (kept for stragglers — mapped to the cool ramp) */
+  --color-true-black: #060608;        /* deepest scrim — never the UI background */
+  --color-black-900: #101013; --color-black-800: #16161a; --color-black-700: #1b1b20;
+  --color-black-600: #202026; --color-black-500: #25252c; --color-black-400: #45454e;
+  --color-black-300: #5c5c66; --color-black-200: #7a7a85; --color-black-100: #a3a3ad;
+  --color-white: #f5f5f5;
 
   /* ================= TYPOGRAPHY (spec 36) ================= */
-  --font-ui: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
-  --font-display: 'Noto Sans Arabic', 'IBM Plex Sans Arabic', 'Segoe UI', sans-serif;
+  --font-ui: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+  --font-display: 'Cairo', 'Noto Sans Arabic', 'IBM Plex Sans Arabic', 'Segoe UI', sans-serif;
   --font-mono: 'Cascadia Mono', 'Consolas', 'SF Mono', ui-monospace, monospace;
   --font-family: var(--font-ui);
   --font-family-arabic-primary: var(--font-ui);
@@ -184,10 +186,10 @@
 
   /* Hero */
   --hero-h: clamp(380px, 52vh, 520px);
-  --hero-overlay: linear-gradient(78deg, rgba(10,10,10,0.96) 0%, rgba(10,10,10,0.82) 38%, rgba(10,10,10,0.28) 74%, rgba(10,10,10,0.10) 100%);
+  --hero-overlay: linear-gradient(78deg, rgba(8,8,11,0.97) 0%, rgba(9,9,12,0.84) 38%, rgba(10,10,14,0.30) 74%, rgba(11,11,15,0.10) 100%);
 
   /* Scrollbar */
-  --scroll-thumb: #2b2b2b; --scroll-thumb-hover: #3a3a3a; --scroll-track: transparent;
+  --scroll-thumb: #2c2c34; --scroll-thumb-hover: #3a3a44; --scroll-track: transparent;
 }
 
 /* ================= DENSITY (spec 35) ================= */
@@ -238,6 +240,6 @@
 ::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 8px; border: 2px solid transparent; background-clip: padding-box; }
 ::-webkit-scrollbar-thumb:hover { background: var(--scroll-thumb-hover); border: 2px solid transparent; background-clip: padding-box; }
 
-::selection { background: color-mix(in srgb, var(--accent) 45%, transparent); color: #fff; }
+::selection { background: color-mix(in srgb, var(--accent) 40%, transparent); color: var(--color-text-primary); }
 
 :focus-visible { outline: 2px solid var(--accent-line); outline-offset: 2px; }

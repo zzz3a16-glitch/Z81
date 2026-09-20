@@ -222,7 +222,7 @@ export function createEpisodeRow(ep, { onOpen = null, season = null, showProgres
       <span class="mt">
         ${ep.air_date ? `<span class="num">${esc(ep.air_date)}</span>` : ''}
         ${ep.runtime ? `· <span class="num">${fmtRuntime(ep.runtime)}</span>` : ''}
-        ${ep.vote_average ? `· ★ <span class="num">${Number(ep.vote_average).toFixed(1)}</span>` : ''}
+        ${ep.vote_average ? `· <span class="num rate">${icon('star',12)} ${Number(ep.vote_average).toFixed(1)}</span>` : ''}
       </span>
       <p>${esc(ep.overview || 'لا يوجد وصف لهذه الحلقة.')}</p>
     </div>
@@ -260,7 +260,7 @@ export function createTop10(medias) {
         : fallbackArt(getMediaTitle(m))}</div>
       <div class="tinfo">
         <b>${esc(truncate(getMediaTitle(m), 24))}</b>
-        <span class="num">${getMediaYear(m) || ''} ${m.vote_average ? `· ★ ${Number(m.vote_average).toFixed(1)}` : ''}</span>
+        <span class="num">${getMediaYear(m) || ''} ${m.vote_average ? `· <span class="rate">${icon('star',12)} ${Number(m.vote_average).toFixed(1)}</span>` : ''}</span>
       </div>`;
     item.dataset.zctx = 'media';
     item.__media = m;
