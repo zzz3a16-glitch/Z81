@@ -86,4 +86,7 @@ shimmer copy-paste forks  → audit-tokens SHIMMER lock (zskel defined once, bas
 dead CSS families revival → consumer-grep before delete rule (audit.md §01)
 stuck async UI states     → boot rehydrate sweep + cancel-lands tests (live tests pattern)
 service filter regressions→ tests/live-pipeline.test.mjs scenario matrix (extend for new filters)
+typography role bypass      → audit-tokens FONT lock (font-size ≤40px fails; >40 exempt; density must move text)
+off-scale spacing           → audit-tokens SPACE lock (int px 4..80 outside --sp-* scale fails; ≤3 micro exempt)
+state/skeleton skin forks   → single-skin doctrine: .z-state + .sk* only (legacy families purged)
 ```

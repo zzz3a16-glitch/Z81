@@ -55,7 +55,7 @@ Every interactive component supports: **default · hover · active · focus-visi
 | Media card | `MediaCard(media, {variant})` | poster · wide · continue · row · compact · person | same DNA: radius `--r-lg`, hover lift token, actions row appears on hover/focus. Progress bar = `.continue` only. |
 | Rail | `railEl/railSection` | snap = `--card-w` | horizontal flow, no vertical scroll; caps use `--text-3xs`. |
 | Section | `section({title, subtitle, action})` | — | THE page rhythm unit: SectionTitle role + action slot on the far inline-end. |
-| Skeletons | `skelGrid/skelRail/skelHero/skelLines/skelRows` | mirrors each pattern | canonical sweep = `@keyframes zskel` + `--dur-shimmer`; never bespoke shimmers. |
+| Skeletons | `skelGrid/skelRail/skelHero/skelLines/skelRows` + `createSkeletonGrid` | mirrors each pattern | canonical sweep = `@keyframes zskel` + `--dur-shimmer`; markup class set is `sk sk-card/sk-line/sk-row/sk-hero` only — `.skeleton*` and `.empty-state*` legacy families purged. |
 | Empty | `emptyState({icon,title,desc,actions})` | — | must answer: what happened / why / what now (§31). |
 | Error | `errorState`/`paintError` + diag tables in live pages | — | human sentence primary, retry + recovery, technical details collapsible (§32). |
 | Feedback | single `showtoast` event → NotificationService; `statusPill` for recency; `pill/statPill` for metadata | — | no page-local alert/toast clones (§33). |
@@ -93,7 +93,7 @@ python3 scripts/audit-tokens.py --drift   # report: spacing/grid/typography drif
 
 Manual checklist per page (§40): alignment to section rhythm · density switch changes grid? · hover/focus/selected/disabled exist · RTL flip sane (toggle `dir` in devtools) · skeleton matches layout · empty & error copy answers §31 trio · no horizontal overflow at 1366/1920/2560 · contrast ≥ 4.5:1 text, ≥ 3:1 large/UI (WCAG AA, §41) · hit target ≥ 30px · Esc/tab-order.
 
-Gate hard rules encoded: no emoji/symbol glyphs in rendered strings; no hex outside palette/boot/data modules; **no `minmax(<px>` override of `.media-grid`** (protects §3); shimmer keyframe defined exactly once.
+Gate hard rules encoded: no emoji/symbol glyphs in rendered strings; no hex outside palette/boot/data modules; **no `minmax(<px>` override of `.media-grid`** (protects §3); shimmer keyframe defined exactly once; **no `font-size: Npx` ≤40** — `--text-*` roles only, so density typography actually propagates (decorative >40px numerals exempt); **no off-scale padding/margin/gap** — integers 4…80 must be on the `--sp-*` scale (≤3px optical micro-values and >80px voids exempt; justified exceptions carry `lint:ok`). Single skins: `.z-state` is the ONLY empty/error pattern, `.sk*` the ONLY skeleton skin.
 
 ## 9. Adding a new page — the recipe
 
