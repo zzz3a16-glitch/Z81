@@ -19,17 +19,17 @@ const SORTS = [
 export async function AnimePage() {
   const page = el('div', 'z-page-anime');
   page.innerHTML = `
-    <header class="page-header" style="padding-bottom:12px">
+    <header class="page-header" style="padding-bottom: var(--sp-3)">
       <h1 class="page-title">أنمي</h1>
       <p class="page-subtitle">مواسم وحلقات ومواعيد بث — كل ما يهم متابع الأنمي حقاً.</p>
     </header>
     <div id="an-airing"></div>
     <div id="an-lib"></div>
-    <div class="container" style="margin-bottom:14px">
-      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+    <div class="container" style="margin-bottom: var(--sp-4)">
+      <div style="display:flex;gap: var(--sp-2);flex-wrap:wrap;align-items:center">
         ${SORTS.map(([v, l], i) => `<button class="chip ${i === 0 ? 'active' : ''}" data-sort="${v}">${l}</button>`).join('')}
         <span style="flex:1"></span>
-        <span style="font-size:11px;color:var(--color-text-faint)">ياباني · تصنيف 16 · مدعوم بالكاش</span>
+        <span style="font-size: var(--text-3xs);color:var(--color-text-faint)">ياباني · تصنيف 16 · مدعوم بالكاش</span>
       </div>
     </div>
     <div class="container">
@@ -104,7 +104,7 @@ async function loadAiringSoon(mount) {
   if (!rows.length) return;
   const s = section({ title: 'قريباً — من متابَعاتك', subtitle: 'مواعيد الحلقات الجديدة لمكتبتك' });
   const box = el('div', '');
-  box.style.cssText = 'display:flex;flex-direction:column;gap:6px;padding-inline:var(--page-gutter)';
+  box.style.cssText = 'display:flex;flex-direction:column;gap: var(--sp-2);padding-inline:var(--page-gutter)';
   s.body.appendChild(box);
   mount.appendChild(s.root);
   let painted = 0;

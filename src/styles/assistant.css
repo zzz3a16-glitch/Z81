@@ -93,13 +93,13 @@
 }
 
 .search-suggestion-item {
-  padding: 12px 16px;
+  padding: var(--sp-3) var(--sp-4);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--sp-3);
   cursor: pointer;
   transition: background 0.2s;
-  font-size: 14px;
+  font-size: var(--text-sm);
 }
 
 .search-suggestion-item:hover {
@@ -120,22 +120,22 @@
 /* Advanced search filters */
 .search-filters {
   display: flex;
-  gap: 8px;
+  gap: var(--sp-2);
   flex-wrap: wrap;
-  margin-bottom: 20px;
+  margin-bottom: var(--sp-5);
 }
 
 .filter-chip {
-  padding: 8px 16px;
+  padding: var(--sp-2) var(--sp-4);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--r-2xl);
-  font-size: 13px;
+  font-size: var(--text-sm);
   cursor: pointer;
   transition: all 0.2s;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--sp-2);
 }
 
 .filter-chip:hover {
@@ -172,10 +172,10 @@
   left: 0;
   right: 0;
   background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 50%, transparent 100%);
-  padding: 20px;
+  padding: var(--sp-5);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--sp-3);
   transition: opacity 0.3s;
 }
 
@@ -226,7 +226,7 @@
 .player-buttons {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--sp-4);
 }
 
 .player-btn {
@@ -261,7 +261,7 @@
 
 .player-time {
   color: var(--accent-contrast);
-  font-size: 13px;
+  font-size: var(--text-sm);
   font-family: monospace;
   min-width: 100px;
 }
@@ -278,7 +278,7 @@
 .player-volume {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--sp-2);
 }
 
 .player-volume-slider {
@@ -306,7 +306,7 @@
   background: rgba(0,0,0,0.9);
   border: 1px solid rgba(255,255,255,0.2);
   border-radius: var(--r-md);
-  padding: 8px;
+  padding: var(--sp-2);
   pointer-events: none;
   transform: translateX(-50%);
   display: none;
@@ -326,10 +326,10 @@
 
 .player-thumbnail-time {
   color: var(--color-white);
-  font-size: 11px;
+  font-size: var(--text-3xs);
   font-family: monospace;
   text-align: center;
-  margin-top: 4px;
+  margin-top: var(--sp-1);
 }
 
 /* Subtitle styling */
@@ -341,11 +341,11 @@
   max-width: 80%;
   text-align: center;
   color: var(--color-white);
-  font-size: 18px;
+  font-size: var(--text-lg);
   line-height: 1.4;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5);
   background: rgba(0,0,0,0.5);
-  padding: 4px 12px;
+  padding: var(--sp-1) var(--sp-3);
   border-radius: var(--r-xs);
   pointer-events: none;
 }
@@ -369,7 +369,7 @@
   left: 0;
   background: var(--color-accent);
   color: var(--accent-contrast);
-  padding: 8px;
+  padding: var(--sp-2);
   text-decoration: none;
   border-radius: 0 0 4px 0;
   z-index: 10000;

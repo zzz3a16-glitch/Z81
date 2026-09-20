@@ -3,7 +3,7 @@
  */
 
 import { watchlistManager } from '../services/watchlist/WatchlistManager.js';
-import { createMediaGrid } from '../components/MediaCard.js';
+import { createMediaGrid, createMediaCard } from '../components/MediaCard.js';
 import { uiIcon } from '../ui/primitives.js';
 import { db } from '../services/storage/Database.js';
 import { tmdbClient } from '../services/tmdb/TMDBClient.js';
@@ -33,13 +33,13 @@ async function createWatchlistPage(listId, title, description) {
  const container = document.createElement('div');
  container.className = 'watchlist-page';
  container.innerHTML = `
-    <div class="container" style="padding-top: 24px;">
-      <div class="page-header" style="padding-bottom:12px">
+    <div class="container" style="padding-top: var(--sp-6);">
+      <div class="page-header" style="padding-bottom: var(--sp-3)">
         <h1 class="page-title">${title}</h1>
         <p class="page-subtitle">${description}</p>
       </div>
       
-      <div style="display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;">
+      <div style="display: flex; gap: var(--sp-2); margin-bottom: var(--sp-6); flex-wrap: wrap;">
         <select id="sort-select" class="input" style="width: 200px; height: 40px;">
           <option value="date">تاريخ الإضافة</option>
           <option value="rating">التقييم</option>
@@ -62,10 +62,10 @@ async function createWatchlistPage(listId, title, description) {
       
  if (items.length === 0) {
  grid.innerHTML = `
-          <div class="empty-state" style="grid-column: 1 / -1;">
-            <div class="empty-state-icon"></div>
-            <h3 class="empty-state-title">القائمة فارغة</h3>
-            <p class="empty-state-description">لم تضف أي محتوى لهذه القائمة بعد. ابدأ بإضافة أفلام ومسلسلات من صفحات التفاصيل</p>
+          <div class="z-state" style="grid-column: 1 / -1;">
+            <div class="art">${icon('bookmark', 30, { stroke: 1.5 })}</div>
+            <h3>القائمة فارغة</h3>
+            <p>لم تضف أي محتوى لهذه القائمة بعد. ابدأ بإضافة أفلام ومسلسلات من صفحات التفاصيل</p>
             <button class="btn btn-primary" onclick="window.router.navigate('/movies')">استكشاف الأفلام</button>
           </div>
  `;
@@ -75,7 +75,7 @@ async function createWatchlistPage(listId, title, description) {
  createMediaGrid(items.map(item => item.media || { id: item.mediaId, title: item.title, poster_path: item.poster_path, media_type: item.mediaType }), grid);
  } catch (e) {
  console.warn('Failed to load watchlist:', e);
- grid.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;"><p>فشل تحميل القائمة</p></div>`;
+ grid.innerHTML = `<div class="z-state" style="grid-column: 1 / -1;"><p>فشل تحميل القائمة</p></div>`;
  }
  }
 
@@ -118,8 +118,8 @@ async function createWatchlistPage(listId, title, description) {
 export async function HistoryPage() {
  const container = document.createElement('div');
  container.innerHTML = `
-    <div class="container" style="padding-top: 24px;">
-      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 24px;"> سجل المشاهدة</h1>
+    <div class="container" style="padding-top: var(--sp-6);">
+      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--sp-6);"> سجل المشاهدة</h1>
       <div id="history-grid" class="media-grid"></div>
     </div>
  `;
@@ -134,10 +134,10 @@ export async function HistoryPage() {
     
  if (allHistory.length === 0) {
  grid.innerHTML = `
-        <div class="empty-state" style="grid-column: 1 / -1;">
-          <div class="empty-state-icon"></div>
-          <h3 class="empty-state-title">لا يوجد سجل مشاهدة</h3>
-          <p class="empty-state-description">سيظهر هنا سجل الأفلام والمسلسلات التي شاهدتها</p>
+        <div class="z-state" style="grid-column: 1 / -1;">
+          <div class="art">${icon('clock', 30, { stroke: 1.5 })}</div>
+          <h3>لا يوجد سجل مشاهدة</h3>
+          <p>سيظهر هنا سجل الأفلام والمسلسلات التي شاهدتها</p>
         </div>
  `;
  } else {
@@ -150,7 +150,7 @@ export async function HistoryPage() {
  })), grid);
  }
  } catch {
- grid.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;"><p>فشل تحميل السجل</p></div>`;
+ grid.innerHTML = `<div class="z-state" style="grid-column: 1 / -1;"><p>فشل تحميل السجل</p></div>`;
  }
 
  return container;
@@ -159,8 +159,8 @@ export async function HistoryPage() {
 export async function ContinueWatchingPage() {
  const container = document.createElement('div');
  container.innerHTML = `
-    <div class="container" style="padding-top: 24px;">
-      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 24px; display:flex; align-items:center; gap:10px;">${icon('play', 22, { weight: "bold" })} متابعة المشاهدة</h1>
+    <div class="container" style="padding-top: var(--sp-6);">
+      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--sp-6); display:flex; align-items:center; gap: var(--sp-3);">${icon('play', 22, { weight: "bold" })} متابعة المشاهدة</h1>
       <div id="continue-grid" class="media-grid"></div>
     </div>
  `;
@@ -173,28 +173,24 @@ export async function ContinueWatchingPage() {
     
  if (inProgress.length === 0) {
  grid.innerHTML = `
-        <div class="empty-state" style="grid-column: 1 / -1;">
-          ${icon('play', 40, { weight: 'duotone' })}
-          <h3 class="empty-state-title">لا يوجد محتوى قيد المشاهدة</h3>
-          <p class="empty-state-description">ابدأ بمشاهدة فيلم أو مسلسل وسيظهر هنا للمتابعة</p>
+        <div class="z-state" style="grid-column: 1 / -1;">
+          <div class="art">${icon('play', 40, { weight: 'duotone' })}</div>
+          <h3>لا يوجد محتوى قيد المشاهدة</h3>
+          <p>ابدأ بمشاهدة فيلم أو مسلسل وسيظهر هنا للمتابعة</p>
         </div>
  `;
  } else {
- grid.innerHTML = inProgress.map(item => `
-        <div class="media-card" style="cursor: pointer;" onclick="window.dispatchEvent(new CustomEvent('playmedia', {detail: {id: '${item.mediaId}', title: '${item.title}'}}))">
- ${item.poster_path ? `<img src="${getTMDBImageUrl(item.poster_path, 'poster', 'w342')}" style="width: 100%; height: 100%; object-fit: cover;" />` : ''}
-          <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 12px; color: var(--color-white);">
-            <div style="font-weight: 600; font-size: 14px; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.title}</div>
-            <div style="background: rgba(255,255,255,0.2); height: 4px; border-radius: 2px; overflow: hidden;">
-              <div style="width: ${item.progress}%; height: 100%; background: var(--color-accent);"></div>
-            </div>
-            <div style="font-size: 11px; margin-top: 4px; opacity: 0.8;">${item.progress}% • ${Math.floor(item.position / 60)}:${String(Math.floor(item.position % 60)).padStart(2, '0')}</div>
-          </div>
-        </div>
- `).join('');
- }
- } catch {
- grid.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;"><p>فشل التحميل</p></div>`;
+   grid.innerHTML = '';
+   for (const item of inProgress) {
+     const card = createMediaCard({ id: item.mediaId, title: item.title, poster_path: item.poster_path, progress: item.progress }, {
+       variant: 'continue',
+       onClick: () => window.dispatchEvent(new CustomEvent('playmedia', { detail: { id: item.mediaId, title: item.title } })),
+     });
+     grid.appendChild(card);
+   }
+  }
+  } catch {
+ grid.innerHTML = `<div class="z-state" style="grid-column: 1 / -1;"><p>فشل التحميل</p></div>`;
  }
 
  return container;
@@ -203,10 +199,10 @@ export async function ContinueWatchingPage() {
 export async function PlatformsPage() {
  const container = document.createElement('div');
  container.innerHTML = `
-    <div class="container" style="padding-top: 24px;">
-      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 8px;"> المنصات</h1>
-      <p style="color: var(--color-text-secondary); margin-bottom: 24px;">منصات البث المتاحة في منطقتك (بيانات حقيقية من TMDB Watch Providers)</p>
-      <div id="platforms-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;"></div>
+    <div class="container" style="padding-top: var(--sp-6);">
+      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--sp-2);"> المنصات</h1>
+      <p style="color: var(--color-text-secondary); margin-bottom: var(--sp-6);">منصات البث المتاحة في منطقتك (بيانات حقيقية من TMDB Watch Providers)</p>
+      <div id="platforms-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--sp-4);"></div>
     </div>
  `;
 
@@ -225,11 +221,11 @@ export async function PlatformsPage() {
  ];
 
  grid.innerHTML = platforms.map(platform => `
-    <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s;" onmouseenter="this.style.borderColor='var(--color-accent)'" onmouseleave="this.style.borderColor='var(--color-border)'">
-      <div style="width: 60px; height: 60px; background: ${platform.color}; border-radius: var(--r-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: var(--color-white); font-weight: 700; font-size: 12px;">${platform.name.slice(0, 2).toUpperCase()}</div>
-      <h3 style="font-weight: 600; margin-bottom: 4px;">${platform.name}</h3>
-      <p style="font-size: 12px; color: var(--color-text-secondary);">متاح في ${localStorage.getItem('zpopcorn-region') || 'SA'}</p>
-      <div style="margin-top: 12px; font-size: 11px; color: var(--color-text-muted);">بيانات من TMDB • JustWatch</div>
+    <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5); text-align: center; cursor: pointer; transition: all 0.2s;" onmouseenter="this.style.borderColor='var(--color-accent)'" onmouseleave="this.style.borderColor='var(--color-border)'">
+      <div style="width: 60px; height: 60px; background: ${platform.color}; border-radius: var(--r-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--sp-3); color: var(--color-white); font-weight: 700; font-size: var(--text-2xs);">${platform.name.slice(0, 2).toUpperCase()}</div>
+      <h3 style="font-weight: 600; margin-bottom: var(--sp-1);">${platform.name}</h3>
+      <p style="font-size: var(--text-2xs); color: var(--color-text-secondary);">متاح في ${localStorage.getItem('zpopcorn-region') || 'SA'}</p>
+      <div style="margin-top: var(--sp-3); font-size: var(--text-3xs); color: var(--color-text-muted);">بيانات من TMDB • JustWatch</div>
     </div>
  `).join('');
 
@@ -239,7 +235,7 @@ export async function PlatformsPage() {
 export async function PersonPage(params) {
  const id = params.id;
  const container = document.createElement('div');
- container.innerHTML = `<div style="padding: 40px; text-align: center;"><div class="app-loading-spinner" style="margin: 0 auto 16px;"></div><p>جاري تحميل بيانات الشخص...</p></div>`;
+ container.innerHTML = `<div style="padding: var(--sp-10); text-align: center;"><div class="app-loading-spinner" style="margin: 0 auto var(--sp-4);"></div><p>جاري تحميل بيانات الشخص...</p></div>`;
 
  try {
  const person = await tmdbClient.getPerson(id);
@@ -247,31 +243,31 @@ export async function PersonPage(params) {
  const profileUrl = person.profile_path ? getTMDBImageUrl(person.profile_path, 'profile', 'w500') : '';
     
  container.innerHTML = `
-      <div class="container" style="padding-top: 24px;">
-        <button class="btn btn-ghost" onclick="window.router.goBack()" style="margin-bottom: 24px;">← العودة</button>
+      <div class="container" style="padding-top: var(--sp-6);">
+        <button class="btn btn-ghost" onclick="window.router.goBack()" style="margin-bottom: var(--sp-6);">← العودة</button>
         
-        <div style="display: grid; grid-template-columns: 300px 1fr; gap: 32px; align-items: start;">
+        <div style="display: grid; grid-template-columns: 300px 1fr; gap: var(--sp-8); align-items: start;">
           <div>
  ${profileUrl ? `<img src="${profileUrl}" style="width: 100%; border-radius: var(--r-xl); aspect-ratio: 2/3; object-fit: cover;" />` : `<div style="width: 100%; aspect-ratio: 2/3; background: var(--color-surface); border-radius: var(--r-xl); display: flex; align-items: center; justify-content: center; color: var(--color-text-faint)">${icon('users', 48, { stroke: 1.4 })}</div>`}
           </div>
           
           <div>
-            <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 8px;">${person.name}</h1>
- ${person.birthday ? `<p style="color: var(--color-text-secondary); margin-bottom: 16px;">${person.birthday} • ${person.place_of_birth || ''}</p>` : ''}
+            <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: var(--sp-2);">${person.name}</h1>
+ ${person.birthday ? `<p style="color: var(--color-text-secondary); margin-bottom: var(--sp-4);">${person.birthday} • ${person.place_of_birth || ''}</p>` : ''}
             
-            <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
-              <span style="background: var(--color-accent); color: var(--accent-contrast); padding: 4px 12px; border-radius: var(--r-xl); font-size: 13px;">${person.known_for_department || 'تمثيل'}</span>
- ${person.popularity ? `<span style="background: var(--color-card); border: 1px solid var(--color-border); padding: 4px 12px; border-radius: var(--r-xl); font-size: 13px;">شعبية: ${person.popularity.toFixed(1)}</span>` : ''}
+            <div style="display: flex; gap: var(--sp-2); margin-bottom: var(--sp-5); flex-wrap: wrap;">
+              <span style="background: var(--color-accent); color: var(--accent-contrast); padding: var(--sp-1) var(--sp-3); border-radius: var(--r-xl); font-size: var(--text-sm);">${person.known_for_department || 'تمثيل'}</span>
+ ${person.popularity ? `<span style="background: var(--color-card); border: 1px solid var(--color-border); padding: var(--sp-1) var(--sp-3); border-radius: var(--r-xl); font-size: var(--text-sm);">شعبية: ${person.popularity.toFixed(1)}</span>` : ''}
             </div>
             
  ${person.biography ? `
-              <div style="margin-bottom: 24px;">
-                <h3 style="font-weight: 600; margin-bottom: 12px;">السيرة الذاتية</h3>
+              <div style="margin-bottom: var(--sp-6);">
+                <h3 style="font-weight: 600; margin-bottom: var(--sp-3);">السيرة الذاتية</h3>
                 <p style="line-height: 1.8; color: var(--color-text-secondary);">${person.biography.slice(0, 500)}${person.biography.length > 500 ? '...' : ''}</p>
               </div>
  ` : ''}
             
-            <h3 style="font-weight: 600; margin-bottom: 16px;">أشهر الأعمال</h3>
+            <h3 style="font-weight: 600; margin-bottom: var(--sp-4);">أشهر الأعمال</h3>
             <div class="media-grid" id="known-for"></div>
           </div>
         </div>
@@ -287,7 +283,7 @@ export async function PersonPage(params) {
  }
 
  } catch (e) {
- container.innerHTML = `<div class="container" style="padding: 40px; text-align: center;"><h2>فشل تحميل بيانات الشخص</h2><p>${e.message}</p></div>`;
+ container.innerHTML = `<div class="container" style="padding: var(--sp-10); text-align: center;"><h2>فشل تحميل بيانات الشخص</h2><p>${e.message}</p></div>`;
  }
 
  return container;
@@ -296,12 +292,12 @@ export async function PersonPage(params) {
 export async function AnalyticsPage() {
  const container = document.createElement('div');
  container.innerHTML = `
-    <div class="container" style="padding-top: 24px;">
-      <h1 class="page-title" style="margin-bottom: 6px;">الإحصائيات</h1><p class="page-subtitle" style="margin-bottom:24px">أرقام مكتبتك الحقيقية — لا شيء يغادر جهازك.</p>
+    <div class="container" style="padding-top: var(--sp-6);">
+      <h1 class="page-title" style="margin-bottom: var(--sp-2);">الإحصائيات</h1><p class="page-subtitle" style="margin-bottom: var(--sp-6)">أرقام مكتبتك الحقيقية — لا شيء يغادر جهازك.</p>
       <div id="analytics-content">
-        <div style="display: grid; gap: 20px;">
-          <div class="skeleton" style="height: 200px; border-radius: var(--r-lg);"></div>
-          <div class="skeleton" style="height: 300px; border-radius: var(--r-lg);"></div>
+        <div style="display: grid; gap: var(--sp-5);">
+          <div class="sk" style="height: 200px; border-radius: var(--r-lg);"></div>
+          <div class="sk" style="height: 300px; border-radius: var(--r-lg);"></div>
         </div>
       </div>
     </div>
@@ -315,62 +311,62 @@ export async function AnalyticsPage() {
  const achievements = await achievementEngine.checkAchievements();
 
  content.innerHTML = `
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
-        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px; text-align: center;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--sp-4); margin-bottom: var(--sp-8);">
+        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5); text-align: center;">
           <div style="font-size: 2rem; font-weight: 700; color: var(--color-accent);">${Math.floor(analytics.watchTime.total / 3600)}س</div>
-          <div style="font-size: 13px; color: var(--color-text-secondary); margin-top: 4px;">إجمالي وقت المشاهدة</div>
+          <div style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-top: var(--sp-1);">إجمالي وقت المشاهدة</div>
         </div>
-        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px; text-align: center;">
+        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5); text-align: center;">
           <div style="font-size: 2rem; font-weight: 700; color: var(--color-accent);">${analytics.library.completed}</div>
-          <div style="font-size: 13px; color: var(--color-text-secondary); margin-top: 4px;">أعمال مكتملة</div>
+          <div style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-top: var(--sp-1);">أعمال مكتملة</div>
         </div>
-        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px; text-align: center;">
+        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5); text-align: center;">
           <div style="font-size: 2rem; font-weight: 700; color: var(--color-accent);">${analytics.ratings.total}</div>
-          <div style="font-size: 13px; color: var(--color-text-secondary); margin-top: 4px;">تقييمات</div>
+          <div style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-top: var(--sp-1);">تقييمات</div>
         </div>
-        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px; text-align: center;">
+        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5); text-align: center;">
           <div style="font-size: 2rem; font-weight: 700; color: var(--color-accent);">${achievements.unlocked.length}</div>
-          <div style="font-size: 13px; color: var(--color-text-secondary); margin-top: 4px;">إنجازات</div>
+          <div style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-top: var(--sp-1);">إنجازات</div>
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px;">
-        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
-          <h3 style="font-weight: 600; margin-bottom: 16px;">الأنواع المفضلة</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-5); margin-bottom: var(--sp-8);">
+        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5);">
+          <h3 style="font-weight: 600; margin-bottom: var(--sp-4);">الأنواع المفضلة</h3>
  ${analytics.genres.length > 0 ? analytics.genres.map(g => `
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--color-border-subtle);">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--sp-2) 0; border-bottom: 1px solid var(--color-border-subtle);">
               <span>نوع ${g.id}</span>
-              <span style="background: var(--color-accent); color: var(--accent-contrast); padding: 2px 8px; border-radius: var(--r-lg); font-size: 12px;">${g.count}</span>
+              <span style="background: var(--color-accent); color: var(--accent-contrast); padding: 2px var(--sp-2); border-radius: var(--r-lg); font-size: var(--text-2xs);">${g.count}</span>
             </div>
- `).join('') : '<p style="color: var(--color-text-muted); font-size: 14px;">لا توجد بيانات بعد</p>'}
+ `).join('') : '<p style="color: var(--color-text-muted); font-size: var(--text-sm);">لا توجد بيانات بعد</p>'}
         </div>
         
-        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
-          <h3 style="font-weight: 600; margin-bottom: 16px;">الإنجازات</h3>
-          <div style="display: grid; gap: 8px;">
+        <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5);">
+          <h3 style="font-weight: 600; margin-bottom: var(--sp-4);">الإنجازات</h3>
+          <div style="display: grid; gap: var(--sp-2);">
  ${achievements.unlocked.map(a => `
-              <div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: var(--color-surface); border-radius: var(--r-md); border: 1px solid var(--color-border);">
+              <div style="display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-2); background: var(--color-surface); border-radius: var(--r-md); border: 1px solid var(--color-border);">
                 ${uiIcon(a.icon, 20)}
                 <div style="flex: 1;">
-                  <div style="font-weight: 500; font-size: 14px;">${a.name}</div>
-                  <div style="font-size: 12px; color: var(--color-text-secondary);">${a.description}</div>
+                  <div style="font-weight: 500; font-size: var(--text-sm);">${a.name}</div>
+                  <div style="font-size: var(--text-2xs); color: var(--color-text-secondary);">${a.description}</div>
                 </div>
                 <span style="color: var(--color-success);">${icon('check', 14)}</span>
               </div>
  `).join('')}
- ${achievements.unlocked.length === 0 ? '<p style="color: var(--color-text-muted); font-size: 14px;">ابدأ بالمشاهدة لفتح الإنجازات</p>' : ''}
+ ${achievements.unlocked.length === 0 ? '<p style="color: var(--color-text-muted); font-size: var(--text-sm);">ابدأ بالمشاهدة لفتح الإنجازات</p>' : ''}
           </div>
         </div>
       </div>
 
-      <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: 20px;">
-        <h3 style="font-weight: 600; margin-bottom: 16px;">خريطة المشاهدة (24×7)</h3>
+      <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5);">
+        <h3 style="font-weight: 600; margin-bottom: var(--sp-4);">خريطة المشاهدة (24×7)</h3>
         <div style="overflow-x: auto;">
-          <div style="display: grid; grid-template-columns: 60px repeat(24, 1fr); gap: 2px; min-width: 800px; font-size: 10px;">
+          <div style="display: grid; grid-template-columns: 60px repeat(24, 1fr); gap: 2px; min-width: 800px; font-size: var(--text-3xs);">
             <div></div>
  ${Array.from({length: 24}, (_, i) => `<div style="text-align: center; color: var(--color-text-muted);">${i}</div>`).join('')}
  ${['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'].map((day, dayIndex) => `
-              <div style="color: var(--color-text-secondary); padding: 4px;">${day}</div>
+              <div style="color: var(--color-text-secondary); padding: var(--sp-1);">${day}</div>
  ${analytics.heatmap[dayIndex] ? analytics.heatmap[dayIndex].map(count => {
  const intensity = Math.min(1, count / 5);
  return `<div style="height: 20px; background: rgba(139, 92, 246, ${intensity}); border-radius: 2px;" title="${count} مشاهدات"></div>`;
@@ -392,10 +388,10 @@ export async function AnalyticsPage() {
 function createNotFoundPage(message = 'الصفحة غير موجودة') {
  const div = document.createElement('div');
  div.innerHTML = `
-    <div class="container" style="padding: 80px 24px; text-align: center;">
-      <div style="font-size: 64px; margin-bottom: 16px;"></div>
-      <h2 style="margin-bottom: 8px;">${message}</h2>
-      <p style="color: var(--color-text-secondary); margin-bottom: 24px;">الصفحة التي تبحث عنها غير موجودة</p>
+    <div class="container" style="padding: var(--sp-20) var(--sp-6); text-align: center;">
+      <div style="font-size: 64px; margin-bottom: var(--sp-4);"></div>
+      <h2 style="margin-bottom: var(--sp-2);">${message}</h2>
+      <p style="color: var(--color-text-secondary); margin-bottom: var(--sp-6);">الصفحة التي تبحث عنها غير موجودة</p>
       <button class="btn btn-primary" onclick="window.router.navigate('/')">العودة للرئيسية</button>
     </div>
  `;

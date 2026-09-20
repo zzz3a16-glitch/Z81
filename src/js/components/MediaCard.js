@@ -67,7 +67,7 @@ export function createMediaCard(media, options = {}) {
         </div>` : ''}
     </div>
     ${variant === 'wide' ? `
-      <div class="ovl" style="position:relative;background:linear-gradient(180deg, transparent, rgba(8,8,10,.2));padding:10px 12px 9px;">
+      <div class="ovl" style="position:relative;background:linear-gradient(180deg, transparent, rgba(8,8,10,.2));padding: var(--sp-3) var(--sp-3) var(--sp-2);">
         <span class="name">${esc(truncate(title, 46))}</span>
         <span class="sub">${year && showYear ? `<span class="num">${year}</span>` : ''} ${rating ? ratingBadge(rating) : ''} ${media.episodeCount ? `<span>${media.episodeCount} حلقة</span>` : ''}</span>
       </div>` : `

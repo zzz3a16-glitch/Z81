@@ -19,17 +19,17 @@ export async function SearchPage(params = {}, query = {}) {
   const page = el('div', 'z-page-search');
   const q0 = (query.q || '').trim();
   page.innerHTML = `
-    <div class="z-narrow" style="padding-top:8px">
+    <div class="z-narrow" style="padding-top: var(--sp-2)">
       <div class="z-tb-search" style="width:100%;max-width:640px;margin-inline:auto">
         <div class="box" style="height:46px;border-radius:var(--r-lg);background:var(--surface-2);border:1px solid var(--color-border)">
           ${icon('search', 17)}
-          <input id="sp-input" type="search" placeholder="ابحث عنواناً، ممثلاً، أو اسمًا بالأصلية..." value="${esc(q0)}" style="font-size:15px" />
+          <input id="sp-input" type="search" placeholder="ابحث عنواناً، ممثلاً، أو اسمًا بالأصلية..." value="${esc(q0)}" style="font-size: var(--text-base)" />
           <kbd>Enter</kbd>
         </div>
       </div>
-      <div id="sp-recent" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:14px"></div>
+      <div id="sp-recent" style="display:flex;gap: var(--sp-2);flex-wrap:wrap;justify-content:center;margin-top: var(--sp-4)"></div>
     </div>
-    <div class="container" id="sp-results" style="margin-top:34px"></div>`;
+    <div class="container" id="sp-results" style="margin-top: var(--sp-8)"></div>`;
 
   const input = page.querySelector('#sp-input');
   const results = page.querySelector('#sp-results');
@@ -38,7 +38,7 @@ export async function SearchPage(params = {}, query = {}) {
   const paintRecent = () => {
     const list = getRecent();
     recentBox.innerHTML = list.length
-      ? `<button class="btn btn-ghost btn-sm" id="sp-clearrecent" style="font-size:11px;color:var(--color-text-faint)">${icon('x', 12)} مسح السجل</button>` +
+      ? `<button class="btn btn-ghost btn-sm" id="sp-clearrecent" style="font-size: var(--text-3xs);color:var(--color-text-faint)">${icon('x', 12)} مسح السجل</button>` +
         list.map((x) => `<button class="chip" data-q="${esc(x)}">${icon('history', 13)} ${esc(x)}</button>`).join('')
       : '';
     recentBox.querySelectorAll('[data-q]').forEach((b) => b.addEventListener('click', () => run(b.dataset.q)));
@@ -91,7 +91,7 @@ export async function SearchPage(params = {}, query = {}) {
       if (works.length) {
         const s = section({ title: 'من TMDB — للاكتشاف', subtitle: inLib.length ? 'غير موجودة في مكتبتك بعد' : '' });
         const head = s.head;
-        head.insertAdjacentHTML('afterbegin', '<em class="z-pill" style="height:18px;font-size:10px;align-self:center">TMDB</em>');
+        head.insertAdjacentHTML('afterbegin', '<em class="z-pill" style="height:18px;font-size: var(--text-3xs);align-self:center">TMDB</em>');
         const grid = el('div', 'media-grid');
         works.forEach((m) => grid.appendChild(createMediaCard(m, { variant: 'poster' })));
         s.body.appendChild(grid);
@@ -100,7 +100,7 @@ export async function SearchPage(params = {}, query = {}) {
       if (people.length) {
         const s = section({ title: 'أشخاص' });
         const row = el('div', '');
-        row.style.cssText = 'display:flex;gap:16px;flex-wrap:wrap';
+        row.style.cssText = 'display:flex;gap: var(--sp-4);flex-wrap:wrap';
         people.slice(0, 12).forEach((p) => row.appendChild(createPersonCard({ ...p, name: p.name })));
         s.body.appendChild(row);
         results.appendChild(s.root);
@@ -115,7 +115,7 @@ export async function SearchPage(params = {}, query = {}) {
     } catch (e) {
       if (inLib.length) {
         const note = el('div', '');
-        note.innerHTML = `<div class="z-hbar" style="border-color:color-mix(in srgb, var(--color-warning) 30%, transparent)"><span class="pulse sev-warn" style="color:var(--color-warning)"></span><span style="font-size:13px">TMDB غير متاح الآن — عُرضت نتائج مكتبتك فقط.</span></div>`;
+        note.innerHTML = `<div class="z-hbar" style="border-color:color-mix(in srgb, var(--color-warning) 30%, transparent)"><span class="pulse sev-warn" style="color:var(--color-warning)"></span><span style="font-size: var(--text-sm)">TMDB غير متاح الآن — عُرضت نتائج مكتبتك فقط.</span></div>`;
         results.appendChild(note);
       } else {
         results.innerHTML = '';

@@ -29,7 +29,7 @@ export async function DetailsPage(params, mediaType = 'movie') {
   const page = el('div', 'z-detail');
   page.appendChild(skelHero());
   const sk = el('div', '');
-  sk.style.cssText = 'padding:28px 8px';
+  sk.style.cssText = 'padding: var(--sp-7) var(--sp-2)';
   sk.appendChild(skelLines(4));
   page.appendChild(sk);
 
@@ -38,7 +38,7 @@ export async function DetailsPage(params, mediaType = 'movie') {
     media = mediaType === 'tv' ? await tmdbClient.getTV(id) : await tmdbClient.getMovie(id);
   } catch (e) {
     page.innerHTML = '';
-    page.appendChild(el('div', '', `<div class="z-state err" style="padding:80px 0"><div class="art">${icon('alert', 28)}</div><h3>تعذّر تحميل بطاقة العمل</h3><p>${esc(e?.message || 'قد يكون الجهاز غير متصل — جرّب من مكتبتك إن كان العمل مضافاً.')}</p><div class="acts"><button class="btn btn-secondary btn-sm" id="retry-d">${icon('refresh', 14)} إعادة المحاولة</button><button class="btn btn-ghost btn-sm" id="back-d">رجوع</button></div></div>`));
+    page.appendChild(el('div', '', `<div class="z-state err" style="padding: var(--sp-20) 0"><div class="art">${icon('alert', 28)}</div><h3>تعذّر تحميل بطاقة العمل</h3><p>${esc(e?.message || 'قد يكون الجهاز غير متصل — جرّب من مكتبتك إن كان العمل مضافاً.')}</p><div class="acts"><button class="btn btn-secondary btn-sm" id="retry-d">${icon('refresh', 14)} إعادة المحاولة</button><button class="btn btn-ghost btn-sm" id="back-d">رجوع</button></div></div>`));
     page.querySelector('#retry-d').addEventListener('click', () => window.location.reload());
     page.querySelector('#back-d').addEventListener('click', () => window.router.goBack());
     return page;
@@ -77,7 +77,7 @@ export async function DetailsPage(params, mediaType = 'movie') {
     <div class="head">
       <div class="poster-fr">${poster ? `<img src="${poster}" alt="${esc(title)}" fetchpriority="high">` : fallbackArt(title, { big: true })}</div>
       <div class="identity">
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+        <div style="display:flex;gap: var(--sp-2);align-items:center;margin-bottom: var(--sp-3)">
           ${inLibrary ? `<span class="z-pill z-pill-accent">${icon('database', 12)} في مكتبتك${localFiles.length ? ` · ${localFiles.length} ملف` : ''}</span>` : ''}
           <span class="z-pill">${mediaType === 'tv' ? 'مسلسل' : 'فيلم'}</span>
           ${media.status && media.status !== 'Released' ? `<span class="z-pill">${esc(media.status)}</span>` : ''}
@@ -100,8 +100,8 @@ export async function DetailsPage(params, mediaType = 'movie') {
           ${isDesktop && localFiles[0] ? `<button class="btn btn-ghost" data-a="locate" title="موقع الملف">${icon('folderOpen', 15)}</button>` : ''}
           <button class="btn btn-ghost" data-a="share" title="مشاركة">${icon('share', 15)}</button>
         </div>
-        <p style="margin-top:20px" class="z-overview">${esc(overview)}</p>
-        ${(media.genres || []).length ? `<div class="z-genres" style="margin-top:14px">${media.genres.map((g) => `<button class="chip" data-genre="${g.id}">${esc(g.name)}</button>`).join('')}</div>` : ''}
+        <p style="margin-top: var(--sp-5)" class="z-overview">${esc(overview)}</p>
+        ${(media.genres || []).length ? `<div class="z-genres" style="margin-top: var(--sp-4)">${media.genres.map((g) => `<button class="chip" data-genre="${g.id}">${esc(g.name)}</button>`).join('')}</div>` : ''}
       </div>
     </div>`);
 
@@ -139,7 +139,7 @@ export async function DetailsPage(params, mediaType = 'movie') {
   const rateSec = section({ title: 'تقييمك', subtitle: 'محلي — لا يغادر جهازك' });
   {
     const wrapEl = el('div', '');
-    wrapEl.style.cssText = 'display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-inline:var(--page-gutter)';
+    wrapEl.style.cssText = 'display:flex;align-items:center;gap: var(--sp-3);flex-wrap:wrap;padding-inline:var(--page-gutter)';
     wrapEl.innerHTML = Array.from({ length: 10 }, (_, i) => {
       const n = i + 1;
       const on = userRating && n <= Math.round(userRating.personalRating / 2);
@@ -181,7 +181,7 @@ export async function DetailsPage(params, mediaType = 'movie') {
     const valid = media.seasons.filter((s) => s.season_number > 0);
     const ss = section({ title: 'المواسم والحلقات', subtitle: 'اختر موسماً لعرض حلقاته' });
     const holder = el('div', '');
-    holder.style.cssText = 'padding-inline:var(--page-gutter);display:flex;flex-direction:column;gap:12px';
+    holder.style.cssText = 'padding-inline:var(--page-gutter);display:flex;flex-direction:column;gap: var(--sp-3)';
     ss.body.appendChild(holder);
     page.appendChild(ss.root);
 
@@ -190,7 +190,7 @@ export async function DetailsPage(params, mediaType = 'movie') {
       <select class="input" id="season-sel" aria-label="اختيار الموسم" style="width:auto;min-width:170px">
         ${valid.map((s) => `<option value="${s.season_number}">الموسم ${s.season_number}${s.episode_count ? ` · ${s.episode_count} حلقة` : ''}</option>`).join('')}
       </select>
-      <span style="font-size:12px;color:var(--color-text-muted)" id="season-year"></span>`;
+      <span style="font-size: var(--text-2xs);color:var(--color-text-muted)" id="season-year"></span>`;
     holder.appendChild(sel);
     const list = el('div', '');
     holder.appendChild(list);
@@ -203,7 +203,7 @@ export async function DetailsPage(params, mediaType = 'movie') {
         holder.querySelector('#season-year').textContent = season.air_date ? `بداية البث: ${fmtDateAr(season.air_date)}` : '';
         if (season.overview) {
           const o = el('p', 'z-overview');
-          o.style.cssText = 'font-size:13px;margin-bottom:6px;color:var(--color-text-muted);max-width:70ch';
+          o.style.cssText = 'font-size: var(--text-sm);margin-bottom: var(--sp-2);color:var(--color-text-muted);max-width:70ch';
           o.textContent = season.overview;
           o.dataset.seasonOver = '1';
           holder.querySelectorAll('[data-season-over]').forEach((x) => x.remove());
@@ -222,10 +222,10 @@ export async function DetailsPage(params, mediaType = 'movie') {
             })),
           }));
         });
-        if (!season.episodes?.length) list.appendChild(el('div', 'z-state', '<p style="font-size:13px">لا حلقات موسومة لهذا الموسم بعد في TMDB.</p>'));
+        if (!season.episodes?.length) list.appendChild(el('div', 'z-state', '<p style="font-size: var(--text-sm)">لا حلقات موسومة لهذا الموسم بعد في TMDB.</p>'));
       } catch (e) {
         list.innerHTML = '';
-        list.appendChild(el('div', '', `<div class="z-hbar" style="border-color:var(--color-border)"><span class="pulse sev-warn" style="color:var(--color-warning)"></span><span style="font-size:13px">تعذّر جلب الموسم الآن (غير متصل؟) — الأوصاف المحفوظة تظل متاحة.</span></div>`));
+        list.appendChild(el('div', '', `<div class="z-hbar" style="border-color:var(--color-border)"><span class="pulse sev-warn" style="color:var(--color-warning)"></span><span style="font-size: var(--text-sm)">تعذّر جلب الموسم الآن (غير متصل؟) — الأوصاف المحفوظة تظل متاحة.</span></div>`));
       }
     };
     sel.querySelector('#season-sel').addEventListener('change', (e) => loadSeason(e.target.value));
@@ -284,14 +284,14 @@ export async function DetailsPage(params, mediaType = 'movie') {
   if (localFiles.length) {
     const ls = section({ title: 'ملفاتك المرتبطة', subtitle: 'تبقى في مكانها — zPopcorn يشير إليها فقط' });
     const box = el('div', '');
-    box.style.cssText = 'display:flex;flex-direction:column;gap:6px;padding-inline:var(--page-gutter)';
+    box.style.cssText = 'display:flex;flex-direction:column;gap: var(--sp-2);padding-inline:var(--page-gutter)';
     localFiles.forEach((f) => {
       const r = el('div', 'z-ep');
       r.style.gridTemplateColumns = 'auto 1fr auto';
       r.innerHTML = `
         <span class="z-pill">${icon('disc', 13)}</span>
-        <span dir="ltr" class="u-ltr" style="font-size:12.5px;color:var(--color-text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.path || f)}</span>
-        <span class="etail" style="display:flex;gap:6px">${f.quality ? `<span class="z-pill">${esc(f.quality)}</span>` : ''}${isDesktop ? `<button class="btn btn-ghost btn-sm" data-loc>${icon('folderOpen', 13)} افتح الموقع</button>` : ''}</span>`;
+        <span dir="ltr" class="u-ltr" style="font-size: var(--text-xs);color:var(--color-text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.path || f)}</span>
+        <span class="etail" style="display:flex;gap: var(--sp-2)">${f.quality ? `<span class="z-pill">${esc(f.quality)}</span>` : ''}${isDesktop ? `<button class="btn btn-ghost btn-sm" data-loc>${icon('folderOpen', 13)} افتح الموقع</button>` : ''}</span>`;
       r.querySelector('[data-loc]')?.addEventListener('click', async (e) => {
         e.stopPropagation();
         try { await api.system.showItemInFolder(f.path || f); } catch (err) { toast(err.message, 'error'); }

@@ -20,13 +20,13 @@ const TABS = [
 export async function MoviesPage(params = {}, query = {}) {
   const page = el('div', 'z-page-movies');
   page.innerHTML = `
-    <header class="page-header" style="padding-bottom:12px">
+    <header class="page-header" style="padding-bottom: var(--sp-3)">
       <h1 class="page-title">أفلام</h1>
       <p class="page-subtitle">مجموعتك المحلية أولاً — ثم اكتشاف العالم عند الحاجة.</p>
     </header>
     <div id="mv-lib"></div>
     <div class="container" id="mv-filters">
-      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <div style="display:flex;gap: var(--sp-2);flex-wrap:wrap;align-items:center">
         ${TABS.map(([id, label]) => `<button class="chip ${id === (query.tab || 'popular') ? 'active' : ''}" data-tab="${id}">${label}</button>`).join('')}
         <span style="flex:1"></span>
         <select class="input input-sm" id="mv-genre" style="width:170px" aria-label="تصفية بالنوع">
@@ -34,14 +34,14 @@ export async function MoviesPage(params = {}, query = {}) {
         </select>
       </div>
     </div>
-    <div class="container" style="margin-top:20px">
+    <div class="container" style="margin-top: var(--sp-5)">
       <div id="mv-feature"></div>
-      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:14px">
+      <div style="display:flex;align-items:baseline;gap: var(--sp-3);margin-bottom: var(--sp-4)">
         <h2 style="font-size:var(--text-xl);font-weight:800" id="mv-grid-title">الأكثر رواجاً</h2>
-        <span style="font-size:12px;color:var(--color-text-muted)">من TMDB — تعمل من الكاش عند عدم الاتصال</span>
+        <span style="font-size: var(--text-2xs);color:var(--color-text-muted)">من TMDB — تعمل من الكاش عند عدم الاتصال</span>
       </div>
       <div id="mv-grid" class="media-grid"></div>
-      <div style="display:flex;justify-content:center;padding:26px 0 8px">
+      <div style="display:flex;justify-content:center;padding: var(--sp-7) 0 var(--sp-2)">
         <button class="btn btn-secondary btn-sm" id="mv-more" style="display:none">${icon('download', 14)} تحميل المزيد</button>
       </div>
     </div>`;

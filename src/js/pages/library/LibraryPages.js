@@ -34,7 +34,7 @@ export class EraPage {
       </div>
       <div class="media-grid" id="era-media">
         <div class="loading-grid">
- ${Array(12).fill(0).map(() => `<div class="skeleton-card"></div>`).join('')}
+ ${Array(12).fill(0).map(() => `<div class="sk sk-card"></div>`).join('')}
         </div>
       </div>
  `;
@@ -70,7 +70,7 @@ export class EraPage {
  if (mediaContainer) {
  if (this.media.length === 0) {
  mediaContainer.innerHTML = `
-              <div class="empty-state">
+              <div class="z-state">
                 <div class="empty-icon">${iconAnim('empty', 52)}</div>
                 <h3>لا توجد أعمال لهذا العقد</h3>
                 <p>جرب عقداً آخر</p>
@@ -141,7 +141,7 @@ export class FranchisesPage {
         
  if (franchises.length === 0) {
  grid.innerHTML = `
-            <div class="empty-state">
+            <div class="z-state">
               <div class="empty-icon">${iconAnim('empty', 52)}</div>
               <h3>لا توجد سلاسل بعد</h3>
               <p>أنشئ سلسلتك الأولى لتنظيم الأفلام المترابطة</p>
@@ -231,7 +231,7 @@ export class SmartCollectionsPage {
  const allCollections = [...defaults.map(d => ({ ...d, id: `default-${d.name}`, isDefault: true })), ...collections];
 
  if (allCollections.length === 0) {
- grid.innerHTML = `<div class="empty-state"><h3>لا توجد مجموعات</h3></div>`;
+ grid.innerHTML = `<div class="z-state"><h3>لا توجد مجموعات</h3></div>`;
  } else {
  grid.innerHTML = allCollections.map(c => `
             <div class="collection-card ${c.isDefault ? 'default-collection' : ''}" data-id="${c.id}">
@@ -505,7 +505,7 @@ export class GenresPage {
             <h3 class="genre-name">${g.name}</h3>
             <span class="genre-count">${g.count || 0} فيلم</span>
           </div>
- `).join('') || '<div class="empty-state">لا توجد أنواع</div>';
+ `).join('') || '<div class="z-state">لا توجد أنواع</div>';
         
  grid.querySelectorAll('.genre-card').forEach(card => {
  card.addEventListener('click', () => {
@@ -579,7 +579,7 @@ export class MissingPiecesPage {
         
  if (missing.total === 0) {
  dashboard.innerHTML = `
-            <div class="empty-state">
+            <div class="z-state">
               <span class="empty-icon" style="color:var(--color-success)">${iconAnim('success', 52)}</span>
               <h3>لا توجد قطع مفقودة!</h3>
               <p>جميع سلاسلك مكتملة</p>
@@ -639,7 +639,7 @@ export class DuplicatesPage {
         
  if (analysis.total === 0) {
  dashboard.innerHTML = `
-            <div class="empty-state">
+            <div class="z-state">
               <span class="empty-icon" style="color:var(--color-success)">${iconAnim('success', 52)}</span>
               <h3>لا توجد مكررات!</h3>
               <p>مكتبتك نظيفة ومنظمة</p>
@@ -772,7 +772,7 @@ export class SnapshotsPage {
         
  if (snapshots.length === 0) {
  dashboard.innerHTML = `
-            <div class="empty-state">
+            <div class="z-state">
               <span class="empty-icon"></span>
               <h3>لا توجد لقطات</h3>
               <p>أنشئ أول لقطة لحماية مكتبتك</p>

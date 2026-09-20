@@ -77,15 +77,15 @@ async function initApp() {
     const appContainer = document.getElementById('app');
     if (appContainer) {
       appContainer.innerHTML = `
-        <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; background: #0a0a0f; color: var(--color-white);">
+        <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: var(--sp-6); text-align: center; background: #0a0a0f; color: var(--color-white);">
           <div>
-            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="1.7" style="margin-bottom:14px"><path d="M12 3.5 2.6 20h18.8z"/><path d="M12 10v4m0 3h.01"/></svg>
-            <h1 style="font-size: 1.5rem; margin-bottom: 8px;">فشل تحميل التطبيق</h1>
-            <p style="color: rgba(255,255,255,0.7); margin-bottom: 24px; max-width: 400px;">${error.message || 'حدث خطأ غير متوقع'}</p>
-            <button onclick="window.location.reload()" style="background: #8b5cf6; color: var(--color-white); border: none; padding: 12px 24px; border-radius: var(--r-md); cursor: pointer; font-weight: 500;">إعادة المحاولة</button>
-            <div style="margin-top: 24px; font-size: 12px; color: rgba(255,255,255,0.5);">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="1.7" style="margin-bottom: var(--sp-4)"><path d="M12 3.5 2.6 20h18.8z"/><path d="M12 10v4m0 3h.01"/></svg>
+            <h1 style="font-size: 1.5rem; margin-bottom: var(--sp-2);">فشل تحميل التطبيق</h1>
+            <p style="color: rgba(255,255,255,0.7); margin-bottom: var(--sp-6); max-width: 400px;">${error.message || 'حدث خطأ غير متوقع'}</p>
+            <button onclick="window.location.reload()" style="background: #8b5cf6; color: var(--color-white); border: none; padding: var(--sp-3) var(--sp-6); border-radius: var(--r-md); cursor: pointer; font-weight: 500;">إعادة المحاولة</button>
+            <div style="margin-top: var(--sp-6); font-size: var(--text-2xs); color: rgba(255,255,255,0.5);">
               <p>تحقق من وحدة التحكم للمزيد من التفاصيل</p>
-              <p style="margin-top: 8px; font-family: monospace; background: rgba(255,255,255,0.1); padding: 8px; border-radius: var(--r-xs); text-align: left; direction: ltr;">${error.stack || error.message}</p>
+              <p style="margin-top: var(--sp-2); font-family: monospace; background: rgba(255,255,255,0.1); padding: var(--sp-2); border-radius: var(--r-xs); text-align: left; direction: ltr;">${error.stack || error.message}</p>
             </div>
           </div>
         </div>

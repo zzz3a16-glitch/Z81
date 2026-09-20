@@ -51,13 +51,13 @@ export function skelRail(count = 6, wide = true) {
 export const skelHero = () => el('div', 'sk sk-hero');
 export const skelLines = (n = 3) => {
   const b = el('div', '');
-  b.style.cssText = 'display:flex;flex-direction:column;gap:10px;';
+  b.style.cssText = 'display:flex;flex-direction:column;gap: var(--sp-3);';
   for (let i = 0; i < n; i++) b.appendChild(el('div', 'sk sk-line', '')).style.width = `${100 - i * 12}%`;
   return b;
 };
 export const skelRows = (n = 5) => {
   const b = el('div', '');
-  b.style.cssText = 'display:flex;flex-direction:column;gap:6px;';
+  b.style.cssText = 'display:flex;flex-direction:column;gap: var(--sp-2);';
   for (let i = 0; i < n; i++) b.appendChild(el('div', 'sk sk-row'));
   return b;
 };
@@ -166,7 +166,7 @@ export function ratingBadge(v, { ring = false } = {}) {
 export function fallbackArt(name = '', { big = false } = {}) {
   return `<div class="fallback">
     <span class="mk">${icon('logo', big ? 26 : 18)}</span>
-    ${big ? `<span style="font-size:11px;max-width:80%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(name)}</span>` : ''}
+    ${big ? `<span style="font-size: var(--text-3xs);max-width:80%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(name)}</span>` : ''}
   </div>`;
 }
 

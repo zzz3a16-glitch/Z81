@@ -18,18 +18,18 @@ const TABS = [
 export async function TVShowsPage(params = {}, query = {}) {
   const page = el('div', 'z-page-tv');
   page.innerHTML = `
-    <header class="page-header" style="padding-bottom:12px">
+    <header class="page-header" style="padding-bottom: var(--sp-3)">
       <h1 class="page-title">مسلسلات</h1>
       <p class="page-subtitle">تتبّع الحلقات القادمة وموعد عرضها، من مكتبتك أنت.</p>
     </header>
     <div id="tv-lib"></div>
     <div class="container">
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px">
+      <div style="display:flex;gap: var(--sp-2);flex-wrap:wrap;margin-bottom: var(--sp-5)">
         ${TABS.map(([id, label]) => `<button class="chip ${id === (query.tab || 'popular') ? 'active' : ''}" data-tab="${id}">${label}</button>`).join('')}
       </div>
-      <h2 style="font-size:var(--text-xl);font-weight:800;margin-bottom:14px" id="tv-grid-title">الأشهر</h2>
+      <h2 style="font-size:var(--text-xl);font-weight:800;margin-bottom: var(--sp-4)" id="tv-grid-title">الأشهر</h2>
       <div id="tv-grid" class="media-grid"></div>
-      <div style="display:flex;justify-content:center;padding:22px 0 6px">
+      <div style="display:flex;justify-content:center;padding: var(--sp-6) 0 var(--sp-2)">
         <button class="btn btn-secondary btn-sm" id="tv-more" style="display:none">${icon('download', 14)} تحميل المزيد</button>
       </div>
     </div>`;

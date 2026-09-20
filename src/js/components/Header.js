@@ -54,7 +54,7 @@ export function createHeader() {
       <div class="z-npanel" id="tb-npanel">
         <div class="z-npanel-head">
           <h3>الإشعارات</h3>
-          <div style="display:flex;gap:4px">
+          <div style="display:flex;gap: var(--sp-1)">
             <button class="btn btn-ghost btn-sm" id="tb-nread">تحديد كمقروء</button>
             <button class="btn btn-ghost btn-sm" id="tb-nclear">تنظيف</button>
           </div>
@@ -194,7 +194,7 @@ export function createHeader() {
           <div class="nt">${x.createdAt ? new Date(x.createdAt).toLocaleString('ar-SA-u-nu-latn', { dateStyle: 'short', timeStyle: 'short' }) : ''}</div>
         </div>
       </div>`).join('')
-      : `<div class="z-state" style="padding:28px"><h3 style="font-size:var(--text-sm)">لا إشعارات بعد</h3><p style="font-size:var(--text-xs)">تصلك تنبيهات الحلقات الجديدة ونتائج الفحص هنا.</p></div>`;
+      : `<div class="z-state" style="padding: var(--sp-7)"><h3 style="font-size:var(--text-sm)">لا إشعارات بعد</h3><p style="font-size:var(--text-xs)">تصلك تنبيهات الحلقات الجديدة ونتائج الفحص هنا.</p></div>`;
   };
   bell.addEventListener('click', async (e) => {
     e.stopPropagation();
@@ -226,7 +226,7 @@ export function createHeader() {
       const b = document.createElement('button');
       b.type = 'button';
       if (activeId === t.id) b.classList.add('on');
-      b.innerHTML = `<span class="sw" style="background:${bg}"><i style="background:${acc}"></i><i style="background:${acc2}"></i></span><span>${esc(t.name)}</span>${t.custom ? '<span class="z-pill" style="margin-inline-start:auto;font-size:9px">مخصص</span>' : ''}`;
+      b.innerHTML = `<span class="sw" style="background:${bg}"><i style="background:${acc}"></i><i style="background:${acc2}"></i></span><span>${esc(t.name)}</span>${t.custom ? '<span class="z-pill" style="margin-inline-start:auto;font-size: var(--text-3xs)">مخصص</span>' : ''}`;
       b.addEventListener('click', () => {
         themeEngine.applyPreset(t.id);
         window.dispatchEvent(new CustomEvent('showtoast', { detail: { message: `طُبِّق «${t.name}»`, type: 'success' } }));

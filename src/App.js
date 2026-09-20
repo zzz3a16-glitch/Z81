@@ -361,7 +361,7 @@ export class App {
       this.mainContent.innerHTML = `
         <div style="display: flex; align-items: center; justify-content: center; min-height: 60vh;">
           <div style="text-align: center;">
-            <div class="app-loading-spinner" style="margin: 0 auto 16px;"></div>
+            <div class="app-loading-spinner" style="margin: 0 auto var(--sp-4);"></div>
             <p style="color: var(--color-text-secondary);">جاري التحميل...</p>
           </div>
         </div>
@@ -383,10 +383,10 @@ export class App {
     } catch (error) {
       console.error('Failed to render page:', error);
       this.mainContent.innerHTML = `
-        <div class="container" style="padding: 80px 24px; text-align: center;">
-          <span style="display:inline-flex;margin-bottom:14px">${iconAnim('error', 56)}</span>
-          <h2 style="margin-bottom: 8px;">حدث خطأ</h2>
-          <p style="color: var(--color-text-secondary); margin-bottom: 24px;">${error.message || 'فشل تحميل الصفحة'}</p>
+        <div class="container" style="padding: var(--sp-20) var(--sp-6); text-align: center;">
+          <span style="display:inline-flex;margin-bottom: var(--sp-4)">${iconAnim('error', 56)}</span>
+          <h2 style="margin-bottom: var(--sp-2);">حدث خطأ</h2>
+          <p style="color: var(--color-text-secondary); margin-bottom: var(--sp-6);">${error.message || 'فشل تحميل الصفحة'}</p>
           <button class="btn btn-primary" onclick="window.router.navigate('/')">العودة للرئيسية</button>
         </div>
       `;
@@ -504,15 +504,15 @@ export class App {
     playerContainer.style.alignItems = 'center';
     playerContainer.style.justifyContent = 'center';
     playerContainer.innerHTML = `
-      <div style="max-width: 640px; margin: 24px; padding: 32px; text-align: center; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-xl); color: var(--color-text-primary); box-shadow: var(--shadow-3, 0 24px 64px rgba(0,0,0,0.5));">
-        <div style="width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent);">${icon('playCircle', 26)}</div>
-        <h2 style="font-size:1.25rem;margin-bottom:8px;">${media.title || media.name || 'وسائط'}</h2>
-        <p style="color:var(--color-text-secondary);line-height:1.7;margin-bottom:20px;">
+      <div style="max-width: 640px; margin: var(--sp-6); padding: var(--sp-8); text-align: center; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-xl); color: var(--color-text-primary); box-shadow: var(--shadow-3, 0 24px 64px rgba(0,0,0,0.5));">
+        <div style="width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin: 0 auto var(--sp-4);background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent);">${icon('playCircle', 26)}</div>
+        <h2 style="font-size:1.25rem;margin-bottom: var(--sp-2);">${media.title || media.name || 'وسائط'}</h2>
+        <p style="color:var(--color-text-secondary);line-height:1.7;margin-bottom: var(--sp-5);">
           مشغّل الوسائط غير مُفعّل بعد — تم تصميم بنية zPopcorn على أن يكون محرك
           التشغيل مرحلة منفصلة قادمة، وستُضاف له كامل دعم المسارات والترجمات تلقائياً.
         </p>
-        <div data-playback-flags style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;"></div>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <div data-playback-flags style="display:flex;gap: var(--sp-2);justify-content:center;flex-wrap:wrap;margin-bottom: var(--sp-5);"></div>
+        <div style="display:flex;gap: var(--sp-3);justify-content:center;flex-wrap:wrap;">
           ${media.id ? `<button class="btn btn-primary" id="playback-details">عرض التفاصيل</button>` : ''}
           ${media.localFile || (media.localFiles && media.localFiles[0]) ? `<button class="btn btn-secondary" id="playback-show" style="background:rgba(255,255,255,0.08);color:inherit;border:1px solid var(--color-border);">فتح موقع الملف</button>` : ''}
           <button class="btn btn-ghost" id="playback-close" style="color:var(--color-text-secondary);">إغلاق</button>
@@ -551,11 +551,11 @@ export class App {
         files = media.localFiles.map((f) => ({ path: f, status: 'ok' }));
       }
       const items = [];
-      items.push(`<span class="badge" style="padding:4px 10px;border-radius: var(--r-full);border:1px solid var(--color-border);font-size:12px;">المحرك: غير مُفعّل بعد</span>`);
+      items.push(`<span class="badge" style="padding: var(--sp-1) var(--sp-3);border-radius: var(--r-full);border:1px solid var(--color-border);font-size: var(--text-2xs);">المحرك: غير مُفعّل بعد</span>`);
       if (files.length) {
-        items.push(`<span class="badge" style="padding:4px 10px;border-radius: var(--r-full);background:var(--success-soft);color:var(--color-success);border:1px solid color-mix(in srgb, var(--color-success) 40%, transparent);font-size:12px;" dir="ltr">${files.length} ملف محلي</span>`);
+        items.push(`<span class="badge" style="padding: var(--sp-1) var(--sp-3);border-radius: var(--r-full);background:var(--success-soft);color:var(--color-success);border:1px solid color-mix(in srgb, var(--color-success) 40%, transparent);font-size: var(--text-2xs);" dir="ltr">${files.length} ملف محلي</span>`);
       } else {
-        items.push(`<span class="badge" style="padding:4px 10px;border-radius: var(--r-full);border:1px solid var(--color-border);font-size:12px;color:var(--color-text-muted);">لا يوجد ملف محلي مرتبط</span>`);
+        items.push(`<span class="badge" style="padding: var(--sp-1) var(--sp-3);border-radius: var(--r-full);border:1px solid var(--color-border);font-size: var(--text-2xs);color:var(--color-text-muted);">لا يوجد ملف محلي مرتبط</span>`);
       }
       flags.innerHTML = items.join('');
     })();
@@ -567,9 +567,9 @@ export class App {
 async function RecommendationsPage() {
   const container = document.createElement('div');
   container.innerHTML = `
-    <div class="container" style="padding-top: 24px;">
-      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 8px;"> موصى به لك</h1>
-      <p style="color: var(--color-text-secondary); margin-bottom: 24px;">توصيات ذكية بناءً على ذوقك وسلوك المشاهدة</p>
+    <div class="container" style="padding-top: var(--sp-6);">
+      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--sp-2);"> موصى به لك</h1>
+      <p style="color: var(--color-text-secondary); margin-bottom: var(--sp-6);">توصيات ذكية بناءً على ذوقك وسلوك المشاهدة</p>
       <div id="recs-grid" class="media-grid"></div>
     </div>
   `;
@@ -597,8 +597,8 @@ async function RecommendationsPage() {
 async function TrendingPage() {
   const container = document.createElement('div');
   container.innerHTML = `
-    <div class="container" style="padding-top: 24px;">
-      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 24px;"> الرائج الآن</h1>
+    <div class="container" style="padding-top: var(--sp-6);">
+      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--sp-6);"> الرائج الآن</h1>
       <div id="trending-grid" class="media-grid"></div>
     </div>
   `;
@@ -622,10 +622,10 @@ async function TrendingPage() {
 function NotFoundPage() {
   const div = document.createElement('div');
   div.innerHTML = `
-    <div class="container" style="padding: 80px 24px; text-align: center;">
-      <div style="font-size: 64px; margin-bottom: 16px;"></div>
-      <h2 style="font-size: 1.5rem; margin-bottom: 8px;">الصفحة غير موجودة</h2>
-      <p style="color: var(--color-text-secondary); margin-bottom: 24px;">الصفحة التي تبحث عنها غير موجودة أو تم نقلها</p>
+    <div class="container" style="padding: var(--sp-20) var(--sp-6); text-align: center;">
+      <div style="font-size: 64px; margin-bottom: var(--sp-4);"></div>
+      <h2 style="font-size: 1.5rem; margin-bottom: var(--sp-2);">الصفحة غير موجودة</h2>
+      <p style="color: var(--color-text-secondary); margin-bottom: var(--sp-6);">الصفحة التي تبحث عنها غير موجودة أو تم نقلها</p>
       <button class="btn btn-primary" onclick="window.router.navigate('/')">العودة للرئيسية</button>
     </div>
   `;

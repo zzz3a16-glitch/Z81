@@ -255,7 +255,7 @@ class InboxView {
       return true;
     });
     if (!items.length) {
-      list.innerHTML = `<div class="inbox-empty">${this.items.length ? 'لا نتائج لهذا التصفية' : this.status === 'pending' ? `<div style="display:grid;justify-items:center;gap:10px;padding:18px 0">${iconAnim('empty', 56)}<div>لا شيء معلّق — المكتبة محدثة</div></div>` : 'القائمة فارغة'}</div>`;
+      list.innerHTML = `<div class="inbox-empty">${this.items.length ? 'لا نتائج لهذا التصفية' : this.status === 'pending' ? `<div style="display:grid;justify-items:center;gap: var(--sp-3);padding: var(--sp-5) 0">${iconAnim('empty', 56)}<div>لا شيء معلّق — المكتبة محدثة</div></div>` : 'القائمة فارغة'}</div>`;
       return;
     }
     list.innerHTML = items.map((it) => this.cardHtml(it)).join('');

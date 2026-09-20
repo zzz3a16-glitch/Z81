@@ -55,6 +55,30 @@ for d in ('src', 'electron'):
                 hits.append((p, i, 'GLYPH', o.strip()[:80]))
             if HEX.search(o) and p not in ALLOW_HEX:
                 hits.append((p, i, 'HEX', o.strip()[:80]))
+# scale locks — typography roles & spacing scale are the density/consistency backbone
+SCALE = {4, 8, 12, 16, 20, 24, 28, 32, 40, 48, 56, 64, 80}
+FS = re.compile(r'font-size:\s*(\d+(?:\.\d+)?)px')
+SP = re.compile(r'(padding|margin|gap|row-gap|column-gap)(-[\w-]+)?:\s*([^;{}"\']*)')
+NUM = re.compile(r'(?<![\w.-])(\d+)px')
+for d in ('src',):
+    for f in pathlib.Path(d).rglob('*'):
+        if f.suffix not in ('.css', '.js') or any(x in str(f) for x in SKIP): continue
+        p2 = str(f)
+        if 'design-tokens' in p2 or 'themes/' in p2 or 'icon-data.generated' in p2: continue
+        for i2, ln in enumerate(open(f, encoding='utf-8', errors='ignore').read().splitlines(), 1):
+            t = ln.strip()
+            if t.startswith(('*', '/*', '//')) or 'lint:ok' in ln: continue
+            m = FS.search(ln)
+            if m and float(m.group(1)) <= 40:
+                hits.append((p2, i2, 'FONT', f'font-size literal {m.group(1)}px — use a --text-* role token (docs/DESIGN-SYSTEM.md §2)'))
+            for mm in SP.finditer(ln):
+                val = mm.group(3)
+                if 'var(' in val or 'calc' in val: continue
+                for nm in NUM.finditer(val):
+                    v = int(nm.group(1))
+                    if 4 <= v <= 80 and v not in SCALE:
+                        hits.append((p2, i2, 'SPACE', f'off-scale {v}px in {mm.group(1)} — snap to --sp-* scale'))
+
 # structural guards (regression locks for the grid/shimmer unification)
 for d in ('src',):
     for f in pathlib.Path(d).rglob('*.css'):

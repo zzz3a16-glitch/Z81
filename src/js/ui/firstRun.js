@@ -95,9 +95,9 @@ function openFirstRun(router) {
       <div class="mark">${icon('logo', 28)}</div>
       <h1>أهلاً بك في zPopcorn</h1>
       <p>مكتبتك تبقى حيث هي — نقرأ الملفات في مكانها، ننظّمها، ونطابقها مع TMDB. كل شيء محلي أولاً، والإنترنت اختياري.</p>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:24px">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap: var(--sp-3);margin-top: var(--sp-6)">
         ${[['shield', 'خصوصية كاملة', 'لا تُرفع ملفاتك لأي مكان'], ['database', 'قاعدة SQLite', 'بحث فوري وتاريخ موثوق'], ['bolt', 'مطابقة ذكية', 'مع مراجعة بشرية عند الشك']]
-      .map(([i, t, d]) => `<div class="z-fact" style="gap:6px"><span style="color:var(--accent)">${icon(i, 18)}</span><b style="font-size:13px">${t}</b><span style="font-size:11.5px;color:var(--color-text-muted)">${d}</span></div>`).join('')}
+      .map(([i, t, d]) => `<div class="z-fact" style="gap: var(--sp-2)"><span style="color:var(--accent)">${icon(i, 18)}</span><b style="font-size: var(--text-sm)">${t}</b><span style="font-size: var(--text-2xs);color:var(--color-text-muted)">${d}</span></div>`).join('')}
       </div>
       <div class="foot">
         <button class="btn btn-ghost btn-sm" data-act="skip">تخطي الإعداد</button>
@@ -107,9 +107,9 @@ function openFirstRun(router) {
 
   function stepTheme(c) {
     return `
-      <h1 style="font-size:22px">اختر مزاجك</h1>
-      <p style="margin-bottom:18px">يمكن تغيير السمة والكثافة لاحقاً من الإعدادات في أي وقت.</p>
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+      <h1 style="font-size: var(--text-xl)">اختر مزاجك</h1>
+      <p style="margin-bottom: var(--sp-5)">يمكن تغيير السمة والكثافة لاحقاً من الإعدادات في أي وقت.</p>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap: var(--sp-3)">
         ${THEMES.map((t) => {
           const accent = { 'neon-lime': '#c9f24d', 'midnight-neon': '#7b6cf6', amoled: '#8f83ff', 'cinema-noir': '#d24a5f', aurora: '#4cc9f0' }[t.id];
           const bg = { 'neon-lime': '#121212', 'midnight-neon': '#0a0a0a', amoled: '#000', 'cinema-noir': '#0b0a0a', aurora: '#070b12' }[t.id];
@@ -119,7 +119,7 @@ function openFirstRun(router) {
               <div class="sbw" style="background:color-mix(in srgb, #fff 4%, ${bg})"></div>
               <div class="main">
                 <div class="bar" style="background:linear-gradient(90deg, ${accent}, color-mix(in srgb, ${accent} 35%, transparent));height:34px;border-radius: var(--r-sm)"></div>
-                <div style="display:flex;gap:5px">
+                <div style="display:flex;gap: var(--sp-1)">
                   <div class="bar" style="flex:1;height:34px;background:#161616;border:1px solid rgba(255,255,255,.07)"></div>
                   <div class="bar" style="flex:1;height:34px;background:#161616;border:1px solid rgba(255,255,255,.07)"></div>
                   <div class="bar" style="flex:1;height:34px;background:#161616;border:1px solid rgba(255,255,255,.07)"></div>
@@ -139,17 +139,17 @@ function openFirstRun(router) {
   function stepFolders(c) {
     if (!isDesktop) {
       return `
-        <h1 style="font-size:22px">مجلدات المكتبة</h1>
+        <h1 style="font-size: var(--text-xl)">مجلدات المكتبة</h1>
         <p>تحديد مجلدات الوسائط متاح داخل نسخة سطح المكتب (نافذة اختيار مجلد أصلية). هنا في وضع المعاينة يمكنك استعراض الواجهة فقط.</p>
         <div class="foot"><span></span><button class="btn btn-primary" data-act="next">حسنًا ${icon('chevL', 15)}</button></div>`;
     }
     return `
-      <h1 style="font-size:22px">أين تعيش وسائطك؟</h1>
+      <h1 style="font-size: var(--text-xl)">أين تعيش وسائطك؟</h1>
       <p>أضِف مجلداً واحداً أو أكثر. تبقى الملفات في مكانها تماماً — zPopcorn يقرأها ولا ينقلها.</p>
-      <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0 4px">
+      <div style="display:flex;flex-direction:column;gap: var(--sp-2);margin: var(--sp-4) 0 var(--sp-1)">
         <button class="btn btn-secondary" data-act="pick">${icon('folderOpen', 16)} اختيار مجلد…</button>
-        <div id="fr-paths" style="display:flex;flex-direction:column;gap:6px;align-items:flex-start"></div>
-        <div id="fr-err" style="font-size:12px;color:var(--color-danger)"></div>
+        <div id="fr-paths" style="display:flex;flex-direction:column;gap: var(--sp-2);align-items:flex-start"></div>
+        <div id="fr-err" style="font-size: var(--text-2xs);color:var(--color-danger)"></div>
       </div>
       <div class="foot">
         <button class="btn btn-ghost btn-sm" data-act="skip">سأضيفها لاحقاً</button>
@@ -160,7 +160,7 @@ function openFirstRun(router) {
   function stepDone(c) {
     return `
       <div class="mark">${icon('check', 26)}</div>
-      <h1 style="font-size:22px">كل شيء جاهز</h1>
+      <h1 style="font-size: var(--text-xl)">كل شيء جاهز</h1>
       <p>${c.paths.length ? `سنفحص <b class="num">${c.paths.length}</b> مجلداً، ثم تراجع النتائج في صندوق الوارد قبل إضافتها.` : 'يمكنك إضافة المجلدات لاحقاً من «صندوق الوارد» أو الإعدادات.'}</p>
       <div class="foot"><span></span><button class="btn btn-primary" data-act="finish">افتح zPopcorn ${icon('chevL', 15, { weight: 'bold' })}</button></div>`;
   }

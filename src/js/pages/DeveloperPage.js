@@ -35,7 +35,7 @@ export async function DeveloperPage() {
       ${section('الصحة والتكرار', 'dev-health', '<button class="btn btn-secondary btn-sm" data-act="health">إعادة الفحص</button>')}
       ${section('السجلات', 'dev-logs', '<button class="btn btn-secondary btn-sm" data-act="logs">تحديث</button>')}
     </div>` : `
-    <div class="inbox-empty" style="padding:48px;text-align:center">
+    <div class="inbox-empty" style="padding: var(--sp-12);text-align:center">
       <strong>أدوات المطور متاحة في نسخة سطح المكتب</strong>
       <p>تقرأ هذه الصفحة حالة خدمات النظام مباشرة عبر الجسر الآمن — وضع المتصفح لا يملك عملية نظام.</p>
     </div>`}

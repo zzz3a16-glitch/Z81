@@ -126,12 +126,12 @@ async function removeWork(store, key, media, title) {
     bd.className = 'modal-backdrop active';
     bd.style.zIndex = 'var(--z-modal-backdrop, 400)';
     bd.innerHTML = `
-      <div class="modal" style="max-width:440px;padding:24px;position:relative;">
-        <h3 style="font-size:17px;font-weight:700;margin-bottom:8px;">إزالة «${esc(title)}» من المكتبة؟</h3>
-        <p style="font-size:13.5px;color:var(--color-text-secondary);line-height:1.7;">
+      <div class="modal" style="max-width:440px;padding: var(--sp-6);position:relative;">
+        <h3 style="font-size: var(--text-lg);font-weight:700;margin-bottom: var(--sp-2);">إزالة «${esc(title)}» من المكتبة؟</h3>
+        <p style="font-size: var(--text-sm);color:var(--color-text-secondary);line-height:1.7;">
           ستُزال بطاقة العمل وسجلاته من مكتبتك فقط. <b>لن تُمسّ ملفات الوسائط الأصلية على القرص نهائياً.</b>
         </p>
-        <div style="display:flex;gap:10px;justify-content:flex-start;margin-top:18px;">
+        <div style="display:flex;gap: var(--sp-3);justify-content:flex-start;margin-top: var(--sp-5);">
           <button class="btn btn-danger btn-sm" data-x="del">إزالة من المكتبة</button>
           <button class="btn btn-ghost btn-sm" data-x="no">إلغاء</button>
         </div>

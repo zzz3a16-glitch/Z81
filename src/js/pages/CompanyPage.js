@@ -10,7 +10,7 @@ import { createMediaCard } from '../components/MediaCard.js';
 export async function CompanyPage(params = {}) {
   const page = el('div', 'z-company');
   const head = el('div', 'z-narrow');
-  head.style.cssText = 'padding-top:34px';
+  head.style.cssText = 'padding-top: var(--sp-8)';
   page.appendChild(head);
   head.innerHTML = '<div class="sk" style="height:110px;border-radius: var(--r-xl)"></div>';
 
@@ -29,7 +29,7 @@ export async function CompanyPage(params = {}) {
   } catch { /* offline */ }
 
   head.innerHTML = `
-    <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+    <div style="display:flex;gap: var(--sp-5);align-items:center;flex-wrap:wrap">
       ${co.logo_path ? `<div style="width:132px;height:72px;border-radius:var(--r-lg);background:var(--color-white);display:grid;place-items:center;overflow:hidden;flex-shrink:0">
         <img src="${getTMDBImageUrl(co.logo_path, 'poster', 'w500')}" alt="${esc(co.name)}" style="max-width:88%;max-height:80%;object-fit:contain" loading="lazy">
       </div>` : `<div class="z-sb-mark" style="width:52px;height:52px">${icon('layers', 24)}</div>`}
@@ -43,7 +43,7 @@ export async function CompanyPage(params = {}) {
         </div>
       </div>
     </div>
-    ${co.description ? `<p style="margin-top:18px;color:var(--color-text-secondary);max-width:82ch;line-height:1.85;font-size:var(--text-base)">${esc(co.description)}</p>` : ''}`;
+    ${co.description ? `<p style="margin-top: var(--sp-5);color:var(--color-text-secondary);max-width:82ch;line-height:1.85;font-size:var(--text-base)">${esc(co.description)}</p>` : ''}`;
 
   const body = el('div', '');
   page.appendChild(body);

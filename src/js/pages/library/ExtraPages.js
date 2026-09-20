@@ -22,13 +22,13 @@ export class MediaTypesPage {
  const grid = container.querySelector('#types-grid');
  const types = await mediaTypeManager.getAllTypes();
  grid.innerHTML = `
-        <div class="types-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
+        <div class="types-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--sp-4);">
  ${types.map(t => `
-            <div class="type-card" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 20px; text-align: center;">
-              <span style="display:block;margin-bottom:8px;color:var(--accent-bright)">${uiIcon(t.icon, 26)}</span>
+            <div class="type-card" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--sp-5); text-align: center;">
+              <span style="display:block;margin-bottom: var(--sp-2);color:var(--accent-bright)">${uiIcon(t.icon, 26)}</span>
               <h4>${t.name}</h4>
-              <span style="display: inline-block; width: 12px; height: 12px; background: ${t.color}; border-radius: 50%; margin-top: 8px;"></span>
- ${t.custom ? '<span style="font-size: 0.7rem; background: var(--color-accent); color: var(--accent-contrast); padding: 2px 6px; border-radius: var(--r-full); margin-right: 8px;">مخصص</span>' : ''}
+              <span style="display: inline-block; width: 12px; height: 12px; background: ${t.color}; border-radius: 50%; margin-top: var(--sp-2);"></span>
+ ${t.custom ? '<span style="font-size: 0.7rem; background: var(--color-accent); color: var(--accent-contrast); padding: 2px var(--sp-2); border-radius: var(--r-full); margin-right: var(--sp-2);">مخصص</span>' : ''}
             </div>
  `).join('')}
         </div>
@@ -58,17 +58,17 @@ export class CollectionBuilderPage {
         <h1 class="page-title">منشئ المجموعات الذكية</h1>
         <p class="page-subtitle">أنشئ مجموعات ذكية بقواعد مخصصة</p>
       </div>
-      <div class="builder-form" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: 24px; max-width: 600px;">
-        <div style="display: grid; gap: 16px;">
+      <div class="builder-form" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: var(--sp-6); max-width: 600px;">
+        <div style="display: grid; gap: var(--sp-4);">
           <label>اسم المجموعة
-            <input id="col-name" class="input" placeholder="مثال: أفلام أكشن عالية التقييم" style="margin-top: 8px;">
+            <input id="col-name" class="input" placeholder="مثال: أفلام أكشن عالية التقييم" style="margin-top: var(--sp-2);">
           </label>
           <label>الوصف
-            <input id="col-desc" class="input" placeholder="وصف اختياري" style="margin-top: 8px;">
+            <input id="col-desc" class="input" placeholder="وصف اختياري" style="margin-top: var(--sp-2);">
           </label>
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--sp-3);">
             <label>الحقل
-              <select id="rule-field" class="input" style="margin-top: 8px;">
+              <select id="rule-field" class="input" style="margin-top: var(--sp-2);">
                 <option value="genre">النوع</option>
                 <option value="year">السنة</option>
                 <option value="rating">التقييم</option>
@@ -76,7 +76,7 @@ export class CollectionBuilderPage {
               </select>
             </label>
             <label>العامل
-              <select id="rule-op" class="input" style="margin-top: 8px;">
+              <select id="rule-op" class="input" style="margin-top: var(--sp-2);">
                 <option value="includes">يحتوي</option>
                 <option value="gte">أكبر أو يساوي</option>
                 <option value="equals">يساوي</option>
@@ -84,12 +84,12 @@ export class CollectionBuilderPage {
               </select>
             </label>
             <label>القيمة
-              <input id="rule-value" class="input" placeholder="28 أو 2020 أو 8.0" style="margin-top: 8px;">
+              <input id="rule-value" class="input" placeholder="28 أو 2020 أو 8.0" style="margin-top: var(--sp-2);">
             </label>
           </div>
           <button class="btn btn-primary" id="create-smart">إنشاء المجموعة الذكية</button>
         </div>
-        <div id="builder-result" style="margin-top: 24px;"></div>
+        <div id="builder-result" style="margin-top: var(--sp-6);"></div>
       </div>
  `;
 
@@ -111,7 +111,7 @@ export class CollectionBuilderPage {
  try {
  const col = await smartCollectionManager.createCollection(name, rules, { description: desc, icon: '' });
  container.querySelector('#builder-result').innerHTML = `
-            <div style="padding: 16px; background: color-mix(in srgb, var(--color-success) 10%, transparent); border: 1px solid color-mix(in srgb, var(--color-success) 30%, transparent); border-radius: var(--radius-lg);">
+            <div style="padding: var(--sp-4); background: color-mix(in srgb, var(--color-success) 10%, transparent); border: 1px solid color-mix(in srgb, var(--color-success) 30%, transparent); border-radius: var(--radius-lg);">
  تم إنشاء المجموعة "${col.name}" مع ${col.items?.length || 0} عنصر
             </div>
  `;
@@ -156,12 +156,12 @@ export class LibraryHubPage {
         <p class="page-subtitle">أدوات التنظيم والذكاء — كلها تقرأ المكتبة ولا تعدّل ملفاتك إطلاقاً.</p>
       </div>`;
  const grid = el('div', '');
- grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;padding:0 var(--page-gutter) 40px';
+ grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap: var(--sp-3);padding:0 var(--page-gutter) 40px';
  TOOLS.forEach(([id, ic, name, desc]) => {
  const a = el('button', 'z-toolcard');
- a.style.cssText = 'cursor:pointer;text-align:start;font:inherit;color:inherit;display:flex;gap:12px;align-items:center;padding:16px;background:var(--surface-2);border:1px solid var(--color-border);border-radius:var(--r-lg);transition:border-color .15s,transform .15s';
+ a.style.cssText = 'cursor:pointer;text-align:start;font:inherit;color:inherit;display:flex;gap: var(--sp-3);align-items:center;padding: var(--sp-4);background:var(--surface-2);border:1px solid var(--color-border);border-radius:var(--r-lg);transition:border-color .15s,transform .15s';
  a.innerHTML = `<span style="display:grid;place-items:center;width:36px;height:36px;border-radius: var(--r-lg);background:var(--surface-3);color:var(--accent-bright);flex-shrink:0">${icon(ic, 17)}</span>
-        <span><b style="display:block;font-size:14px">${name}</b><span style="font-size:12px;color:var(--color-text-muted)">${desc}</span></span>
+        <span><b style="display:block;font-size: var(--text-sm)">${name}</b><span style="font-size: var(--text-2xs);color:var(--color-text-muted)">${desc}</span></span>
         <span style="margin-inline-start:auto;color:var(--color-text-faint)">${icon('chevL', 15)}</span>`;
  a.addEventListener('mouseenter', () => { a.style.borderColor = 'var(--accent-line)'; a.style.transform = 'translateY(-2px)'; });
  a.addEventListener('mouseleave', () => { a.style.borderColor = 'var(--color-border)'; a.style.transform = ''; });
@@ -190,12 +190,12 @@ export class LibraryBrowsePage {
  let rows = [];
 
  page.innerHTML = `
-      <div class="page-header" style="display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap">
+      <div class="page-header" style="display:flex;align-items:flex-end;gap: var(--sp-5);flex-wrap:wrap">
         <div style="flex:1;min-width:240px">
           <h1 class="page-title">كل المكتبة</h1>
           <p class="page-subtitle" id="lb-count">…</p>
         </div>
-        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <div style="display:flex;gap: var(--sp-2);align-items:center;flex-wrap:wrap">
           <input id="lb-q" class="input input-sm" style="width:190px" placeholder="بحث في مكتبتك…" aria-label="بحث في المكتبة">
  ${[['all', 'الكل'], ['movie', 'أفلام'], ['tv', 'مسلسلات']].map(([v, l]) => `<button class="chip" data-type="${v}">${l}</button>`).join('')}
           <select id="lb-sort" class="input input-sm" style="width:auto" aria-label="الترتيب">
@@ -260,7 +260,7 @@ export class LibraryBrowsePage {
               <td class="num">${(r.release_date || r.first_air_date || '').slice(0, 4) || '—'}</td>
               <td class="num">${r.vote_average ? Number(r.vote_average).toFixed(1) : '—'}</td>
               <td>${r.watched ? '<span class="z-pill z-pill-ok">شوهد</span>' : r.userRating ? '<span class="z-pill">مقيَّم</span>' : '<span class="z-pill">في المكتبة</span>'}</td>
-              <td style="color:var(--color-text-faint);font-size:11.5px">${r.addedAt ? new Date(r.addedAt).toLocaleDateString('ar') : '—'}</td>
+              <td style="color:var(--color-text-faint);font-size: var(--text-2xs)">${r.addedAt ? new Date(r.addedAt).toLocaleDateString('ar') : '—'}</td>
             </tr>`).join('')}</tbody></table>`;
  wrap.querySelectorAll('tbody tr').forEach((tr) => {
  tr.style.cursor = 'pointer';

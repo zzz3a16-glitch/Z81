@@ -28,7 +28,7 @@ const row = (label, ...controls) => {
   const r = el('div', 'ts-row');
   const l = el('label', '', label);
   r.appendChild(l);
-  const c = el('div', ''); c.style.cssText = 'display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-width:0';
+  const c = el('div', ''); c.style.cssText = 'display:flex;gap: var(--sp-2);align-items:center;flex-wrap:wrap;min-width:0';
   controls.forEach((x) => c.appendChild(typeof x === 'string' ? el('span', '', x) : x));
   r.appendChild(c);
   return r;
@@ -69,7 +69,7 @@ function openColorPicker(anchor, initial, onPick) {
   field.appendChild(knob);
   const hue = document.createElement('input'); hue.type = 'range'; hue.min = 0; hue.max = 360; hue.value = Math.round(h * 360); hue.setAttribute('aria-label', 'درجة اللون');
   const alpha = document.createElement('input'); alpha.type = 'range'; alpha.min = 0; alpha.max = 100; alpha.value = Math.round(a * 100); alpha.setAttribute('aria-label', 'الشفافية');
-  const hexIn = document.createElement('input'); hexIn.className = 'input'; hexIn.style.cssText = 'height:30px;font-family:var(--font-mono);font-size:12px'; hexIn.value = initial || toHexStr(h, s, v);
+  const hexIn = document.createElement('input'); hexIn.className = 'input'; hexIn.style.cssText = 'height:30px;font-family:var(--font-mono);font-size: var(--text-2xs)'; hexIn.value = initial || toHexStr(h, s, v);
   const grids = el('div', 'grid4');
   const mk = (k, label, min, max, get, set) => {
     const lab = el('label', '', label);
@@ -224,14 +224,14 @@ function panelAccent() {
     p.appendChild(row('عدد المحطات', segmented([[2, 'محطتان'], [3, 'ثلاث']], c.accent.stops, (v) => themeEngine.setPath('accent.stops', v))));
   }
   const prev = el('div', '');
-  prev.style.cssText = 'margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center';
+  prev.style.cssText = 'margin-top: var(--sp-3);display:flex;gap: var(--sp-3);flex-wrap:wrap;align-items:center';
   const paintPrev = () => {
     const cc = cfg();
     const grad = cc.accentMode === 'gradient'
       ? `linear-gradient(${cc.accent.angle}deg, ${cc.accent.primary}, ${cc.accent.secondary}${cc.accent.stops === 3 ? `, ${cc.accent.tertiary}` : ''})`
       : cc.accent.primary;
     prev.innerHTML = '';
-    const mk = (label, css) => { const d = el('div', ''); d.style.cssText = `padding:8px 16px;border-radius:var(--r-full);font-weight:700;font-size:13px;${css}`; d.textContent = label; return d; };
+    const mk = (label, css) => { const d = el('div', ''); d.style.cssText = `padding: var(--sp-2) var(--sp-4);border-radius:var(--r-full);font-weight:700;font-size: var(--text-sm);${css}`; d.textContent = label; return d; };
     prev.append(
       mk('زر أساسي', `background:${grad};color:${contrastText(cc.accent.primary)}`),
       cc.accentMode === 'dual' ? mk('ثانوية', `border:1px solid ${cc.accent.secondary};color:${cc.accent.secondary}`) : '',
@@ -268,7 +268,7 @@ function panelBackground() {
     sub.appendChild(row('الملف', file));
     if (c.background.image.src) {
       const cur = el('div', '');
-      cur.style.cssText = 'height:96px;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--color-border);background-size:cover;background-position:center;margin-bottom:8px';
+      cur.style.cssText = 'height:96px;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--color-border);background-size:cover;background-position:center;margin-bottom: var(--sp-2)';
       cur.style.backgroundImage = `url("${c.background.image.src}")`;
       sub.prepend(cur);
     }
@@ -278,7 +278,7 @@ function panelBackground() {
     sub.appendChild(row('التشبّع', slider(0, 2, 0.05, c.background.image.saturate, (v) => themeEngine.setPath('background.image.saturate', v), (v) => `${Math.round(v * 100)}%`)));
     sub.appendChild(row('التعبئة', segmented([['cover', 'تغطية'], ['contain', 'احتواء'], ['repeat', 'تكرار']], c.background.image.size, (v) => themeEngine.setPath('background.image.size', v))));
   }
-  if (c.background.type === 'dynamic') sub.innerHTML = `<p class="hint" style="margin:6px 0 0">تدرّج ناعم بطيء الحركة مبني على لهجتك؛ يتوقف تماماً عند تقليل الحركة في النظام.</p>`;
+  if (c.background.type === 'dynamic') sub.innerHTML = `<p class="hint" style="margin: var(--sp-2) 0 0">تدرّج ناعم بطيء الحركة مبني على لهجتك؛ يتوقف تماماً عند تقليل الحركة في النظام.</p>`;
   p.appendChild(sub);
   return p;
 }
@@ -308,7 +308,7 @@ function panelType() {
   const fontsList = el('div', 'ts-fonts');
   c.fonts.forEach((f) => {
     const li = el('div', '');
-    li.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--color-hairline)';
+    li.style.cssText = 'display:flex;align-items:center;gap: var(--sp-2);padding: var(--sp-2) 0;border-top:1px solid var(--color-hairline)';
     li.innerHTML = `<span style="font-family:'${f.family}',sans-serif;flex:1">${esc(f.label)} — عيّنة Aa ببت</span>`;
     const del = el('button', 'btn btn-ghost btn-sm', '');
     del.innerHTML = icon('trash', 13); del.title = 'حذف';
@@ -419,17 +419,17 @@ function panelPages() {
   OVERRIDE_PAGES.forEach(([path, label]) => {
     const ent = c.pageOverrides[path] || {};
     const card = el('div', '');
-    card.style.cssText = 'padding:10px;border:1px solid var(--color-border);border-radius:var(--r-lg);margin-bottom:8px';
+    card.style.cssText = 'padding: var(--sp-3);border:1px solid var(--color-border);border-radius:var(--r-lg);margin-bottom: var(--sp-2)';
     const head = el('div', '');
-    head.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:6px';
-    head.innerHTML = `<b style="font-size:var(--text-sm)">${esc(label)}</b>${Object.keys(ent).length ? '<span class="z-pill z-pill-accent">تجاوز نشط</span>' : '<span style="font-size:11px;color:var(--color-text-faint)">افتراضي</span>'}`;
+    head.style.cssText = 'display:flex;align-items:center;gap: var(--sp-2);margin-bottom: var(--sp-2)';
+    head.innerHTML = `<b style="font-size:var(--text-sm)">${esc(label)}</b>${Object.keys(ent).length ? '<span class="z-pill z-pill-accent">تجاوز نشط</span>' : '<span style="font-size: var(--text-3xs);color:var(--color-text-faint)">افتراضي</span>'}`;
     const clear = el('button', 'btn btn-ghost btn-sm', 'مسح التجاوز');
-    clear.style.cssText = 'margin-inline-start:auto;font-size:11px';
+    clear.style.cssText = 'margin-inline-start:auto;font-size: var(--text-3xs)';
     clear.addEventListener('click', () => { themeEngine.clearPageOverride(path); rerenderTabs(); });
     if (Object.keys(ent).length) head.appendChild(clear);
     card.appendChild(head);
     const body = el('div', '');
-    body.style.cssText = 'display:flex;gap:14px;flex-wrap:wrap;align-items:center';
+    body.style.cssText = 'display:flex;gap: var(--sp-4);flex-wrap:wrap;align-items:center';
     const acc = el('div', 'ts-color');
     acc.innerHTML = `<span style="font-size:var(--text-xs);color:var(--color-text-muted)">لهجة</span>`;
     const accSw = el('button', 'sw'); accSw.type = 'button'; accSw.style.cssText = 'width:24px;height:24px;border-radius: var(--r-md);border:1px solid var(--color-border-strong);cursor:pointer;position:relative';
@@ -439,11 +439,11 @@ function panelPages() {
     accSw.addEventListener('click', () => openColorPicker(accSw, ent.accent || '#22D3EE', (v) => { themeEngine.setPathOverride(path, { ...ent, accent: v }); rerenderTabs(); }));
     acc.appendChild(accSw);
     body.appendChild(acc);
-    const dens = document.createElement('select'); dens.className = 'input'; dens.style.cssText = 'width:auto;height:28px;font-size:12px';
+    const dens = document.createElement('select'); dens.className = 'input'; dens.style.cssText = 'width:auto;height:28px;font-size: var(--text-2xs)';
     [['', 'كثيفة؟ الافتراضي'], ...DENSITIES.map((d) => [d, { compact: 'مضغوطة', comfortable: 'مريحة', spacious: 'واسعة' }[d]])].forEach(([v, l]) => { const o = document.createElement('option'); o.value = v; o.textContent = l; if (v === (ent.density || '')) o.selected = true; dens.appendChild(o); });
     dens.addEventListener('change', () => { const e2 = { ...ent }; if (dens.value) e2.density = dens.value; else delete e2.density; themeEngine.setPathOverride(path, cleanEnt(e2)); rerenderTabs(); });
     body.appendChild(dens);
-    const cs = document.createElement('select'); cs.className = 'input'; cs.style.cssText = 'width:auto;height:28px;font-size:12px';
+    const cs = document.createElement('select'); cs.className = 'input'; cs.style.cssText = 'width:auto;height:28px;font-size: var(--text-2xs)';
     [['', 'بطاقات: الافتراضي'], ...CARD_STYLES.map((k) => [k, k])].forEach(([v, l]) => { const o = document.createElement('option'); o.value = v; o.textContent = l; if (v === (ent.cardStyle || '')) o.selected = true; cs.appendChild(o); });
     cs.addEventListener('change', () => { const e2 = { ...ent }; if (!cs.value) delete e2.cardStyle; else e2.cardStyle = cs.value; themeEngine.setPathOverride(path, cleanEnt(e2)); rerenderTabs(); });
     body.appendChild(cs);
@@ -471,7 +471,7 @@ function previewPanel() {
           <div class="cd"><div class="img" style="background:var(--surface-4)"></div><div class="t"><b>أنمي</b><span>قيد البث</span></div></div>
         </div>
         <div class="row2">
-          <div class="dlg"><b>حوار</b><p style="color:var(--color-text-muted);margin:2px 0 6px">نص الوصف داخل النافذة</p><span class="btnp" style="padding:2px 8px;display:inline-block">تأكيد</span></div>
+          <div class="dlg"><b>حوار</b><p style="color:var(--color-text-muted);margin: 2px 0 var(--sp-2)">نص الوصف داخل النافذة</p><span class="btnp" style="padding: 2px var(--sp-2);display:inline-block">تأكيد</span></div>
           <div class="ntc"><span class="ic">${icon('check', 11)}</span><span>أُضيف إلى المفضلة</span></div>
         </div>
         <div class="typo">
@@ -504,7 +504,7 @@ function panelOverview() {
         </div>
         <div class="mw">
           <div class="bar" style="height:26px;background:linear-gradient(100deg, ${acc}, ${acc2})"></div>
-          <div style="display:flex;gap:6px">
+          <div style="display:flex;gap: var(--sp-2)">
             <div class="bar" style="flex:1;height:30px;background:${mixHex(bg, '#FFFFFF', 0.07)};border:1px solid ${hexA('#fff', .09)}"></div>
             <div class="bar" style="flex:1;height:30px;background:${mixHex(bg, '#FFFFFF', 0.07)};border:1px solid ${hexA('#fff', .09)}"></div>
             <div class="bar" style="flex:1;height:30px;background:${mixHex(bg, '#FFFFFF', 0.07)};border:1px solid ${hexA('#fff', .09)}"></div>
@@ -538,7 +538,7 @@ function panelOverview() {
   const ops = el('div', 'ts-card');
   ops.style.marginTop = '14px';
   ops.innerHTML = `<h3>${icon('save', 15)} إدارة المظاهر</h3><p class="hint">حفظ التكوين الحالي، تصدير ملف ‎.zpopcorn-theme.json محمول، استيراد مع فحص كامل قبل التطبيق.</p>`;
-  const bar = el('div', ''); bar.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap';
+  const bar = el('div', ''); bar.style.cssText = 'display:flex;gap: var(--sp-2);flex-wrap:wrap';
   const nameIn = document.createElement('input'); nameIn.className = 'input'; nameIn.placeholder = 'اسم المظهر الجديد'; nameIn.style.cssText = 'width:200px;height:32px';
   const save = el('button', 'btn btn-secondary btn-sm', 'حفظ الحالي كمظهر');
   save.addEventListener('click', () => {
@@ -564,7 +564,7 @@ function panelOverview() {
   bar.append(nameIn, save, exp, imp, fileIn);
   ops.appendChild(bar);
   const dang = el('div', '');
-  dang.style.cssText = 'display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;padding-top:12px;border-top:1px solid var(--color-hairline)';
+  dang.style.cssText = 'display:flex;gap: var(--sp-2);margin-top: var(--sp-3);flex-wrap:wrap;padding-top: var(--sp-3);border-top:1px solid var(--color-hairline)';
   const rBtn = (label, need, fn) => {
     const b = el('button', 'btn btn-ghost btn-sm', '');
     b.innerHTML = `${icon('refresh', 12)} ${label}`;
@@ -641,7 +641,7 @@ export function ThemeStudio() {
   const panel = el('div', 'ts-panel');
   root.append(tabs, panel, previewPanel());
   const header = el('div', '');
-  header.style.cssText = 'display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap';
+  header.style.cssText = 'display:flex;align-items:center;gap: var(--sp-3);margin-bottom: var(--sp-4);flex-wrap:wrap';
   header.innerHTML = `<h2 style="font-size:var(--text-2xl);font-weight:800;margin:0">استوديو المظهر</h2>
     <span class="z-pill z-pill-accent">محرك zPopcorn v2</span>
     <span style="font-size:var(--text-xs);color:var(--color-text-muted)">كل تغيير يُطبَّق ويُحفظ لحظياً — لا إعادة تشغيل</span>`;

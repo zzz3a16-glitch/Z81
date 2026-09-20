@@ -30,29 +30,29 @@ export async function PersonPage(params = {}) {
   const place = person.place_of_birth || '';
 
   page.innerHTML = `
-    <div class="z-narrow" style="padding-top:34px">
-      <div style="display:grid;grid-template-columns:180px minmax(0,1fr);gap:28px;align-items:start">
+    <div class="z-narrow" style="padding-top: var(--sp-8)">
+      <div style="display:grid;grid-template-columns:180px minmax(0,1fr);gap: var(--sp-7);align-items:start">
         <div style="border-radius:50% 50% var(--r-xl) var(--r-xl);overflow:hidden;border:1px solid var(--color-border);aspect-ratio:3/4;background:var(--surface-2)">
           ${person.profile_path
             ? `<img src="${getTMDBImageUrl(person.profile_path, 'profile', 'w342')}" alt="" style="width:100%;height:100%;object-fit:cover" fetchpriority="high">`
             : fallbackArt(person.name || '', { big: true })}
         </div>
         <div>
-          <div class="u-caps" style="margin-bottom:6px">شخص</div>
+          <div class="u-caps" style="margin-bottom: var(--sp-2)">شخص</div>
           <h1 class="page-title" style="font-size:var(--text-4xl)">${esc(person.name || '')}</h1>
-          ${person.also_known_as?.length ? `<div style="color:var(--color-text-muted);font-size:13px;margin-top:6px">يُعرف أيضاً: ${esc(person.also_known_as.slice(0, 3).join('، '))}</div>` : ''}
+          ${person.also_known_as?.length ? `<div style="color:var(--color-text-muted);font-size: var(--text-sm);margin-top: var(--sp-2)">يُعرف أيضاً: ${esc(person.also_known_as.slice(0, 3).join('، '))}</div>` : ''}
           <div class="z-meta-strip">
             ${person.known_for_department ? `<span class="z-pill z-pill-accent">${esc(person.known_for_department)}</span>` : ''}
             ${birthday ? `<span>${birthday}${place ? ` · ${esc(place)}` : ''}</span>` : ''}
             ${person.birthday && person.deathday ? `<span>توفي: ${fmtDateAr(person.deathday)}</span>` : ''}
           </div>
           ${person.biography ? `
-            <p id="person-bio" style="margin-top:16px;color:var(--color-text-secondary);font-size:var(--text-base);line-height:1.85;max-width:78ch;
-              display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer">${esc(person.biography)}</p>` : '<p style="margin-top:16px;color:var(--color-text-muted);font-size:13px">لا سيرة متاحة — ستظهر عند توفر اتصال بالشبكة.</p>'}
+            <p id="person-bio" style="margin-top: var(--sp-4);color:var(--color-text-secondary);font-size:var(--text-base);line-height:1.85;max-width:78ch;
+              display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer">${esc(person.biography)}</p>` : '<p style="margin-top: var(--sp-4);color:var(--color-text-muted);font-size: var(--text-sm)">لا سيرة متاحة — ستظهر عند توفر اتصال بالشبكة.</p>'}
         </div>
       </div>
     </div>
-    <div id="person-sections" style="margin-top:40px"></div>`;
+    <div id="person-sections" style="margin-top: var(--sp-10)"></div>`;
 
   const bio = page.querySelector('#person-bio');
   if (bio) bio.addEventListener('click', () => {

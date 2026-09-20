@@ -319,7 +319,7 @@ async function loadHealthStrip() {
   const mk = (iconName, title, desc, to, tone) => {
     const b = el('button', 'z-stat');
     b.style.cssText = 'cursor:pointer;text-align:start;display:flex;flex-direction:column;font:inherit;color:inherit';
-    b.innerHTML = `<span style="display:flex;align-items:center;gap:8px">${icon(iconName, 15)}<b class="num">${title}</b></span><span style="margin-top:4px">${desc}</span>${tone ? `<span class="z-pill z-pill-warn" style="width:fit-content;margin-top:6px">${tone}</span>` : ''}`;
+    b.innerHTML = `<span style="display:flex;align-items:center;gap: var(--sp-2)">${icon(iconName, 15)}<b class="num">${title}</b></span><span style="margin-top: var(--sp-1)">${desc}</span>${tone ? `<span class="z-pill z-pill-warn" style="width:fit-content;margin-top: var(--sp-2)">${tone}</span>` : ''}`;
     b.addEventListener('click', () => window.router.navigate(to));
     return b;
   };
