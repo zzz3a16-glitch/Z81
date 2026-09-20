@@ -69,11 +69,11 @@ a { color: var(--z-link); }
 /* ============ glass levels (spec 23) — rationed ============ */
 :root[data-z-glass="subtle"] .z-topbar,
 :root[data-z-glass="medium"] .z-topbar,
-:root[data-z-glass="strong"] .z-topbar { backdrop-filter: blur(var(--z-glass-blur, 14px)) saturate(1.25); }
-:root[data-z-glass="subtle"] .z-ctx, :root[data-z-glass="subtle"] .z-npanel, :root[data-z-glass="subtle"] .z-tb-suggest { backdrop-filter: blur(10px) saturate(1.3); }
-:root[data-z-glass="medium"] .z-ctx, :root[data-z-glass="medium"] .z-npanel, :root[data-z-glass="medium"] .z-tb-suggest { backdrop-filter: blur(16px) saturate(1.35); }
+:root[data-z-glass] .z-topbar { backdrop-filter: blur(var(--z-glass-blur)) saturate(1.25); }
+:root[data-z-glass="subtle"] .z-ctx, :root[data-z-glass="subtle"] .z-npanel, :root[data-z-glass="subtle"] .z-tb-suggest { backdrop-filter: blur(var(--z-glass-blur)) saturate(1.3); }
+:root[data-z-glass="medium"] .z-ctx, :root[data-z-glass="medium"] .z-npanel, :root[data-z-glass="medium"] .z-tb-suggest { backdrop-filter: blur(var(--z-glass-blur)) saturate(1.35); }
 :root[data-z-glass="strong"] .z-ctx, :root[data-z-glass="strong"] .z-npanel, :root[data-z-glass="strong"] .z-tb-suggest,
-:root[data-z-glass="strong"] .z-topbar, :root[data-z-glass="strong"] .z-sidebar { backdrop-filter: blur(22px) saturate(1.4); }
+:root[data-z-glass="strong"] .z-topbar, :root[data-z-glass="strong"] .z-sidebar { backdrop-filter: blur(var(--z-glass-blur)) saturate(1.4); }
 :root[data-z-glass="subtle"] { --z-glass-blur: 8px; }
 :root[data-z-glass="medium"] { --z-glass-blur: 14px; }
 :root[data-z-glass="strong"] { --z-glass-blur: 22px; }

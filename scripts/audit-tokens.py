@@ -90,6 +90,28 @@ for d in ('src',):
         if n:
             hits.append((p, 1, 'SHIMMER', f'zskel keyframe defined here; canonical home is base.css (count={n})')) if p != 'src/styles/base.css' or n != 1 else None
 
+# masked-fallback lock: var(--token, Npx) where the token is DEFINED (dead mask that
+# freezes the value against theme/density retunes) or UNDEFINED everywhere (hidden hardcode)
+_tok = {}
+for _f in pathlib.Path('src/styles').rglob('*.css'):
+    for _t in re.findall(r'(--[a-z0-9-]+)\s*:', open(_f, encoding='utf-8', errors='ignore').read()):
+        _tok.setdefault(_t, 0)
+        _tok[_t] += 1
+_runtime = set()
+for _f in pathlib.Path('src/js').rglob('*.js'):
+    _txt = open(_f, encoding='utf-8', errors='ignore').read()
+    _runtime.update(re.findall(r"setProperty\(\s*'(--[a-z0-9-]+)'", _txt))
+    _runtime.update(re.findall(r"'(--[a-z0-9-]+)'\s*,", _txt))
+    _runtime.update(re.findall(r'"(--[a-z0-9-]+)"\s*,', _txt))
+    _runtime.update(re.findall(r'(--[a-z0-9-]+)\s*:', _txt))  # inline style="--x:" in templates
+for _f in pathlib.Path('src').rglob('*.css'):
+    if 'themes/' in str(_f): continue
+    for _i, _ln in enumerate(open(_f, encoding='utf-8', errors='ignore').read().splitlines(), 1):
+        for _m in re.finditer(r'var\((--[a-z0-9-]+),\s*-?[\d.]+px\)', _ln):
+            _t = _m.group(1)
+            if _t in _tok or _t not in _runtime:
+                hits.append((str(_f), _i, 'MASK', f'masked fallback {_m.group(0)} — token defined: fallback freezes retunes' if _t in _tok else f'masked fallback {_m.group(0)} — token defined nowhere: the px IS the value'))
+
 if '--drift' in sys.argv:
     print('\n── drift report (informational) ──')
     rows = []

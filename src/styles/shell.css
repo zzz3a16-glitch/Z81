@@ -78,6 +78,9 @@
 }
 .z-sb-item svg { flex-shrink: 0; width: 18px; height: 18px; opacity: .82; }
 .z-sb-item:hover { background: var(--color-surface-hover); color: var(--color-text-primary); }
+.z-sb-item[aria-disabled="true"] { color: var(--color-text-faint); cursor: default; }
+.z-sb-item[aria-disabled="true"]:hover { background: none; color: var(--color-text-faint); }
+.z-sb-item[aria-disabled="true"] svg { opacity: .38; }
 .z-sb-item.z-active {
   background: var(--accent-soft);
   color: var(--color-text-primary);
@@ -117,7 +120,7 @@
 .z-sb-more-btn[aria-expanded="true"] .chev { transform: rotate(180deg); }
 .z-sb-sub { display: none; }
 .z-sb-sub.open { display: block; }
-.z-sb-sub .z-sb-item { font-size: var(--text-xs); height: 30px; padding-inline-start: var(--sp-11, 44px); }
+.z-sb-sub .z-sb-item { font-size: var(--text-xs); height: 30px; padding-inline-start: var(--sp-12); }
 
 .z-sb-foot {
   border-top: 1px solid var(--color-hairline);
@@ -352,7 +355,7 @@
   .z-menu-btn { display: grid !important; }
   .z-app { grid-template-columns: 0 minmax(0, 1fr) !important; }
   .z-sidebar {
-    position: fixed; inset-block: 0; inset-inline-start: 0; width: var(--sidebar-w-compact, 248px);
+    position: fixed; inset-block: 0; inset-inline-start: 0; width: var(--sidebar-w-compact);
     z-index: var(--z-modal, 120); display: flex !important;
     transform: translateX(-102%); transition: transform var(--dur-3, .24s) var(--ease-out, ease);
     box-shadow: var(--shadow-2xl, 0 24px 64px rgba(0,0,0,.5));
@@ -360,7 +363,7 @@
   html[dir="rtl"] .z-sidebar { transform: translateX(102%); }
   .z-sidebar.mobile-open { transform: none !important; }
   .z-sidebar .z-sb-name, .z-sidebar .z-sb-grouptitle b { display: revert !important; }
-  .z-sidebar .z-sb-item { justify-content: flex-start !important; padding-inline: var(--sp-3, 12px) !important; }
+  .z-sidebar .z-sb-item { justify-content: flex-start !important; padding-inline: var(--sp-3) !important; }
   .z-scrim { position: fixed; inset: 0; background: rgba(4, 6, 14, .55); backdrop-filter: blur(2px);
     z-index: calc(var(--z-modal, 120) - 5); opacity: 0; pointer-events: none; transition: opacity var(--dur-3, .24s); }
   .z-scrim.on { opacity: 1; pointer-events: auto; }

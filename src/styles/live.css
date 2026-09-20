@@ -176,7 +176,7 @@
 .zlv-onboard .grid { display: grid; grid-template-columns: 1fr auto auto; gap: var(--sp-2); align-items: end; }
 .zlv-onboard label, .zlv-addpanel label { display: flex; flex-direction: column; gap: var(--sp-1); font-size: var(--text-xs); color: var(--color-text-muted); min-width: 0; }
 .zlv-onboard input, .zlv-addpanel input {
-  height: var(--input-height, 38px); padding: 0 var(--sp-3); min-width: 0;
+  height: var(--input-height); padding: 0 var(--sp-3); min-width: 0;
   background: var(--color-surface); color: var(--color-text-primary);
   border: 1px solid var(--color-border); border-radius: var(--r-md);
   font-size: var(--text-sm); font-family: inherit;
@@ -230,7 +230,7 @@
   padding: 2px; scrollbar-gutter: stable; }
 .zlv-spacer { position: relative; }
 .zlv-win { position: absolute; inset-inline-start: 0; top: 0; width: 100%; will-change: transform; }
-.zlv-row { display: grid; grid-template-columns: repeat(var(--cols, 6), minmax(0, 1fr)); gap: var(--zlv-gap, 12px); margin-bottom: var(--zlv-gap, 12px); }
+.zlv-row { --zlv-gap: var(--sp-3); display: grid; grid-template-columns: repeat(var(--cols, 6), minmax(0, 1fr)); gap: var(--zlv-gap); margin-bottom: var(--zlv-gap); }
 .zlv-row.as-rows { grid-template-columns: 1fr; gap: var(--sp-2); --zlv-gap: var(--sp-2); margin-bottom: 0; }
 .zlv-scroller::-webkit-scrollbar { width: 10px; }
 .zlv-scroller::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: var(--r-full); border: 3px solid transparent; background-clip: padding-box; }
@@ -424,7 +424,7 @@ html[dir="ltr"] .zlv-switch.on i { transform: translateX(18px); }
   width: min(760px, calc(100vw - 32px));
   display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-3) var(--sp-4);
   background: color-mix(in srgb, var(--color-surface-elevated) 92%, transparent);
-  backdrop-filter: blur(var(--blur-intensity, 14px)) saturate(1.3);
+  backdrop-filter: blur(var(--blur-intensity)) saturate(1.3);
   border: 1px solid var(--color-border); border-radius: var(--r-lg);
   box-shadow: var(--shadow-xl), 0 0 0 1px color-mix(in srgb, var(--accent) 8%, transparent);
   animation: zlv-dockin var(--dur-3) var(--ease-enter) both;
