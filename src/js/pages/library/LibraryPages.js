@@ -8,6 +8,7 @@ import { awardManager, formatManager, contentThemeManager, missingPiecesDetector
 import { mediaTypeManager } from '../../services/library/LibraryIntelligence.js';
 import { uiIcon } from '../../ui/primitives.js';
 import { icon } from '../../ui/icons.js';
+import { iconAnim } from '../../ui/IconFX.js';
 
 // ========== ERA PAGE ==========
 export class EraPage {
@@ -70,7 +71,7 @@ export class EraPage {
  if (this.media.length === 0) {
  mediaContainer.innerHTML = `
               <div class="empty-state">
-                <div class="empty-icon" style="color:var(--color-text-faint)">${icon('film', 34, { stroke: 1.5 })}</div>
+                <div class="empty-icon">${iconAnim('empty', 52)}</div>
                 <h3>لا توجد أعمال لهذا العقد</h3>
                 <p>جرب عقداً آخر</p>
               </div>
@@ -141,7 +142,7 @@ export class FranchisesPage {
  if (franchises.length === 0) {
  grid.innerHTML = `
             <div class="empty-state">
-              <div class="empty-icon" style="color:var(--color-text-faint)">${icon('film', 34, { stroke: 1.5 })}</div>
+              <div class="empty-icon">${iconAnim('empty', 52)}</div>
               <h3>لا توجد سلاسل بعد</h3>
               <p>أنشئ سلسلتك الأولى لتنظيم الأفلام المترابطة</p>
               <div class="empty-examples">
@@ -579,7 +580,7 @@ export class MissingPiecesPage {
  if (missing.total === 0) {
  dashboard.innerHTML = `
             <div class="empty-state">
-              <span class="empty-icon" style="color:var(--color-success)">${icon('success', 26, { stroke: 1.9 })}</span>
+              <span class="empty-icon" style="color:var(--color-success)">${iconAnim('success', 52)}</span>
               <h3>لا توجد قطع مفقودة!</h3>
               <p>جميع سلاسلك مكتملة</p>
             </div>
@@ -639,7 +640,7 @@ export class DuplicatesPage {
  if (analysis.total === 0) {
  dashboard.innerHTML = `
             <div class="empty-state">
-              <span class="empty-icon" style="color:var(--color-success)">${icon('success', 26, { stroke: 1.9 })}</span>
+              <span class="empty-icon" style="color:var(--color-success)">${iconAnim('success', 52)}</span>
               <h3>لا توجد مكررات!</h3>
               <p>مكتبتك نظيفة ومنظمة</p>
             </div>

@@ -8,6 +8,7 @@ import { isDesktop, api } from '../bridge.js';
 import { notificationService } from '../services/notification/NotificationService.js';
 import { getTMDBImageUrl } from '../services/tmdb/TMDBImage.js';
 import { icon } from '../ui/icons.js';
+import { iconAnim } from '../ui/IconFX.js';
 
 const toast = (o) => notificationService.showToast(o);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -86,7 +87,7 @@ class InboxView {
 
     this.root.querySelector('#inbox-actions').innerHTML = `
       <select id="inbox-source" class="input input-sm" aria-label="مصدر الفحص" style="min-width:180px"></select>
-      <button class="btn btn-secondary btn-sm" id="inbox-scan-btn">${svgIcon('scan', 14)} فحص الآن</button>
+      <button class="btn btn-secondary btn-sm" id="inbox-scan-btn">${icon('scan', 14, { weight: 'bold' })} فحص الآن</button>
       <button class="btn btn-ghost btn-sm" id="inbox-clear-btn">${svgIcon('refresh', 14)} تنظيف المؤكَّد</button>
     `;
 
@@ -217,7 +218,7 @@ class InboxView {
     if (!s || !isDesktop) return;
     api.inbox.stats().then((st) => {
       const review = this.items.filter(needsReview).length;
-      s.textContent = `${st.pending ?? 0} قيد المراجعة · ${review} يحتاج تدخلاً · ${st.confirmed ?? 0} مؤكد · ${st.ignored ?? 0} مرفوض${st.running ? ' · فحص جارٍ الآن' : ''}`;
+      s.innerHTML = `${st.pending ?? 0} قيد المراجعة · ${review} يحتاج تدخلاً · ${st.confirmed ?? 0} مؤكد · ${st.ignored ?? 0} مرفوض${st.running ? ` · <span class="z-run">${iconAnim('importing', 20)}<b>فحص جارٍ الآن</b></span>` : ''}`;
     }).catch(() => { s.textContent = `${this.items.length} عنصر`; });
   }
 
@@ -254,7 +255,7 @@ class InboxView {
       return true;
     });
     if (!items.length) {
-      list.innerHTML = `<div class="inbox-empty">${this.items.length ? 'لا نتائج لهذا التصفية' : this.status === 'pending' ? 'لا شيء معلّق — المكتبة محدثة' : 'القائمة فارغة'}</div>`;
+      list.innerHTML = `<div class="inbox-empty">${this.items.length ? 'لا نتائج لهذا التصفية' : this.status === 'pending' ? `<div style="display:grid;justify-items:center;gap:10px;padding:18px 0">${iconAnim('empty', 56)}<div>لا شيء معلّق — المكتبة محدثة</div></div>` : 'القائمة فارغة'}</div>`;
       return;
     }
     list.innerHTML = items.map((it) => this.cardHtml(it)).join('');

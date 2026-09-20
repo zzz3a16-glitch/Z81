@@ -9,7 +9,7 @@ import { watchlistManager } from '../services/watchlist/WatchlistManager.js';
 import { behaviorEngine, BEHAVIOR_EVENTS } from '../services/behavior/UserBehaviorEngine.js';
 import { notificationService } from '../services/notification/NotificationService.js';
 import { isDesktop, api } from '../bridge.js';
-import { icon } from '../ui/icons.js';
+import { icon, iconHuge } from '../ui/icons.js';
 import { esc, ratingBadge, fallbackArt, fmtRuntime, emptyState } from '../ui/primitives.js';
 
 export function cardThumb(media, variant) {
@@ -55,7 +55,7 @@ export function createMediaCard(media, options = {}) {
       ${cardThumb(media, variant)}
       ${tagHtml}
       ${variant === 'continue' ? `
-        <div class="resume"><span class="pp">${icon('play', 16)}</span></div>
+        <div class="resume"><span class="pp">${iconHuge('play', 18)}</span></div>
         ${media.timeLeft ? `<span class="timeleft">${esc(typeof media.timeLeft === 'number' ? fmtRuntime(media.timeLeft) : media.timeLeft)} متبقية</span>` : ''}
         ${showProgress && progress ? `<span class="prog"><i style="width:${Math.min(100, progress)}%"></i></span>` : ''}
       ` : ''}

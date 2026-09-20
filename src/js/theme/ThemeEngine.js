@@ -74,6 +74,12 @@ function mix(a, b, t) {
 }
 
 /* ============================ schema/defaults ============================ */
+/** Active icon weight tier (driven by icons.weight) — icon() consumes it so one
+ * global choice flows into every glyph: light ≤1.44 · regular · bold ≥2.06px.
+ * Huge/stroke glyphs keep the raw --zi-sw numeric. */
+let _iconWeightTier = 'regular';
+export const iconWeightTier = () => _iconWeightTier;
+
 export const DENSITIES = ['compact', 'comfortable', 'spacious'];
 export const RADIUS_PRESETS = { sharp: 0, subtle: 6, modern: 12, rounded: 18 };
 export const BORDER_PRESETS = { none: 0, subtle: 0.06, standard: 0.09, defined: 0.14 };
@@ -427,6 +433,7 @@ class ThemeEngine {
     v['--zi-sw'] = `${cfg.icons.weight}`; v['--zi-op'] = `${cfg.icons.opacity}`;
     root.style.setProperty('--zi-sw', `${cfg.icons.weight}`);
     root.style.setProperty('--zi-op', `${cfg.icons.opacity}`);
+    _iconWeightTier = cfg.icons.weight > 2.05 ? 'bold' : cfg.icons.weight < 1.45 ? 'light' : 'regular';
     root.style.setProperty('--z-sb-w', `${cfg.sidebar.width}px`);
     root.style.setProperty('--z-sb-op', `${cfg.sidebar.opacity}`);
     root.style.setProperty('--z-sb-ic', `${cfg.sidebar.iconSize}px`);

@@ -93,7 +93,7 @@ export async function DetailsPage(params, mediaType = 'movie') {
           ${media.release_date || media.first_air_date ? `· <span>${fmtDateAr(media.release_date || media.first_air_date)}</span>` : ''}
         </div>
         <div class="z-actions" id="d-actions">
-          <button class="btn btn-primary" data-a="play">${icon('play', 15)} ${localFiles.length ? 'تشغيل الملف المحلي' : 'مشاهدة'}</button>
+          <button class="btn btn-primary" data-a="play">${icon('play', 15, { weight: 'bold' })} ${localFiles.length ? 'تشغيل الملف المحلي' : 'مشاهدة'}</button>
           <button class="btn btn-secondary" data-a="fav">${icon('heart', 15)} <span>المفضلة</span></button>
           <button class="btn btn-secondary" data-a="later">${icon('bookmark', 15)} <span>لاحقاً</span></button>
           ${!inLibrary ? `<button class="btn btn-secondary" data-a="addlib">${icon('database', 15)} <span>إضافة للمكتبة</span></button>` : ''}

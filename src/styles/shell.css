@@ -397,7 +397,7 @@ a.z-ctl:hover:not(:disabled) .zi { color: var(--accent-bright, #B18CFF); }
 .btn:not(.btn-primary):active:not(:disabled) .zi,
 button.z-ctl:active:not(:disabled) .zi { transform: scale(.9); }
 /* selected — the accent holds */
-.z-sb-item.active .zi, .chip.active .zi, .z-qts button.on .zi { color: var(--accent, #7B6CF6); }
+.z-sb-item.z-active .zi, .z-sb-item.active .zi, .chip.active .zi, .z-qts button.on .zi { color: var(--accent, #7B6CF6); }
 /* disabled — first thing to go quiet */
 .z-iconbtn:disabled .zi, .btn:disabled .zi, button:disabled .zi, a[aria-disabled="true"] .zi {
   color: var(--color-text-faint, #55566b) !important;
@@ -412,3 +412,18 @@ svg.zi.spin { animation: zi-spin .9s linear infinite; transform-origin: 50% 50%;
   svg.zi { transition: none; }
   .z-iconbtn:active:not(:disabled) .zi, .btn:not(.btn-primary):active:not(:disabled) .zi { transform: none; }
 }
+
+/* ── animated register (IconFX / lord-icon) ─────────────────────────
+   .zanim is the mount point: static duotone fallback underneath, the
+   lord-icon layer fades in when the engine + asset are live. If either
+   is missing (offline first launch), nothing shifts — fallback stays. */
+.zanim { position: relative; display: inline-flex; align-items: center; justify-content: center;
+  width: var(--zanim-sz, 40px); height: var(--zanim-sz, 40px); vertical-align: middle; }
+.zanim > .zanim-fb { display: inline-flex; opacity: .85; }
+.zanim > lord-icon { position: absolute; inset: 0; width: 100%; height: 100%; }
+.zanim.ld-live > .zanim-fb { visibility: hidden; }
+.z-run { display: inline-flex; align-items: center; gap: 6px; color: var(--accent, #7B6CF6); }
+/* fill-register glyphs: never inherit the stroke pipeline */
+svg.zi-fill, svg.zi-brand { stroke: none; }
+/* the sidebar's active register switch (light → duotone) keeps position:
+   both svgs share the .zi box model, so zero layout shift by construction. */

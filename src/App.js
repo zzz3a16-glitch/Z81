@@ -7,6 +7,7 @@ import { router } from './js/router.js';
 import { themeManager } from './js/services/theme/ThemeManager.js';
 import { createSidebar } from './js/components/Sidebar.js';
 import { icon } from './js/ui/icons.js';
+import { iconAnim } from './js/ui/IconFX.js';
 import { themeEngine } from './js/theme/ThemeEngine.js';
 import { createHeader } from './js/components/Header.js';
 import { db } from './js/services/storage/Database.js';
@@ -177,7 +178,7 @@ export class App {
       <div id="player-container" style="display: none;"></div>
       <div class="z-drop" id="z-drop">
         <div class="z-drop-card">
-          <span class="ic">${icon('folderOpen', 24, { stroke: 1.8 })}
+          <span class="ic">${icon('folderOpen', 26, { weight: 'duotone' })}
           </span>
           <span>أفلِت المجلد لإضافته إلى المكتبة</span>
           <small>لن تُنسخ أو تُنقل أي ملفات — يُضاف المسار كمصدر فحص فقط</small>
@@ -375,7 +376,7 @@ export class App {
       console.error('Failed to render page:', error);
       this.mainContent.innerHTML = `
         <div class="container" style="padding: 80px 24px; text-align: center;">
-          ${'<span style="color:var(--color-warning);display:inline-block;margin-bottom:14px">' + icon('alert', 44, { stroke: 1.6 }) + '</span>'}
+          <span style="display:inline-flex;margin-bottom:14px">${iconAnim('error', 56)}</span>
           <h2 style="margin-bottom: 8px;">حدث خطأ</h2>
           <p style="color: var(--color-text-secondary); margin-bottom: 24px;">${error.message || 'فشل تحميل الصفحة'}</p>
           <button class="btn btn-primary" onclick="window.router.navigate('/')">العودة للرئيسية</button>
@@ -437,11 +438,12 @@ export class App {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     
+    // meaningful states, per icon system: duotone marks a state (spec: special visual states)
     const icons = {
-      success: icon('check', 15),
-      error: icon('x', 15),
-      warning: icon('alert', 15),
-      info: icon('info', 15)
+      success: icon('success', 17, { weight: 'duotone' }),
+      error: icon('error', 17, { weight: 'duotone' }),
+      warning: icon('warning', 17, { weight: 'duotone' }),
+      info: icon('info', 17, { weight: 'duotone' })
     };
 
     toast.innerHTML = `
@@ -450,7 +452,7 @@ export class App {
         ${title ? `<div class="toast-title">${title}</div>` : ''}
         ${message ? `<div class="toast-message">${message}</div>` : ''}
       </div>
-      <button class="toast-close">✕</button>
+      <button class="toast-close" aria-label="إغلاق">${icon('x', 13)}</button>
     `;
 
     container.appendChild(toast);

@@ -153,7 +153,7 @@ function openFirstRun(router) {
       </div>
       <div class="foot">
         <button class="btn btn-ghost btn-sm" data-act="skip">سأضيفها لاحقاً</button>
-        <button class="btn btn-primary" data-act="next" ${c.paths.length ? '' : 'disabled'}>ابدأ الفحص ${icon('scan', 15)}</button>
+        <button class="btn btn-primary" data-act="next" ${c.paths.length ? '' : 'disabled'}>ابدأ الفحص ${icon('scan', 15, { weight: 'bold' })}</button>
       </div>`;
   }
 
@@ -162,6 +162,6 @@ function openFirstRun(router) {
       <div class="mark">${icon('check', 26)}</div>
       <h1 style="font-size:22px">كل شيء جاهز</h1>
       <p>${c.paths.length ? `سنفحص <b class="num">${c.paths.length}</b> مجلداً، ثم تراجع النتائج في صندوق الوارد قبل إضافتها.` : 'يمكنك إضافة المجلدات لاحقاً من «صندوق الوارد» أو الإعدادات.'}</p>
-      <div class="foot"><span></span><button class="btn btn-primary" data-act="finish">افتح zPopcorn ${icon('chevL', 15)}</button></div>`;
+      <div class="foot"><span></span><button class="btn btn-primary" data-act="finish">افتح zPopcorn ${icon('chevL', 15, { weight: 'bold' })}</button></div>`;
   }
 }

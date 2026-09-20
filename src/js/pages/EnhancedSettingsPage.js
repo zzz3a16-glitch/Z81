@@ -400,7 +400,7 @@ async function createAppearanceSection() {
  card.style.borderColor = 'var(--color-accent)';
  const badge = document.createElement('div');
  badge.style.cssText = 'position: absolute; top: 8px; right: 8px; background: var(--color-accent); color: white; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;';
- badge.textContent = '✓ نشط';
+ badge.textContent = 'نشط'; badge.dataset.state = 'active';
  card.querySelector('[style*="height: 120px"]').appendChild(badge);
       
  window.dispatchEvent(new CustomEvent('showtoast', {
@@ -707,7 +707,7 @@ function createLibrarySection() {
               <div style="font-weight: 500;">المجلد الافتراضي</div>
               <div style="font-size: 12px; color: var(--color-text-muted);">/home/user/Videos</div>
             </div>
-            <span style="font-size: 11px; padding: 2px 8px; background: #10b981; color: white; border-radius: 12px;">نشط</span>
+            <span style="font-size: 11px; padding: 2px 8px; background: var(--color-success, #10b981); color: white; border-radius: 12px;">نشط</span>
           </div>
         </div>
         <button class="btn btn-secondary" id="add-source">+ إضافة مصدر</button>
@@ -808,7 +808,7 @@ async function createTMDBSection() {
     
     <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
       <h3 style="font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-        <span style="width: 10px; height: 10px; background: #10b981; border-radius: 50%; display: inline-block; animation: pulse 2s infinite;"></span>
+        <span style="width: 10px; height: 10px; background: var(--color-success, #10b981); border-radius: 50%; display: inline-block; animation: pulse 2s infinite;"></span>
  حالة الاتصال
       </h3>
       <div style="display: grid; gap: 8px; font-size: 14px;">
@@ -855,7 +855,7 @@ async function createTMDBSection() {
  const { tmdbClient } = await import('../services/tmdb/TMDBClient.js');
  const config = await tmdbClient.getConfiguration();
  if (config) {
- resultDiv.innerHTML = '<span style="color: #10b981; font-weight: 600;">TMDB متصل بنجاح</span> • الصور: ' + (config.images?.secure_base_url || 'متاح');
+ resultDiv.innerHTML = '<span style="color: var(--color-success, #10b981); font-weight: 600;">TMDB متصل بنجاح</span> • الصور: ' + (config.images?.secure_base_url || 'متاح');
  } else {
  resultDiv.innerHTML = '<span style="color: #ef4444;">فشل الاتصال</span>';
  }
@@ -1202,7 +1202,7 @@ async function createBackupSection() {
  pendingBackup = data;
  div.querySelector('#restore-info').innerHTML = `
         <div style="background: var(--color-card); padding: 12px; border-radius: 8px; border: 1px solid var(--color-border);">
-          <div style="font-weight: 600; margin-bottom: 8px; color: #10b981;">✓ ملف صالح</div>
+          <div style="font-weight: 600; margin-bottom: 8px; color: var(--color-success, #10b981);">✓ ملف صالح</div>
           <div style="display: grid; gap: 4px; font-size: 12px; font-family: monospace;">
             <div>الإصدار: ${info.schemaVersion} | التطبيق: ${info.appVersion || 'غير محدد'}</div>
             <div>التاريخ: ${new Date(info.createdAt || info.timestamp).toLocaleString('ar-SA')}</div>
@@ -1395,7 +1395,7 @@ function createAboutSection() {
       <p style="color: var(--color-text-secondary); margin-bottom: 8px; font-size: 16px;">منصة الوسائط الذكية المتكاملة - مساعد شخصي ذكي</p>
       <p style="font-size: 13px; color: var(--color-text-muted);">الإصدار 2.0.0 • Production-Grade • Local-First • SA Default</p>
       <div style="display: inline-flex; gap: 8px; margin-top: 16px;">
-        <span style="padding: 4px 12px; background: #10b981; color: white; border-radius: 16px; font-size: 11px; font-weight: 600;">✓ Production Ready</span>
+        <span style="padding: 4px 12px; background: var(--color-success, #10b981); color: white; border-radius: 16px; font-size: 11px; font-weight: 600;">✓ Production Ready</span>
         <span style="padding: 4px 12px; background: var(--color-accent); color: white; border-radius: 16px; font-size: 11px; font-weight: 600;">✓ Real TMDB</span>
         <span style="padding: 4px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; font-size: 11px;"> SA</span>
       </div>
@@ -1435,7 +1435,7 @@ function createAboutSection() {
  'SQLite + IndexedDB + localStorage مع ترحيل آمن'
  ].map(f => `
             <div style="display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; font-size: 12px;">
-              <span style="color: #10b981; font-weight: 700; flex-shrink: 0;">✓</span>
+              <span style="color: var(--color-success, #10b981); font-weight: 700; flex-shrink: 0;">✓</span>
               <span style="color: var(--color-text-secondary); line-height: 1.5;">${f}</span>
             </div>
  `).join('')}
@@ -1472,7 +1472,7 @@ function createAboutSection() {
         <div style="margin-top: 16px; display: flex; justify-content: center; gap: 8px;">
           <a href="https://github.com" target="_blank" style="padding: 6px 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; font-size: 11px; text-decoration: none; color: var(--color-text-secondary);">GitHub</a>
           <a href="https://www.themoviedb.org/" target="_blank" style="padding: 6px 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; font-size: 11px; text-decoration: none; color: var(--color-text-secondary);">TMDB</a>
-          <span style="padding: 6px 12px; background: #10b981; color: white; border-radius: 16px; font-size: 11px; font-weight: 600;">Production Ready ✓</span>
+          <span style="padding: 6px 12px; background: var(--color-success, #10b981); color: white; border-radius: 16px; font-size: 11px; font-weight: 600;">Production Ready ✓</span>
         </div>
       </div>
     </div>

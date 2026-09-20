@@ -64,8 +64,8 @@ export function createSidebar() {
   const moreOpen = JSON.parse(localStorage.getItem('zpopcorn-sb-more') || '{}');
 
   const itemHtml = ([href, ic, label, badge]) => `
-    <a href="#${href}" class="z-sb-item" data-route="${href}" data-tip="${label}" tabindex="-1">
-      ${icon(ic)}<span>${label}</span>${badge ? `<span class="sb-badge" id="${badge}" style="display:none">0</span>` : ''}
+    <a href="#${href}" class="z-sb-item" data-route="${href}" data-tip="${label}" data-ic="${ic}" tabindex="-1">
+      ${icon(ic, 18, { weight: 'light' })}<span>${label}</span>${badge ? `<span class="sb-badge" id="${badge}" style="display:none">0</span>` : ''}
     </a>`;
 
   nav.innerHTML = `
@@ -75,7 +75,7 @@ export function createSidebar() {
     </div>
     <nav class="z-sb-nav">
       <div class="z-sb-group">
-        <a href="#/" class="z-sb-item" data-route="/" data-tip="الرئيسية">${icon('home')}<span>الرئيسية</span></a>
+        <a href="#/" class="z-sb-item" data-route="/" data-tip="الرئيسية" data-ic="home">${icon('home', 18, { weight: 'light' })}<span>الرئيسية</span></a>
       </div>
       ${GROUPS.map((g) => `
         <div class="z-sb-group" data-g="${g.id}">
@@ -139,6 +139,10 @@ export function createSidebar() {
       const on = r === '/' ? route.actualPath === '/' : r && route.actualPath?.startsWith(r);
       a.classList.toggle('z-active', !!on);
       if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+      if (a.dataset.ic) {
+        const g = a.querySelector('svg.zi');
+        if (g) g.outerHTML = icon(a.dataset.ic, +g.getAttribute('width') || 18, { weight: on ? 'duotone' : 'light' });
+      }
     });
   };
   router.onRouteChange(applyActive);

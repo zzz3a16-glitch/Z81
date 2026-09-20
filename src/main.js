@@ -116,3 +116,6 @@ window.addEventListener('error', (event) => {
 window.addEventListener('unhandledrejection', (event) => {
   console.error('Unhandled promise rejection:', event.reason);
 });
+
+// Icon FX — hydrate the animated register (lord-icon engine, offline-safe fallbacks)
+import('./js/ui/IconFX.js').then((m) => { m.watchIconFX(); m.hydrateIconFX(document); }).catch(() => {});
