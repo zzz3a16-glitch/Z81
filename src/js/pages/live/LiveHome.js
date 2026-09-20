@@ -199,6 +199,7 @@ export async function LiveHomePage() {
     if (t === 'progress' || t === 'epg') {
       const importing = live.sources.some((s) => s.status === 'importing');
       if (!importing && live.stats().channels) render();
+      if (e.detail?.partial) render(); // channels arrive while parsing continues
     }
   };
   window.addEventListener('zpopcn-live', onLiveEvent);

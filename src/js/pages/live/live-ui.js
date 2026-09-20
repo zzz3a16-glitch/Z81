@@ -151,10 +151,14 @@ export function stateBlock({ icon: ic = 'inbox', anim = null, title, desc = '', 
 
 export function statusPill(src) {
   const map = {
-    ok: ['ok', 'يعمل', 'check'], importing: ['busy', 'جارٍ التحديث…', 'loading'],
+    ok: ['ok', 'متصل', 'check'], importing: ['busy', 'جارٍ التحديث…', 'loading'],
     error: ['err', 'فشل', 'alert'], empty: ['warn', 'فارغ', 'inbox'], new: ['dim', 'جديد', 'sparkle'],
+    invalid: ['err', 'صيغة غير صالحة', 'warning'],
+    expired: ['warn', 'منتهية الصلاحية', 'clock'],
   };
-  const [cls, label, ic] = map[src.status] || map.new;
+  let key = src.status;
+  if (key === 'ok' && src.stale) key = 'expired';
+  const [cls, label, ic] = map[key] || map.new;
   return `<span class="zlv-pill ${cls}">${icon(ic, 12)} ${esc(label)}</span>`;
 }
 

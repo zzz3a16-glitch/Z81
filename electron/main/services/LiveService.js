@@ -60,6 +60,9 @@ export class LiveService {
     const url = safeHttpUrl(req.url);
     const maxBytes = Math.min(+req.maxBytes || MAX_BYTES, MAX_BYTES);
     const ac = new AbortController();
+    const flightKey = req.sourceId ? String(req.sourceId).replace(/[^a-z0-9_-]/gi, '') : null;
+    if (flightKey) this.inflight.set(flightKey, ac); // wires live.abortSource
+    const t0 = Date.now();
     const timer = setTimeout(() => ac.abort(new Error('E_TIMEOUT')), +req.timeoutMs || DEFAULT_TIMEOUT);
     let res;
     try {
@@ -70,14 +73,17 @@ export class LiveService {
       });
     } catch (e) {
       clearTimeout(timer);
+      if (flightKey) this.inflight.delete(flightKey);
+      if (String(ac.signal.reason?.message || e?.message || '').includes('E_CANCELLED')) throw err('E_CANCELLED', 'أُلغيت عملية الجلب');
       const aborted = String(e?.name || '') === 'AbortError' || String(e?.message || '').includes('E_TIMEOUT');
       throw err(aborted ? 'E_TIMEOUT' : 'E_NETWORK',
-        aborted ? 'انتهت مهلة الاتصال بالمصدر' : `لا يمكن الوصول إلى المصدر: ${e.message}`);
+        aborted ? 'انتهت مهلة الاتصال بالمصدر — الخادم لم يستجب في الوقت المناسب' : `لا يمكن الوصول إلى المصدر: ${e.message}`);
     }
     if (!res.ok && res.status >= 400) {
       clearTimeout(timer);
+      if (flightKey) this.inflight.delete(flightKey);
       try { res.body?.cancel(); } catch { /* ignore */ }
-      throw err('E_HTTP', `المصدر ردّ بالخطأ ${res.status}`);
+      throw err('E_HTTP', `المصدر ردّ بالخطأ ${res.status} (${res.status === 401 || res.status === 403 ? 'محمي بكلمة مرور أو جلسة منتهية' : res.status === 404 ? 'الرابط غير موجود على الخادم' : res.status >= 500 ? 'خطأ في الخادم المستضيف' : 'طلب مرفوض'})`);
     }
     // stream-read with a hard byte cap — a hostile endpoint cannot OOM us
     const chunks = [];
@@ -98,15 +104,20 @@ export class LiveService {
         bytes = buf.length;
         if (bytes > maxBytes) { truncated = true; chunks.push(buf.subarray(0, maxBytes)); } else chunks.push(buf);
       }
-    } finally { clearTimeout(timer); }
-    const text = Buffer.concat(chunks).toString('utf8');
-    this.log.info?.('live', `fetched ${bytes}B from ${new URL(url).host}${truncated ? ' (truncated)' : ''}`);
-    return { status: res.status, text, bytes, truncated, contentType: res.headers.get('content-type') || '' };
+    } finally { clearTimeout(timer); if (flightKey) this.inflight.delete(flightKey); }
+    const ct = res.headers.get('content-type') || '';
+    const charset = /charset=([\w-]+)/i.exec(ct)?.[1];
+    const text = charset && /windows-125[0-9]|latin-?1/i.test(charset)
+      ? new TextDecoder('windows-1256').decode(Buffer.concat(chunks)) // Arabic IPTV hosts still do this
+      : Buffer.concat(chunks).toString('utf8');
+    const ms = Date.now() - t0;
+    this.log.info?.('live', `fetched ${bytes}B from ${new URL(url).host} in ${ms}ms${truncated ? ' (truncated)' : ''}`);
+    return { status: res.status, text, bytes, truncated, contentType: ct, charset: charset || 'utf-8', finalUrl: res.url || url, redirects: res.redirected ? 1 : 0, ms };
   }
 
   /** Cancel any in-flight fetch/refresh belonging to a source. */
   abortSource(sourceId) {
-    const ac = this.inflight.get(String(sourceId));
+    const ac = this.inflight.get(String(sourceId?.sourceId ?? sourceId ?? ''));
     if (ac) { try { ac.abort(new Error('E_CANCELLED')); } catch { /* ignore */ } this.inflight.delete(String(sourceId)); }
   }
 

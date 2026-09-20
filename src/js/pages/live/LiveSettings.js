@@ -154,6 +154,12 @@ export async function LiveSettingsPage() {
       })(),
     }),
     row({
+      title: 'صلاحية القوائم المحفوظة',
+      desc: 'بعد انقضائها تُوسم البطاقات «قائمة قديمة» مع دعوة للتحديث — لا يُجلب شيء تلقائيًا في الخلفية.',
+      control: seg([['3', '٣ أيام'], ['7', 'أسبوع'], ['30', 'شهر'], ['90', '٣ أشهر']], String(cfg.liveTtlDays ?? 7),
+        async (v) => { await live.setConfig({ liveTtlDays: +v }); for (const x of live.sources) x.stale = x.status === 'ok' && x.lastUpdate && Date.now() - x.lastUpdate > (+v) * 864e5; }, {}),
+    }),
+    row({
       title: 'مسح سجل المشاهدة',
       desc: 'يحذف تتبع القنوات التي شاهدتها (لن يمس المفضلة).',
       control: dangerBtn('مسح السجل', 'history', async () => { await live.clearHistory(); paintStats(); }, 'مُسح سجل المشاهدة'),

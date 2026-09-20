@@ -173,6 +173,7 @@ const INVOKE_CHANNELS = {
     logoPath: 'zpopcorn:live.logoPath',
     purge: 'zpopcorn:live.purge',
     endSession: 'zpopcorn:live.endSession',
+    abortSource: 'zpopcorn:live.abortSource',
   },
   player: {
     // Abstraction only this phase — see spec section 02 / 73. NO engine installed.

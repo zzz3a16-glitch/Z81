@@ -120,14 +120,16 @@ const ATTR = /([\w-]+)="([^"]*)"/g;
  * @param {{sourceId:string, yieldEvery?:number, onProgress?:(n:number)=>void}} opt
  * @returns {Promise<Array>} normalized channel descriptors
  */
-export async function parseM3U(text, { sourceId, yieldEvery = 5000, onProgress } = {}) {
+export async function parseM3U(text, { sourceId, yieldEvery = 5000, onProgress, onBatch } = {}) {
   const src = String(text || '').replace(/^\uFEFF/, '');
   const isM3U = /^\s*#EXTM3U/m.test(src.slice(0, 2048));
   const lines = src.split(/\r?\n/);
   const out = [];
+  const seenStreams = new Map();
   let meta = null;
   for (let i = 0; i < lines.length; i++) {
     if (onProgress && i && i % yieldEvery === 0) { onProgress(i); await null; await new Promise((r) => setTimeout(r)); }
+    if (onBatch && i && i % yieldEvery === 0) onBatch(out, lines.length);
     const line = lines[i].trim();
     if (!line) continue;
     if (line.startsWith('#EXTINF:')) {
@@ -158,7 +160,13 @@ export async function parseM3U(text, { sourceId, yieldEvery = 5000, onProgress }
       const rawName = meta?.rawTitle || a['tvg-name'] || decodeURIComponent((url.split('?')[0].split('#').pop() || '').split('/').pop() || '') .replace(/\.[a-z0-9]{2,4}$/i, '') .replace(/[-_]/g, ' ') || `قناة ${i + 1}`;
       const name = cleanTitle(rawName) || `قناة ${i + 1}`;
       const country = guessCountry({ tvgCountry: a['tvg-country'], group, name });
-      out.push({
+      const dup = seenStreams.get(url);
+      if (dup) { // same stream twice in one list → merge sparse metadata, never duplicate
+        if (!dup.epg && a['tvg-id']) dup.epg = a['tvg-id'];
+        if (!dup.logo && (a['tvg-logo'] || a['logo'])) dup.logo = a['tvg-logo'] || a['logo'];
+        meta = null; continue;
+      }
+      const chan = {
         id: chanHash(sourceId, url, name),
         name, raw: rawName,
         stream: url,
@@ -169,20 +177,15 @@ export async function parseM3U(text, { sourceId, yieldEvery = 5000, onProgress }
         epg: a['tvg-id'] || '',
         cat: classify(group, name),
         opts: meta?.opts || {},
-      });
+      };
+      seenStreams.set(url, chan);
+      out.push(chan);
+      chan.i = out.length - 1;
       meta = null;
     }
   }
-  // dedupe identical streams within the source (IPTV lists love duplicates)
-  const seen = new Map();
-  const dedup = [];
-  for (const c of out) {
-    const k = c.stream;
-    if (seen.has(k)) { const prev = seen.get(k); if (!prev.epg && c.epg) prev.epg = c.epg; if (!prev.logo && c.logo) prev.logo = c.logo; continue; }
-    seen.set(k, c); dedup.push(c);
-  }
-  dedup.forEach((c, idx) => { c.i = idx; });
-  return dedup;
+  if (onBatch) onBatch(out, lines.length);
+  return out;
 }
 
 /** HLS master playlist → levels (for stream info only; playback is external) */
@@ -203,6 +206,59 @@ export function parseM3U8Master(text) {
     }
   }
   return levels;
+}
+
+/** identify what the response actually is — honest routing, not blind parsing */
+export function sniffFormat(text) {
+  const head = String(text || '').replace(/^\uFEFF/, '').slice(0, 4096);
+  if (/^\s*#EXTM3U/m.test(head)) return /#EXTINF/i.test(head) ? 'm3u' : 'm3u8-master';
+  if (/^\s*<\?xml[\s\S]{0,600}?<tv\b/i.test(head)) return 'xmltv';
+  if (/^\s*<(!doctype\s+html|html)|<html[\s>]/i.test(head)) return 'html';
+  const t = head.trim();
+  if (t.startsWith('[') || /^\{\s*"(playlists|series|streams|live|items)"/i.test(t)) return 'json';
+  if (/^\{\s*"(server_info|user_info|player_api)"/i.test(t)) return 'xtream-api';
+  if (head.split(/\r?\n/).filter((l) => l.trim() && !l.trim().startsWith('#')).every((l) => /^https?:\/\//i.test(l.trim()))) return 'bare-urls';
+  return 'unknown';
+}
+
+/**
+ * JSON playlist APIs: arrays of {name,title,url,stream_id,group,...} — normalized
+ * through the SAME pipeline as M3U (clean/guess/classify/hash). Xtream API roots
+ * are reported honestly with the fix, not silently parsed.
+ */
+export function parseJSONPlaylist(text, { sourceId } = {}) {
+  let data;
+  try { data = JSON.parse(text); }
+  catch { throw Object.assign(new Error('رابط JSON غير صالح (not parseable JSON)'), { code: 'E_JSON' }); }
+  if (data && typeof data === 'object' && !Array.isArray(data) && (data.server_info || data.user_info || data.player_api)) {
+    throw Object.assign(new Error('هذا رابط واجهة Xtream API — استخدم رابط القائمة المباشر (…/get.php?username=…&type=m3u_plus)'), { code: 'E_XTREAM_API' });
+  }
+  const arr = Array.isArray(data) ? data : Array.isArray(data?.playlists) ? data.playlists : Array.isArray(data?.streams) ? data.streams : Array.isArray(data?.items) ? data.items : null;
+  if (!arr) throw Object.assign(new Error('بنية JSON غير معروفة — لم نجد مصفوفة قنوات'), { code: 'E_JSON_SHAPE' });
+  const out = [];
+  const seen = new Map();
+  for (const it of arr) {
+    const url = typeof it === 'string' ? it : String(it?.url || it?.stream_url || it?.file || '');
+    if (!/^https?:\/\//i.test(url)) continue; // invalid item skipped, never fatal
+    if (seen.has(url)) continue;
+    const rawName = String(it?.name || it?.title || '').trim() || decodeURIComponent(url.split('?')[0].split('/').pop() || '').replace(/\.[a-z0-9]{2,4}$/i, '').replace(/[-_]/g, ' ');
+    const name = cleanTitle(rawName) || `قناة ${out.length + 1}`;
+    const group = String(it?.group_title || it?.group || it?.category || 'عام').replace(/^\s*\d+\s*[-.)]\s*/, '').trim() || 'عام';
+    const chan = {
+      id: chanHash(sourceId, url, name), name, raw: rawName, stream: url,
+      logo: String(it?.stream_icon || it?.logo || it?.icon || ''),
+      group,
+      country: guessCountry({ tvgCountry: it?.country, group, name }),
+      lang: String(it?.lang || it?.language || ''),
+      epg: String(it?.epg_id || it?.['tvg-id'] || it?.tv_id || (it?.stream_id != null ? `xtream.${it.stream_id}` : '')),
+      cat: classify(group, name),
+      opts: { ...(it?.user_agent ? { 'http-user-agent': String(it.user_agent) } : {}) },
+    };
+    seen.set(url, chan);
+    out.push(chan);
+    chan.i = out.length - 1;
+  }
+  return out;
 }
 
 /* ───────────────────────── XMLTV / EPG ───────────────────────── */

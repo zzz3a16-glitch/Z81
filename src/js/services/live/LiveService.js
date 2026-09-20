@@ -10,7 +10,7 @@
  */
 import { db } from '../storage/Database.js';
 import { isDesktop, api } from '../../bridge.js';
-import { parseM3U, parseXMLTV, parseM3U8Master, normText, progsForDay, nowNext, dayKey } from './m3u.js';
+import { parseM3U, parseXMLTV, parseM3U8Master, parseJSONPlaylist, sniffFormat, normText, progsForDay, nowNext, dayKey } from './m3u.js';
 
 const S_SRC = 'live_sources';
 const S_PL = 'live_playlists';
@@ -25,6 +25,7 @@ export const LIVE_DEFAULTS = {
   epgMinutes: 360,          // auto refresh cadence while a Live view is mounted
   historyDays: 60,
   hideAdult: true,
+  liveTtlDays: 7,           // playlists older than this show 'expired' status (spec 36)
 };
 
 const emit = (type, detail = {}) => {
@@ -48,6 +49,7 @@ class LiveManager {
     this.epgMem = new Map();    // `${srcId}|${epgId}` -> progs[] (loaded day window)
     this.epgStatus = new Map(); // srcId -> {builtAt, reason?}
     this._loading = new Map();  // sourceId -> Promise (import single-flight)
+    this._ac = new Map();       // sourceId -> AbortController (browser-mode fetch cancel)
     this._epgFlight = new Map();// srcId -> Promise
     this._logoCache = new Map();// url -> renderable src | null
     this.context = null;       // channel list the session navigates within
@@ -76,6 +78,7 @@ class LiveManager {
     this.hist = new Map(hist.map((h) => [h.chanId, h]));
     this.config = { ...LIVE_DEFAULTS, ...(cfg?.value || {}) };
     this.session = sess?.value || null;
+    for (const x of this.sources) x.stale = x.status === 'ok' && x.lastUpdate && Date.now() - x.lastUpdate > (this.config.liveTtlDays || 7) * 864e5;
     await this._loadPlaylists();
     this.rebuildIndex();
     return this;
@@ -133,11 +136,19 @@ class LiveManager {
       status: 'new', channelCount: 0, groupsCount: 0, lastUpdate: 0, error: null,
     };
     if (!src.url && !text) throw Object.assign(new Error('يلزم رابط أو ملف قائمة'), { code: 'E_NO_INPUT' });
+    if (src.url) this.constructor.assertUrl(src.url, 'رابط القائمة');
+    if (src.epgUrl) this.constructor.assertUrl(src.epgUrl, 'رابط الدليل');
     this.sources.push(src);
     await db.put(S_SRC, src);
     if (text) await this._stashText(src.id, text); // file import path
-    await this.importSource(src.id);
-    return src;
+    const result = await this.importSource(src.id);
+    return { ...src, import: result || { status: src.status, error: src.error } };
+  }
+
+  static assertUrl(raw, label = 'الرابط') {
+    const v = String(raw || '').trim();
+    if (!/^https?:\/\//i.test(v)) throw Object.assign(new Error(`${label}: يجب أن يبدأ بـ http:// أو https://`), { code: 'E_BAD_URL' });
+    if (v.length > 2048) throw Object.assign(new Error(`${label}: طويل جدًا (الحد 2048 حرفًا)`), { code: 'E_BAD_URL' });
   }
 
   async _stashText(sourceId, text) {
@@ -147,6 +158,10 @@ class LiveManager {
   async updateSource(id, patch) {
     const src = this.sources.find((s) => s.id === id);
     if (!src) return null;
+    if (patch.url && patch.url !== src.url) this.constructor.assertUrl(patch.url, 'رابط القائمة');
+    if (patch.epgUrl && patch.epgUrl !== src.epgUrl) this.constructor.assertUrl(patch.epgUrl, 'رابط الدليل');
+    const identityChanged = (patch.url && patch.url !== src.url) || ('epgUrl' in patch && patch.epgUrl !== src.epgUrl);
+    if (identityChanged && src.status === 'ok') Object.assign(patch, { status: 'new', error: null }); // old parse no longer describes this source
     Object.assign(src, patch);
     src.order = src.order ?? Date.now();
     await db.put(S_SRC, src);
@@ -191,9 +206,13 @@ class LiveManager {
 
   /* ───────────────────────── import pipeline ───────────────────────── */
 
+  cancelImport(sourceId) { this._cancel(sourceId); }
+
   _cancel(sourceId) {
-    if (isDesktop) api.live?.abortSource?.({ sourceId })?.catch?.(() => {});
     this._loading.delete(sourceId);
+    const ac = this._ac.get(sourceId) || this._ac.get(`${sourceId}:import`);
+    if (ac) { try { ac.abort(new Error('E_CANCELLED')); } catch { /* gone */ } this._ac.delete(sourceId); }
+    if (isDesktop && api.live?.abortSource) api.live.abortSource({ sourceId }).catch(() => {});
   }
 
   importSource(sourceId, { force = false } = {}) {
@@ -205,63 +224,98 @@ class LiveManager {
 
   async _import(sourceId, force) {
     const src = this.sources.find((s) => s.id === sourceId);
-    if (!src) return;
+    if (!src) return { status: 'gone' };
     const existing = await db.get(S_PL, sourceId).catch(() => null);
+    const diag = { at: Date.now() };
     const setStatus = async (status, error = null, extra = {}) => {
       Object.assign(src, { status, error, ...extra });
+      src.stale = status === 'ok' && src.lastUpdate && Date.now() - src.lastUpdate > (this.config.liveTtlDays || 7) * 864e5;
+      if (Object.keys(diag).length > 1) src.diag = { ...diag };
       await db.put(S_SRC, src).catch(() => {});
       emit('progress', { sourceId, status, error, ...extra });
     };
     await setStatus('importing');
+    const t0 = Date.now();
     try {
       let text = '';
       const stashed = existing?.raw ? existing.text : null;
       if (stashed) {
         text = stashed;
+        diag.source = 'ملف محلي مخزّن';
       } else if (src.url) {
-        const res = await this._fetch(src.url, { timeoutMs: 25000 });
+        const res = await this._fetch(src.url, { timeoutMs: 25000, sourceId, kind: 'import' });
         text = res.text;
+        Object.assign(diag, { httpStatus: res.status || 200, ms: res.ms || Date.now() - t0, bytes: res.bytes || text.length, contentType: res.contentType || '', host: res.host || '', via: res.via || '', truncated: !!res.truncated, redirects: res.redirects || 0 });
         if (res.truncated) emit('progress', { sourceId, warn: 'truncated' });
-      } else throw Object.assign(new Error('لا رابط ولا ملف للمصدر'), { code: 'E_NO_INPUT' });
+      } else throw Object.assign(new Error('لا رابط ولا ملف للمصدر — حرّر المصدر وأضف رابطًا صالحًا'), { code: 'E_NO_INPUT' });
 
-      // choose the parser: extended m3u vs raw m3u8 master vs bare list
-      const looksM3U8 = /\.m3u8(\?|$)/i.test(src.url || '') && !/#EXTINF/i.test(text);
+      // route by what the response ACTUALLY is (spec 25) — never blind-parse
+      const format = sniffFormat(text);
+      diag.format = format;
       let channels = [];
       let levels = [];
-      if (looksM3U8) {
+      if (format === 'xmltv') throw Object.assign(new Error('هذا ملف دليل (XMLTV) وليس قائمة قنوات — ضعه في حقل «رابط الدليل» بتحرير المصدر'), { code: 'E_FORMAT' });
+      if (format === 'html') throw Object.assign(new Error('الخادم أعاد صفحة ويب، لا قائمة — تأكدي أن الرابط مباشر للملف (.m3u/.m3u8) وليس صفحة تحميل'), { code: 'E_FORMAT' });
+      if (format === 'xtream-api') throw Object.assign(new Error('رابط Xtream API — استخدمي رابط القائمة: …/get.php?username=…&type=m3u_plus'), { code: 'E_FORMAT' });
+      if (format === 'json') {
+        channels = parseJSONPlaylist(text, { sourceId });
+      } else if (format === 'm3u8-master') {
         levels = parseM3U8Master(text);
         const base = (src.url || '').split('?')[0];
         if (levels.length) {
           channels = levels.map((lv, i) => ({
             id: `${sourceId}~lv${i}`, name: `${src.name} — ${lv.height ? `${lv.height}p` : `جودة ${i + 1}`}`,
-            raw: '', stream: new URL(lv.url, base).href, logo: '', group: 'عام', country: null, lang: '', epg: '',
+            raw: '', stream: new URL(lv.url, base).href, logo: '', group: 'جودة البث', country: null, lang: '', epg: '',
             cat: 'general', i, opts: {},
           }));
         } else channels = [{ id: `${sourceId}~lv0`, name: src.name, raw: '', stream: src.url, logo: '', group: 'عام', country: null, lang: '', epg: '', cat: 'general', i: 0, opts: {} }];
       } else {
+        let published = false;
+        const tPub = Date.now();
         channels = await parseM3U(text, {
           sourceId,
-          onProgress: (lines) => emit('progress', { sourceId, status: 'importing', lines }),
+          onProgress: (lines) => { diag.lines = lines; emit('progress', { sourceId, status: 'importing', lines, channels: published ? undefined : 0 }); },
+          onBatch: (partial) => { // §31: first hundreds become browsable while parsing continues
+            if (!partial.length) return;
+            this.playlists.set(sourceId, { sourceId, builtAt: 0, partial: true, count: partial.length, channels: partial.map((c) => ({ ...c, src: sourceId })) });
+            this.rebuildIndex();
+            if (!published || Date.now() - tPub > 1500) {
+              published = true;
+              emit('progress', { sourceId, status: 'importing', partial: true, channels: partial.length });
+            }
+          },
         });
       }
+      diag.parseMs = Date.now() - t0 - (diag.ms || 0);
       if (!channels.length) {
-        await db.delete(S_PL, sourceId).catch(() => {});
+        if (existing && !existing.raw) { await db.delete(S_PL, sourceId).catch(() => {}); }
         this.playlists.delete(sourceId);
-        await setStatus('empty', 'لم تُعثر على أي قناة في القائمة');
+        await setStatus('empty', format === 'bare-urls' || format === 'unknown'
+          ? 'الملف صيغته m3u لكنه لا يحوي أي قناة صالحة — تحققي من محتواه'
+          : 'لم تُعثر على أي قناة في هذه الصيغة');
         this.rebuildIndex();
-        return;
+        return { status: 'empty', count: 0 };
       }
       const groups = new Set(channels.map((c) => c.group));
-      const doc = { sourceId, builtAt: Date.now(), count: channels.length, channels: channels.map((c) => ({ ...c, src: sourceId })) };
+      const doc = { sourceId, builtAt: Date.now(), count: channels.length, format, channels: channels.map((c) => ({ ...c, src: sourceId })) };
+      if (stashed) doc.raw = true, doc.text = existing.text; // keep the stash for file sources
+      else delete doc.text;
       await db.put(S_PL, doc);
       this.playlists.set(sourceId, doc);
-      await setStatus('ok', null, { channelCount: channels.length, groupsCount: groups.size, lastUpdate: Date.now() });
+      await setStatus('ok', null, { channelCount: channels.length, groupsCount: groups.size, lastUpdate: Date.now(), lastSuccessAt: Date.now() });
       this.rebuildIndex();
       emit('imported', { sourceId, count: channels.length });
+      return { status: 'ok', count: channels.length, groups: groups.size, ms: Date.now() - t0 };
     } catch (e) {
-      if (String(e?.message || '').includes('E_CANCELLED')) { await setStatus('new'); return; }
-      await setStatus('error', String(e?.message || 'فشل الاستيراد').slice(0, 200));
-      emit('error', { sourceId, message: e?.message });
+      const cancelled = String(e?.message || '') + String(e?.code || '') || '';
+      if (cancelled.includes('E_CANCELLED') || e?.name === 'AbortError') {
+        await setStatus('new', null);
+        return { status: 'cancelled' };
+      }
+      diag.failMs = Date.now() - t0;
+      await setStatus(e?.code === 'E_FORMAT' ? 'invalid' : 'error', String(e?.message || 'فشل الاستيراد').slice(0, 240));
+      emit('error', { sourceId, message: e?.message, code: e?.code || 'E_IMPORT' });
+      return { status: e?.code === 'E_FORMAT' ? 'invalid' : 'error', error: String(e?.message || 'خطأ').slice(0, 240) };
     }
   }
 
@@ -272,22 +326,68 @@ class LiveManager {
   }
 
   async _fetch(url, opts = {}) {
+    // distinct flight keys: an import and a test on the same source must not
+    // cancel each other (spec 43); `abortSource` on desktop needs the real id.
+    const key = opts.sourceId ? (opts.kind ? `${opts.sourceId}:${opts.kind}` : opts.sourceId) : null;
+    const mainKey = key && !opts.kind ? key : undefined;
     if (isDesktop && api?.live?.fetchText) {
-      return api.live.fetchText({ url, timeoutMs: opts.timeoutMs || 20000 });
+      const res = await api.live.fetchText({ url, timeoutMs: opts.timeoutMs || 25000, sourceId: mainKey });
+      try { res.host = new URL(res.finalUrl || url).host; } catch { res.host = ''; }
+      res.via = 'desktop';
+      return res;
     }
+    // Browser QA: same-origin dev proxy first (CORS-free, same caps as main),
+    // then a direct fetch for permissive hosts, then an honest failure.
+    let host = '';
+    try { host = new URL(url).host; } catch { throw Object.assign(new Error('رابط غير صالح'), { code: 'E_BAD_URL' }); }
     const ac = new AbortController();
-    const t = setTimeout(() => ac.abort(), opts.timeoutMs || 15000);
+    if (key) this._ac.set(key, ac);
+    const timer = setTimeout(() => { try { ac.abort(new Error('E_TIMEOUT')); } catch { /* ignore */ } }, opts.timeoutMs || 25000);
+    const t0 = Date.now();
     try {
+      const proxied = await fetch(`/__zpop-live-fetch?url=${encodeURIComponent(url)}`, { signal: ac.signal });
+      if (proxied.ok) {
+        const j = await proxied.json();
+        if (j.ok) return { text: j.text, status: j.status, bytes: j.bytes, truncated: j.truncated, contentType: j.contentType, finalUrl: j.finalUrl, redirects: j.redirects, ms: j.ms, host, via: 'dev-proxy' };
+        throw Object.assign(new Error(j.code === 'E_TIMEOUT' ? 'انتهت مهلة الاتصال بالمصدر — الخادم لم يستجب' : j.code === 'E_HTTP' ? `المصدر ردّ بالخطأ ${j.status}` : `لا يمكن الوصول إلى المصدر: ${j.message}`), { code: j.code || 'E_NETWORK' });
+      }
+      if (proxied.status !== 404) throw Object.assign(new Error('تعذّر الاتصال بالمصدر عبر وسيط التطوير'), { code: 'E_NETWORK' });
       const res = await fetch(url, { signal: ac.signal, redirect: 'follow' });
       if (!res.ok) throw Object.assign(new Error(`المصدر ردّ بالخطأ ${res.status}`), { code: 'E_HTTP' });
       const buf = await res.arrayBuffer();
-      const capped = buf.byteLength > 24 * 1024 * 1024;
-      const text = new TextDecoder('utf-8', { fatal: false }).decode(capped ? buf.slice(0, 24 * 1024 * 1024) : buf);
-      return { status: res.status, text, truncated: capped };
+      const capped = buf.byteLength > 32 * 1024 * 1024;
+      const text = new TextDecoder('utf-8', { fatal: false }).decode(capped ? buf.slice(0, 32 * 1024 * 1024) : buf);
+      return { status: res.status, text, truncated: capped, bytes: buf.byteLength, contentType: res.headers.get('content-type') || '', finalUrl: res.url || url, ms: Date.now() - t0, host, via: 'direct' };
     } catch (e) {
-      const blocked = e?.name === 'AbortError' ? 'انتهت المهلة' : 'تعذّر الجلب — متصفح المعاينة يحجب بعض المصادر (CORS). استخدم تطبيق سطح المكتب.';
-      throw Object.assign(new Error(e?.message && e.code ? e.message : blocked), { code: e?.code || 'E_NETWORK' });
-    } finally { clearTimeout(t); }
+      if (e?.code) throw e;
+      if (String(ac.signal.reason?.message || '').includes('E_CANCELLED') || e?.name === 'AbortError' && String(ac.signal.reason || '').includes('E_CANCELLED')) throw Object.assign(new Error('E_CANCELLED'), { code: 'E_CANCELLED' });
+      if (e?.name === 'AbortError') throw Object.assign(new Error('انتهت مهلة الاتصال بالمصدر'), { code: 'E_TIMEOUT' });
+      throw Object.assign(new Error(`لا يمكن الوصول إلى ${host}: هذا المتصفح يحجب الطلبات المباشرة (CORS) — في وضع المعاينة شغّلي وسيط التطوير، وفي الإنتاج يستخدم التطبيق الجلب عبر نظام التشغيل`), { code: 'E_NETWORK' });
+    } finally {
+      clearTimeout(timer);
+      if (key) this._ac.delete(key);
+    }
+  }
+
+  /** §43: probe without committing — status, speed, format, first lines */
+  async testSource(sourceId) {
+    const src = this.sources.find((s) => s.id === sourceId);
+    if (!src) return { ok: false, message: 'المصدر غير موجود' };
+    if (!src.url) return { ok: false, message: 'لا رابط للمصدر (ملف محلي)' };
+    const t0 = Date.now();
+    try {
+      const res = await this._fetch(src.url, { timeoutMs: 15000, sourceId, kind: 'test' });
+      const format = sniffFormat(res.text);
+      const lines = String(res.text || '').split(/\r?\n/);
+      const preview = lines.filter((l) => l.trim() && !l.trim().startsWith('#')).slice(0, 2).map((l) => l.slice(0, 90));
+      const est = lines.filter((l) => /^https?:\/\//i.test(l.trim())).length;
+      const out = { ok: true, format, ms: res.ms || Date.now() - t0, httpStatus: res.status || 200, bytes: res.bytes || 0, contentType: res.contentType || '', host: res.host || '', streamLines: est, truncated: !!res.truncated, preview, via: res.via };
+      src.diag = { ...(src.diag || {}), test: { ...out, at: Date.now(), preview: undefined } };
+      db.put(S_SRC, src).catch(() => {});
+      return out;
+    } catch (e) {
+      return { ok: false, message: String(e?.message || 'تعذّر الاتصال').slice(0, 200), ms: Date.now() - t0 };
+    }
   }
 
   /* ───────────────────────── queries ───────────────────────── */
@@ -508,7 +608,7 @@ class LiveManager {
     if (fresh && !force && this._epgHas(src)) return { ok: true, cached: true };
     try {
       emit('epg', { sourceId, phase: 'fetch' });
-      const res = await this._fetch(src.epgUrl, { timeoutMs: 60000 });
+      const res = await this._fetch(src.epgUrl, { timeoutMs: 60000, sourceId, kind: 'epg' });
       emit('epg', { sourceId, phase: 'parse' });
       const today = dayKey(Date.now());
       const winFrom = new Date(`${today}T00:00:00`).getTime() - 864e5;

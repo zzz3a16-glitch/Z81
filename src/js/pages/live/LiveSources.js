@@ -49,12 +49,16 @@ export async function LiveSourcesPage() {
     if (!/^https?:\/\//i.test(url)) { toast('warning', 'رابط غير صالح', 'استخدم رابط http/https كاملاً للقائمة.'); return; }
     btnAdd.disabled = true;
     try {
-      await live.addSource({ name: name || hostOf(url), url, epgUrl: epg });
-      toast('success', 'أُضيف المصدر', 'اكتمل الاستيراد الأولي.');
-      add.querySelector('[data-u]').value = ''; add.querySelector('[data-n]').value = ''; add.querySelector('[data-e]').value = '';
+      const out = await live.addSource({ name: name || hostOf(url), url, epgUrl: epg });
+      const imp = out?.import || {};
+      if (imp.status === 'ok') {
+        toast('success', 'تم التحميل', `${(imp.count || 0).toLocaleString('ar-EG')} قناة جاهزة في ${(imp.ms / 1000).toFixed(1)} ث`);
+        add.querySelector('[data-u]').value = ''; add.querySelector('[data-n]').value = ''; add.querySelector('[data-e]').value = '';
+      } else if (imp.status === 'cancelled') toast('info', 'أُلغيت العملية', 'الحفظ في القائمة لا يزال متاحًا.');
+      else toast('error', 'أُضيف المصدر لكن لم تُحمّل قنوات', `${imp.error || 'تعذّر الجلب'} — افتحي «التشخيص» في بطاقة المصدر.`);
       render();
     } catch (e) {
-      toast('error', 'فشل الإضافة', e?.message || 'خطأ غير معروف');
+      toast('error', 'تعذّرت الإضافة', e?.message || 'خطأ غير معروف');
       render();
     } finally { btnAdd.disabled = false; }
   };
@@ -71,8 +75,10 @@ export async function LiveSourcesPage() {
     const rd = new FileReader();
     rd.onload = async () => {
       try {
-        await live.addSource({ name: f.name.replace(/\.[a-z0-9]+$/i, ''), kind: 'file', text: String(rd.result) });
-        toast('success', 'استُورد الملف', 'يُحفظ نص القائمة محليًا ويُعاد تحليله عند الحاجة.');
+        const out = await live.addSource({ name: f.name.replace(/\.[a-z0-9]+$/i, ''), kind: 'file', text: String(rd.result) });
+        const imp = out?.import || {};
+        if (imp.status === 'ok') toast('success', 'استُورد الملف', `${(imp.count || 0).toLocaleString('ar-EG')} قناة — محفوظ محليًا ويُعاد تحليله عند الحاجة.`);
+        else toast('error', 'الملف لا يحوي قنوات', `${imp.error || 'صيغة غير مفهومة'} — استخدمي قائمة m3u صالحة.`);
         render();
       } catch (e) { toast('error', 'ملف غير صالح', e?.message); }
       fileIn.value = '';
@@ -102,14 +108,17 @@ export async function LiveSourcesPage() {
         <span class="epg" title="${src.epgUrl ? 'EPG' : 'لا رابط دليل'}">${epgLine}</span>
       </div>
       ${src.error ? `<p class="err">${icon('alert', 13)} ${esc(src.error)}</p>` : ''}
-      ${src.status === 'importing' ? `<p class="imp" data-imp>${icon('loading', 13, { cls: 'spin' })} جارٍ الجلب والتحليل…</p>` : ''}
+      ${src.status === 'importing' ? `<p class="imp" data-imp>${icon('loading', 13, { cls: 'spin' })} جارٍ الجلب والتحليل… <button class="btn btn-ghost btn-sm" data-act="cancelimp" type="button">إلغاء</button></p>` : ''}
+      ${src.status === 'ok' && src.stale ? `<p class="imp stale">${icon('clock', 13)} القائمة قديمة (مضت أكثر من ${live.config.liveTtlDays || 7} أيام على آخر تحديث) — حدّثيها.</p>` : ''}
       <div class="acts">
         <button class="btn btn-ghost btn-sm" data-act="refresh">${icon('refresh', 14)} تحديث</button>
         <button class="btn btn-ghost btn-sm" data-act="toggle">${src.enabled === false ? `${icon('check', 14)} تفعيل` : `${icon('eyeOff', 14)} تعطيل`}</button>
         <button class="btn btn-ghost btn-sm" data-act="edit">${icon('edit', 14)} تحرير</button>
+        <button class="btn btn-ghost btn-sm" data-act="diag">${icon('chart', 14)} التشخيص</button>
         <button class="btn btn-ghost btn-sm" data-act="cache">${icon('trash', 14)} مسح المخزن</button>
         <button class="btn btn-ghost btn-sm danger" data-act="del">${icon('delete', 14)} حذف</button>
       </div>
+      <div class="zlv-diag" hidden></div>
       <div class="editpanel" hidden>
         <label>الاسم<input data-en value="${esc(src.name)}"></label>
         <label>رابط القائمة<input dir="ltr" data-eu value="${esc(src.url || '')}"></label>
@@ -118,10 +127,16 @@ export async function LiveSourcesPage() {
         <button class="btn btn-ghost btn-sm" data-act="cancel">إلغاء</button></div>
       </div>`;
     if (isDesktop && src.logoCount) { /* future: show cached logo stats */ }
-    c.querySelector('.acts').addEventListener('click', async (e) => {
+    c.addEventListener('click', async (e) => {
       const b = e.target.closest('[data-act]'); if (!b) return;
       const act = b.dataset.act;
       if (act === 'refresh') { b.disabled = true; await live.importSource(src.id, { force: true }); b.disabled = false; render(); }
+      if (act === 'cancelimp') { live.cancelImport(src.id); setTimeout(render, 350); }
+      if (act === 'diag') {
+        const d = c.querySelector('.zlv-diag');
+        if (!d.hidden) { d.hidden = true; return; }
+        d.hidden = false; renderDiag(d, src);
+      }
       if (act === 'toggle') { await live.toggleSource(src.id); render(); }
       if (act === 'edit') { const p = c.querySelector('.editpanel'); p.hidden = !p.hidden; p.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
       if (act === 'cancel') c.querySelector('.editpanel').hidden = true;
@@ -151,6 +166,35 @@ export async function LiveSourcesPage() {
         } else { b.dataset.armed = '1'; b.innerHTML = `${icon('warning', 14)} تأكيد الحذف نهائيًا`; setTimeout(() => { if (b.isConnected) { delete b.dataset.armed; b.innerHTML = `${icon('delete', 14)} حذف`; } }, 4000); }
       }
     });
+  function renderDiag(d, src) {
+    const g = src.diag || {};
+    const rows = [
+      ['الحالة', src.error ? `${src.error}` : { ok: 'تعمل', importing: 'جارٍ التحديث', new: 'لم تُستورد بعد', empty: 'فارغة', error: 'فشل', invalid: 'صيغة غير صالحة' }[src.status] || src.status || '—'],
+      ['HTTP', g.httpStatus ?? g.test?.httpStatus ?? '—'],
+      ['زمن الاستجابة', g.ms ? `${g.ms} ms` : g.failMs ? `${g.failMs} ms (فشل)` : '—'],
+      ['حجم الاستجابة', g.bytes ? `${Math.max(1, Math.round(g.bytes / 1024))} KB${g.truncated ? ' (مقطوعة عند السقف)' : ''}` : '—'],
+      ['نوع المحتوى', g.contentType || '—'],
+      ['الصيغة المكتشفة', g.format || g.test?.format || '—'],
+      ['أسطر البث', g.lines ?? g.test?.streamLines ?? '—'],
+      ['آخر نجاح', src.lastSuccessAt ? new Date(src.lastSuccessAt).toLocaleString('ar-EG') : src.lastUpdate ? ago(src.lastUpdate) : 'لا يوجد'],
+      ['مسار الاتصال', g.via === 'desktop' ? 'طبقة النظام (Electron)' : g.via === 'dev-proxy' ? 'وسيط المطوّرين (QA)' : g.via === 'direct' ? 'مباشر (CORS مسموح)' : g.via === 'browser' ? 'متصفح' : '—'],
+      ['سجل الكاش', live.playlists.has(src.id) ? (live.playlists.get(src.id).partial ? 'مؤقت أثناء التحليل' : 'يوجد — لا يُعاد الجلب إلا عند التحديث') : 'لا يوجد — سيُجلب عند أول استخدام'],
+      ['الخطأ الأخير', src.error || 'لا أخطاء'],
+    ];
+    d.innerHTML = `<h5>${icon('chart', 14)} تشخيص المصدر <button class="btn btn-ghost btn-sm" data-test type="button">${icon('bolt', 13)} اختبار المصدر الآن</button></h5>
+      <div class="kv">${rows.map(([k, v]) => `<b>${esc(k)}</b><span dir="auto">${esc(String(v))}</span>`).join('')}</div>
+      <div class="sample" hidden></div>`;
+    d.querySelector('[data-test]').addEventListener('click', async (e) => {
+      const btn = e.currentTarget; btn.disabled = true; btn.innerHTML = `${icon('loading', 13, { cls: 'spin' })} اختبار…`;
+      const r = await live.testSource(src.id);
+      btn.disabled = false; btn.innerHTML = `${icon('bolt', 13)} اختبار المصدر الآن`;
+      const sm = d.querySelector('.sample'); sm.hidden = false;
+      sm.innerHTML = r.ok
+        ? `<p class="good">${icon('check', 12)} ${r.ms} ms · HTTP ${r.httpStatus} · صيغة: ${esc(r.format)} · ${r.streamLines} سطر بث${r.truncated ? ' · مقاطع' : ''}</p>${(r.preview || []).map((l) => `<code dir="ltr">${esc(l)}</code>`).join('')}`
+        : `<p class="bad">${icon('alert', 12)} ${esc(r.message)}${r.ms ? ` · بعد ${r.ms} ms` : ''}</p>`;
+    });
+  }
+
     return c;
   }
 
@@ -174,7 +218,7 @@ export async function LiveSourcesPage() {
       const c = list.querySelector(`[data-sid="${d.sourceId}"]`);
       if (!c) { render(); return; }
       const imp = c.querySelector('[data-imp]');
-      if (d.status === 'importing' && imp) imp.innerHTML = `${icon('loading', 13, { cls: 'spin' })} جارٍ الجلب والتحليل…${d.lines ? ` (${d.lines.toLocaleString('ar-EG')} سطر)` : ''}`;
+      if (d.status === 'importing' && imp) imp.innerHTML = `${icon('loading', 13, { cls: 'spin' })} جارٍ الجلب والتحليل…${d.lines ? ` (${d.lines.toLocaleString('ar-EG')} سطر)` : ''}${d.channels ? ` · ${d.channels.toLocaleString('ar-EG')} قناة متاحة الآن` : ''} <button class="btn btn-ghost btn-sm" data-act="cancelimp" type="button">إلغاء</button>`;
       else render();
     }
     if (d.type === 'imported' || d.type === 'sources' || d.type === 'error') render();

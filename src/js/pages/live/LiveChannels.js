@@ -193,6 +193,7 @@ export async function LiveChannelsPage(params, query = {}) {
   const onEvent = (e) => {
     const t = e.detail?.type;
     if (t === 'imported' || t === 'sources' || t === 'favs' || t === 'config') { applyFilters(); }
+    if (t === 'progress' && e.detail?.partial) applyFilters(); // §31: first batch becomes browsable while parsing continues
   };
   window.addEventListener('zpopcn-live', onEvent);
 

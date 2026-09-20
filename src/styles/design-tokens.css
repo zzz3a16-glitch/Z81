@@ -243,3 +243,63 @@
 ::selection { background: color-mix(in srgb, var(--accent) 40%, transparent); color: var(--color-text-primary); }
 
 :focus-visible { outline: 2px solid var(--accent-line); outline-offset: 2px; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   zPopcorn Design System v2 — semantic layer (rebuild directive §06–§12, §22)
+   One vocabulary over the existing token engine: pages/components read these
+   names; themes keep painting the primitives, so ThemeEngine & presets stay
+   fully compatible. Geometry follows the 8px foundation (§07).
+   ════════════════════════════════════════════════════════════════════════ */
+:root {
+  /* background & surfaces */
+  --background-primary:   var(--color-background);
+  --background-secondary: var(--color-surface);
+  --surface-primary:      var(--color-surface);
+  --surface-secondary:    var(--color-card);
+  --surface-elevated:     var(--color-surface-elevated);
+  --surface-hover:        var(--color-surface-hover);
+
+  /* text */
+  --text-primary:   var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --text-muted:     var(--color-text-muted);
+  --text-faint:     var(--color-text-faint);
+
+  /* accent */
+  --accent-primary:   var(--accent);
+  --accent-secondary: var(--color-accent-secondary);
+
+  /* borders */
+  --border-subtle: var(--color-border-subtle);
+  --border-default: var(--color-border);
+  --border-strong: var(--color-border-strong);
+
+  /* state colors (Fluent-style semantic quartet) */
+  --state-success: var(--color-success);
+  --state-warning: var(--color-warning);
+  --state-error:   var(--color-danger);
+  --state-info:    var(--color-info);
+  --state-success-soft: var(--success-soft);
+  --state-warning-soft: var(--warning-soft);
+  --state-error-soft:   var(--danger-soft);
+  --state-info-soft:    var(--info-soft);
+
+  /* motion contract (§22) — short, intentional; every name states its job */
+  --motion-micro:    var(--dur-1);   /* hover, press, chip toggles  */
+  --motion-standard: var(--dur-2);   /* reveals, tabs, surfaces      */
+  --motion-enter:    var(--dur-3);   /* popovers, dock, modals       */
+  --motion-page:     var(--dur-4);   /* route transitions only       */
+  --motion-ease-out:    var(--ease-out);
+  --motion-ease-enter:  var(--ease-enter);
+
+  /* elevation ladder (§08) — exactly four steps; a fifth must be earned */
+  --elevation-1: var(--shadow-sm);
+  --elevation-2: var(--shadow-md);
+  --elevation-3: var(--shadow-lg);
+  --elevation-4: var(--shadow-xl);
+}
+
+/* interaction-state contract (§23): every interactive control answers hover,
+   press, focus, disabled — globally, so no page re-invents it             */
+.chip:active:not(:disabled), .z-iconbtn:active:not(:disabled), .zlv-tab:active { transform: scale(.96); }
+.chip:disabled, .z-iconbtn:disabled { opacity: .45; cursor: not-allowed; }

@@ -183,3 +183,70 @@ test('progsForDay / nowNext / pctOf power the guide queries', async () => {
   assert.equal(ahead.next.t, 'صباح الخير', 'next scheduled before the day counts');
   assert.equal(pctOf({ s: 5, e: 10 }, 0), 0, 'clamped');
 });
+
+/* ─────────── rebuild additions: format detection, JSON API, partial batches ─────────── */
+
+test('sniffFormat identifies what a response actually is (spec 25)', async () => {
+  const { sniffFormat } = await import('../src/js/services/live/m3u.js');
+  assert.equal(sniffFormat('#EXTM3U\n#EXTINF:-1,x\nhttp://a/b.ts'), 'm3u');
+  assert.equal(sniffFormat('#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1\nv.m3u8'), 'm3u8-master');
+  assert.equal(sniffFormat('<?xml version="1.0"?><tv><programme></programme></tv>'), 'xmltv');
+  assert.equal(sniffFormat('<!DOCTYPE html><html><body>login</body></html>'), 'html');
+  assert.equal(sniffFormat('{"server_info":{"url":"x"}}'), 'xtream-api');
+  assert.equal(sniffFormat('[{"name":"a","url":"http://x/a.ts"}]'), 'json');
+  assert.equal(sniffFormat('http://a/1.ts\nhttp://a/2.ts'), 'bare-urls');
+  assert.equal(sniffFormat('completely arbitrary junk text'), 'unknown');
+});
+
+test('parseJSONPlaylist normalizes API playlists through the same pipeline', async () => {
+  const { parseJSONPlaylist } = await import('../src/js/services/live/m3u.js');
+  const list = [
+    { name: 'MBC Action [HD]', url: 'http://s/mbca.ts', group_title: '2- منوعات', stream_icon: 'http://i/a.png', country: 'SA' },
+    { name: '', stream_url: 'http://s/nameless.ts' },
+    { name: 'broken row', url: 'ftp://nope' },          // non-http skipped
+    'http://s/bare.ts',                                    // bare string item
+  ];
+  const chans = parseJSONPlaylist(JSON.stringify(list), { sourceId: 'j1' });
+  assert.equal(chans.length, 3, 'invalid items skipped, never fatal');
+  assert.equal(chans[0].name, 'MBC Action', 'quality noise cleaned');
+  assert.equal(chans[0].group, 'منوعات', 'numbered prefix cleaned');
+  assert.equal(chans[0].cat, 'entertainment');
+  assert.equal(chans[0].country, 'sa');
+  assert.ok(chans[1].id && chans[1].name, 'nameless entry still gets identity');
+  assert.ok(chans.every((c) => c.id.startsWith('j1~')));
+});
+
+test('Xtream API root is reported with the fix, not silently mis-parsed', async () => {
+  const { parseJSONPlaylist } = await import('../src/js/services/live/m3u.js');
+  assert.throws(
+    () => parseJSONPlaylist('{"user_info":{"status":"Active"},"server_info":{"url":"x"}}', { sourceId: 'x' }),
+    /get\.php/,
+  );
+});
+
+test('parseM3U publishes partial batches while continuing (spec 31)', async () => {
+  const lines = ['#EXTM3U'];
+  for (let i = 0; i < 12000; i++) { lines.push(`#EXTINF:-1,Ch ${i}`); lines.push(`http://s/c${i}.ts`); }
+  const batches = [];
+  const chans = await parseM3U(lines.join('\n'), {
+    sourceId: 'p1', yieldEvery: 4000,
+    onBatch: (partial) => batches.push(partial.length),
+  });
+  assert.equal(chans.length, 12000);
+  assert.ok(batches.length >= 3, `batches fired: ${batches.join(',')}`);
+  assert.ok(batches[0] >= 1000 && batches[0] < 12000, 'first batch is partial, usable, and honest');
+});
+
+test('inline dedupe keeps first identity and merges sparse metadata', async () => {
+  const txt = `#EXTM3U
+#EXTINF:-1,Alpha
+http://s/x.ts
+#EXTINF:-1 tvg-id="e2" tvg-logo="http://i/2.png",Alpha Dup
+http://s/x.ts`;
+  const chans = await parseM3U(txt, { sourceId: 'd1' });
+  assert.equal(chans.length, 1);
+  assert.equal(chans[0].name, 'Alpha');
+  assert.equal(chans[0].epg, 'e2', 'epg merged from the duplicate');
+  assert.equal(chans[0].logo, 'http://i/2.png', 'logo merged');
+  assert.equal(chans[0].i, 0);
+});

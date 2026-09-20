@@ -193,6 +193,7 @@ export function registerHandlers(S, broadcast) {
   on('zpopcorn:live.logoPath', (o) => { o && json(o); }, (o) => S.live.logoPath(o));
   on('zpopcorn:live.purge', (o) => { o && json(o); }, (o) => S.live.purge(o));
   on('zpopcorn:live.endSession', (o) => { o && json(o); }, (o) => S.live.endSession(o));
+  on('zpopcorn:live.abortSource', (o) => { o && json(o); }, (o) => S.live.abortSource(o));
 
   // ---------------- inbox ----------------
   on('zpopcorn:inbox.list', (opts) => { opts && json(opts); }, (opts = {}) => S.imports.list(opts));
