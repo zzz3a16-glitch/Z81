@@ -22,6 +22,7 @@ import './styles/assistant.css';
 
 // Themes - All 8 themes + custom builder support
 import './styles/themes/midnight-neon.css';
+import './styles/themes/neon-lime.css';
 import './styles/themes/cinema-noir.css';
 import './styles/themes/aurora.css';
 import './styles/themes/amoled.css';

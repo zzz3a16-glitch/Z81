@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" data-theme="midnight-neon" data-density="comfortable" data-sidebar="full">
+<html lang="ar" dir="rtl" data-theme="neon-lime" data-density="comfortable" data-sidebar="full">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,8 +13,8 @@
   <script>
     /* pre-paint theme so the splash matches the app (no flash) */
     try {
-      var t = JSON.parse(localStorage.getItem('zpopcorn-theme') || '"midnight-neon"');
-      if (typeof t === 'object' && t) t = t.id || 'midnight-neon';
+      var t = JSON.parse(localStorage.getItem('zpopcorn-theme') || '"neon-lime"');
+      if (typeof t === 'object' && t) t = t.id || 'neon-lime';
       if (typeof t === 'string') document.documentElement.setAttribute('data-theme', t);
       var d = localStorage.getItem('zpopcorn-density'); if (d) document.documentElement.setAttribute('data-density', d);
       if (localStorage.getItem('zpopcorn-sb-rail') === '1') document.documentElement.setAttribute('data-sidebar', 'rail');

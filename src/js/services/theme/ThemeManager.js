@@ -28,6 +28,30 @@ export const THEMES = {
       accent2: '#06b6d4'
     }
   },
+  'neon-lime': {
+    id: 'neon-lime',
+    name: 'لايم النيون',
+    nameEn: 'Neon Lime',
+    description: 'فحمي داكن مع لايم نيوني ولمسات سماوي/بنفسجي/برتقالي — جمالية بنّتو SaaS والقيمنق',
+    category: 'dark',
+    isDark: true,
+    colors: {
+      background: '#121212',
+      surface: 'rgba(23, 23, 23, 0.9)',
+      card: 'rgba(255, 255, 255, 0.05)',
+      border: 'rgba(255, 255, 255, 0.09)',
+      accent: '#c9f24d',
+      accentSecondary: '#3fdcf2',
+      textPrimary: '#fafafa',
+      textSecondary: 'rgba(250, 250, 250, 0.72)',
+      textMuted: 'rgba(250, 250, 250, 0.5)'
+    },
+    preview: {
+      bg: '#121212',
+      accent: '#c9f24d',
+      accent2: '#3fdcf2'
+    }
+  },
   'cinema-noir': {
     id: 'cinema-noir',
     name: 'سينما نوار',
@@ -256,7 +280,7 @@ export class ThemeManager {
     }
     
     // Default theme
-    this.currentTheme = 'midnight-neon';
+    this.currentTheme = 'neon-lime';
     this.applyTheme(this.currentTheme, false);
     return this.currentTheme;
   }
@@ -316,7 +340,7 @@ export class ThemeManager {
   }
 
   resetTheme() {
-    return this.setTheme('midnight-neon');
+    return this.setTheme('neon-lime');
   }
 
   saveTheme(themeName) {

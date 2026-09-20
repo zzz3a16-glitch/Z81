@@ -8,7 +8,8 @@ import { isDesktop, api } from '../bridge.js';
 import { themeManager } from '../services/theme/ThemeManager.js';
 
 const THEMES = [
-  { id: 'midnight-neon', name: 'ليل ميدناي', hint: 'الافتراضية — نيلي هادئ' },
+  { id: 'neon-lime', name: 'لايم النيون', hint: 'فحمي + نيون لايم — SaaS/قيمنق' },
+  { id: 'midnight-neon', name: 'ليل ميدناي', hint: 'نيلي هادئ' },
   { id: 'amoled', name: 'أسود نقي', hint: 'OLED — تباين مطلق' },
   { id: 'cinema-noir', name: 'نوار سينمائي', hint: 'كلاسيكي داكن' },
   { id: 'aurora', name: 'شفق', hint: 'لمسة سماوية' },
@@ -33,7 +34,7 @@ function openFirstRun(router) {
   overlay.className = 'z-onb';
   overlay.id = 'z-firstrun';
   let step = 0;
-  const chosen = { theme: 'midnight-neon', paths: [], scan: null };
+  const chosen = { theme: 'neon-lime', paths: [], scan: null };
 
   const steps = 4;
   const render = () => {
@@ -110,8 +111,8 @@ function openFirstRun(router) {
       <p style="margin-bottom:18px">يمكن تغيير السمة والكثافة لاحقاً من الإعدادات في أي وقت.</p>
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
         ${THEMES.map((t) => {
-          const accent = { 'midnight-neon': '#7b6cf6', amoled: '#8f83ff', 'cinema-noir': '#d24a5f', aurora: '#4cc9f0' }[t.id];
-          const bg = { 'midnight-neon': '#0a0a0a', amoled: '#000', 'cinema-noir': '#0b0a0a', aurora: '#070b12' }[t.id];
+          const accent = { 'neon-lime': '#c9f24d', 'midnight-neon': '#7b6cf6', amoled: '#8f83ff', 'cinema-noir': '#d24a5f', aurora: '#4cc9f0' }[t.id];
+          const bg = { 'neon-lime': '#121212', 'midnight-neon': '#0a0a0a', amoled: '#000', 'cinema-noir': '#0b0a0a', aurora: '#070b12' }[t.id];
           return `
           <button class="z-themecard ${c.theme === t.id ? 'on' : ''}" data-act="theme" data-v="${t.id}" style="text-align:start">
             <div class="prev" style="background:${bg}">
