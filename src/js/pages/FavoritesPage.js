@@ -4,7 +4,7 @@
 
 import { watchlistManager } from '../services/watchlist/WatchlistManager.js';
 import { createMediaGrid, createMediaCard } from '../components/MediaCard.js';
-import { uiIcon } from '../ui/primitives.js';
+import { uiIcon, esc } from '../ui/primitives.js';
 import { db } from '../services/storage/Database.js';
 import { tmdbClient } from '../services/tmdb/TMDBClient.js';
 import { getTMDBImageUrl } from '../services/tmdb/TMDBImage.js';
@@ -38,7 +38,7 @@ async function createWatchlistPage(listId, title, description) {
         <h1 class="page-title">${title}</h1>
         <p class="page-subtitle">${description}</p>
       </div>
-      
+      <div data-pagetabs></div>
       <div style="display: flex; gap: var(--sp-2); margin-bottom: var(--sp-6); flex-wrap: wrap;">
         <select id="sort-select" class="input" style="width: 200px; height: 40px;">
           <option value="date">تاريخ الإضافة</option>
@@ -96,7 +96,18 @@ async function createWatchlistPage(listId, title, description) {
  }
  });
 
- container.querySelector('#clear-btn').addEventListener('click', async () => {
+ watchlistManager.getAllLists().then((lists) => {
+ const mount = container.querySelector('[data-pagetabs]');
+ if (!mount) return;
+ const tab = (id, label, href) => `<a role="tab" aria-selected="${id === listId}" class="${id === listId ? 'on' : ''}" href="#${href}">${label}</a>`;
+ mount.outerHTML = `<div class="z-pagetabs" role="tablist" aria-label="القوائم">
+   ${tab('favorites', 'المفضلة', '/favorites')}
+   ${tab('watch-later', 'المشاهدة لاحقاً', '/watch-later')}
+   ${lists.filter((l) => l.id !== 'favorites' && l.id !== 'watch-later').map((l) => tab(l.id, esc(l.name), `/watchlist/${l.id}`)).join('')}
+ </div>`;
+ }).catch(() => { container.querySelector('[data-pagetabs]')?.remove(); });
+
+container.querySelector('#clear-btn').addEventListener('click', async () => {
  if (confirm('هل أنت متأكد من مسح القائمة؟')) {
  try {
  const list = await watchlistManager.getList(listId);
@@ -119,7 +130,11 @@ export async function HistoryPage() {
  const container = document.createElement('div');
  container.innerHTML = `
     <div class="container" style="padding-top: var(--sp-6);">
-      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--sp-6);"> سجل المشاهدة</h1>
+      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--sp-4);"> سجل المشاهدة</h1>
+      <div class="z-pagetabs" role="tablist" aria-label="أدوات المشاهدة">
+        <a role="tab" href="#/continue-watching">قيد المشاهدة</a>
+        <a role="tab" class="on" aria-selected="true" href="#/history">السجل الكامل</a>
+      </div>
       <div id="history-grid" class="media-grid"></div>
     </div>
  `;
@@ -160,7 +175,11 @@ export async function ContinueWatchingPage() {
  const container = document.createElement('div');
  container.innerHTML = `
     <div class="container" style="padding-top: var(--sp-6);">
-      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--sp-6); display:flex; align-items:center; gap: var(--sp-3);">${icon('play', 22, { weight: "bold" })} متابعة المشاهدة</h1>
+      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--sp-4); display:flex; align-items:center; gap: var(--sp-3);">${icon('play', 22, { weight: "bold" })} متابعة المشاهدة</h1>
+      <div class="z-pagetabs" role="tablist" aria-label="أدوات المشاهدة">
+        <a role="tab" class="on" aria-selected="true" href="#/continue-watching">قيد المشاهدة</a>
+        <a role="tab" href="#/history">السجل الكامل</a>
+      </div>
       <div id="continue-grid" class="media-grid"></div>
     </div>
  `;

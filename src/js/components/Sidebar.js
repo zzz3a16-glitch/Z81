@@ -1,7 +1,10 @@
 /**
- * Sidebar v3 — minimal, grouped, expandable, keyboard-first (spec 08–09).
- * Hierarchy: Home / Discover / My Library / Manage / System — features live
- * inside groups, "more" rows unfold. Collapses to an icon rail with tooltips.
+ * Sidebar v4 — minimal, grouped, expandable, keyboard-first (spec 08–09).
+ * One entry per purpose: the watchlist family (favorites / watch-later /
+ * custom lists) lives behind ONE row — «قوائمي» — and switches by page tabs;
+ * history + continue-watching are ONE row with tabs; live sub-views and facet
+ * pages unfold under "more". Routes stay deep-linkable (aliases keep the row
+ * lit via data-also).
  */
 import { router } from '../router.js';
 import { watchlistManager } from '../services/watchlist/WatchlistManager.js';
@@ -13,8 +16,8 @@ const GROUPS = [
     ['/movies', 'film', 'أفلام'],
     ['/tv', 'tv', 'مسلسلات'],
     ['/anime', 'sparkle', 'أنمي'],
-    ['/platforms', 'globe', 'المنصات'],
   ], more: [
+    ['/platforms', 'globe', 'المنصات'],
     ['/genres', 'palette', 'الأنواع'],
     ['/countries', 'globe', 'الدول'],
     ['/eras', 'calendar', 'العقود والحقب'],
@@ -24,18 +27,16 @@ const GROUPS = [
   ] },
   { id: 'live', label: 'مباشر', items: [
     ['/live', 'live', 'البث المباشر'],
-    ['/live/channels', 'grid', 'كل القنوات'],
   ], more: [
+    ['/live/channels', 'grid', 'كل القنوات'],
     ['/live/guide', 'guide', 'دليل القنوات'],
     ['/live/sources', 'sources', 'مصادر IPTV'],
     ['/live/settings', 'gear', 'إعدادات البث'],
   ] },
   { id: 'library', label: 'مكتبتي', items: [
     ['/library', 'database', 'المكتبة'],
-    ['/favorites', 'heart', 'المفضلة', 'favorites-badge'],
-    ['/watch-later', 'bookmark', 'المشاهدة لاحقاً', 'watchlater-badge'],
-    ['/history', 'history', 'سجل المشاهدة'],
-    ['/continue-watching', 'playCircle', 'متابعة المشاهدة'],
+    ['/favorites', 'bookmark', 'قوائمي', 'favorites-badge', '/watch-later,/watchlist'],
+    ['/history', 'history', 'سجل المشاهدة', null, '/continue-watching'],
     ['/collections', 'layers', 'المجموعات'],
   ], more: [
     ['/recommendations', 'bulb', 'توصيات لك'],
@@ -47,16 +48,15 @@ const GROUPS = [
   { id: 'manage', label: 'الإدارة والصحة', items: [
     ['/inbox', 'inbox', 'صندوق الوارد', 'inbox-badge'],
     ['/health', 'shield', 'صحة المكتبة', 'health-badge'],
-    ['/duplicates', 'dup', 'المكررات'],
     ['/storage', 'drive', 'التخزين'],
   ], more: [
-    ['/snapshots', 'snap', 'اللقطات', null, 'restore'],
+    ['/duplicates', 'dup', 'المكررات'],
+    ['/snapshots', 'snap', 'اللقطات'],
     ['/audit', 'list', 'سجل التدقيق'],
     ['/content-themes', 'palette', 'ثيمات المحتوى'],
   ] },
   { id: 'system', label: 'النظام', items: [
     ['/settings', 'gear', 'الإعدادات'],
-    ['/settings/appearance', 'palette', 'المظهر والسمة'],
   ] },
 ];
 
@@ -68,11 +68,10 @@ export function createSidebar() {
   nav.setAttribute('aria-label', 'القائمة الرئيسية');
 
   const devMode = ['true', '"true"'].includes(String(localStorage.getItem('zpopcorn-dev-mode')));
-  const groupsFor = JSON.parse(localStorage.getItem('zpopcorn-sb-groups') || '{}');
   const moreOpen = JSON.parse(localStorage.getItem('zpopcorn-sb-more') || '{}');
 
-  const itemHtml = ([href, ic, label, badge]) => `
-    <a href="#${href}" class="z-sb-item" data-route="${href}" data-tip="${label}" data-ic="${ic}" tabindex="-1">
+  const itemHtml = ([href, ic, label, badge, also]) => `
+    <a href="#${href}" class="z-sb-item" data-route="${href}"${also ? ` data-also="${also}"` : ''} data-tip="${label}" data-ic="${ic}" tabindex="-1">
       ${icon(ic, 18, { weight: 'light' })}<span>${label}</span>${badge ? `<span class="sb-badge" id="${badge}" style="display:none">0</span>` : ''}
     </a>`;
 
@@ -144,7 +143,9 @@ export function createSidebar() {
   const applyActive = (route) => {
     nav.querySelectorAll('.z-sb-item').forEach((a) => {
       const r = a.dataset.route;
-      const on = r === '/' ? route.actualPath === '/' : r && route.actualPath?.startsWith(r);
+      const also = (a.dataset.also || '').split(',').filter(Boolean);
+      const on = r === '/' ? route.actualPath === '/'
+        : (r && route.actualPath?.startsWith(r)) || also.some((x) => route.actualPath?.startsWith(x));
       a.classList.toggle('z-active', !!on);
       if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
       if (a.dataset.ic) {
@@ -197,8 +198,7 @@ export function createSidebar() {
         watchlistManager.getList('favorites').catch(() => null),
         watchlistManager.getList('watch-later').catch(() => null),
       ]);
-      setBadge('favorites-badge', fav?.items?.length || 0);
-      setBadge('watchlater-badge', later?.items?.length || 0);
+      setBadge('favorites-badge', (fav?.items?.length || 0) + (later?.items?.length || 0)); // «قوائمي»: كل القوائم
     } catch { /* ok */ }
     if (isDesktop) {
       try { const st = await api.inbox.stats(); setBadge('inbox-badge', st.pending || 0); } catch { /* ok */ }

@@ -589,6 +589,17 @@
   color: var(--color-text-primary);
 }
 
+.z-pagetabs { display: flex; flex-wrap: wrap; gap: var(--sp-1); margin: var(--sp-1) 0 var(--sp-6); }
+.z-pagetabs a {
+  padding: var(--sp-1) var(--sp-3); border-radius: var(--r-full);
+  font-size: var(--text-sm); color: var(--color-text-secondary); text-decoration: none;
+  border: 1px solid var(--color-border); background: var(--color-surface);
+  transition: border-color var(--dur-1), background var(--dur-1), color var(--dur-1);
+}
+.z-pagetabs a:hover { color: var(--color-text-primary); border-color: var(--accent-line); }
+.z-pagetabs a.on { background: var(--accent-soft); border-color: var(--accent-line); color: var(--accent); font-weight: var(--weight-semibold); }
+.z-pagetabs a:focus-visible { outline: none; box-shadow: var(--ring-focus); }
+
 /* ========== BADGES ========== */
 .badge {
   display: inline-flex;
