@@ -80,6 +80,7 @@ class LiveManager {
     this.session = sess?.value || null;
     for (const x of this.sources) x.stale = x.status === 'ok' && x.lastUpdate && Date.now() - x.lastUpdate > (this.config.liveTtlDays || 7) * 864e5;
     await this._loadPlaylists();
+    this._staleRecover(); // imports killed by a reload must not haunt the UI as 'importing' forever
     this.rebuildIndex();
     return this;
   }
@@ -160,6 +161,14 @@ class LiveManager {
     if (!src.url && !text) throw Object.assign(new Error('يلزم رابط أو ملف قائمة'), { code: 'E_NO_INPUT' });
     if (src.url) this.constructor.assertUrl(src.url, 'رابط القائمة');
     if (src.epgUrl) this.constructor.assertUrl(src.epgUrl, 'رابط الدليل');
+    // same URL twice = ONE source, re-imported — not a new row per retry click
+    const dup = src.url && this.sources.find((x) => x.url && x.url === src.url);
+    if (dup) {
+      if (name || epgUrl) await this.updateSource(dup.id, { name: String(name || dup.name).trim().slice(0, 80), epgUrl: String(epgUrl || '').trim() || dup.epgUrl });
+      const re = await this.importSource(dup.id, { force: true });
+      const d = this.sources.find((x) => x.id === dup.id);
+      return { ...d, import: re || { status: d.status, error: d.error }, deduped: true };
+    }
     this.sources.push(src);
     await db.put(S_SRC, src);
     if (text) await this._stashText(src.id, text); // file import path
@@ -228,7 +237,44 @@ class LiveManager {
 
   /* ───────────────────────── import pipeline ───────────────────────── */
 
-  cancelImport(sourceId) { this._cancel(sourceId); }
+  /** A row persisted as 'importing' means the page died mid-flight: the
+   *  single-flight promise and AbortController are per-session memory and no
+   *  longer exist. Without this sweep the home stays on «جارٍ استيراد القائمة…»
+   *  forever and cancel/refresh look dead. Called after playlists load. */
+  _staleRecover() {
+    const stuck = this.sources.filter((x) => x.status === 'importing' && !this._loading.has(x.id));
+    for (const src of stuck) {
+      const pl = this.playlists.get(src.id);
+      if (pl?.channels?.length) { // parse finished; the status write was the casualty
+        Object.assign(src, { status: 'ok', error: null, channelCount: pl.channels.length,
+          groupsCount: new Set(pl.channels.map((c) => c.group)).size, lastUpdate: pl.builtAt || Date.now() });
+        db.put(S_SRC, src).catch(() => {});
+        continue;
+      }
+      const resumable = !!src.url || pl?.raw; // url sources re-fetch; stashed files re-parse locally
+      Object.assign(src, { status: resumable ? 'new' : 'error',
+        error: resumable ? null : 'مصدر بلا رابط ولا ملف محفوظ — حرّره وأضف رابطًا صالحًا' });
+      db.put(S_SRC, src).catch(() => {});
+      if (resumable) this.importSource(src.id, { force: true }).catch(() => {});
+    }
+    if (stuck.length) emit('sources', { sources: this.sources });
+    return stuck.length;
+  }
+
+  /** Cancel is a UI promise, not just an abort: with no live flight (stale row
+   *  after a reload) it must still land the source in a terminal, actionable state. */
+  cancelImport(sourceId) {
+    const running = this._loading.has(sourceId);
+    this._cancel(sourceId);
+    if (running) return;
+    const src = this.sources.find((x) => x.id === sourceId);
+    if (src && src.status === 'importing') {
+      Object.assign(src, { status: 'new', error: null });
+      db.put(S_SRC, src).catch(() => {});
+      emit('progress', { sourceId, status: 'new' });
+      emit('sources', { sources: this.sources });
+    }
+  }
 
   _cancel(sourceId) {
     this._loading.delete(sourceId);
@@ -371,7 +417,10 @@ class LiveManager {
       if (proxied.ok) {
         const j = await proxied.json();
         if (j.ok) return { text: j.text, status: j.status, bytes: j.bytes, truncated: j.truncated, contentType: j.contentType, finalUrl: j.finalUrl, redirects: j.redirects, ms: j.ms, host, via: 'dev-proxy' };
-        throw Object.assign(new Error(j.code === 'E_TIMEOUT' ? 'انتهت مهلة الاتصال بالمصدر — الخادم لم يستجب' : j.code === 'E_HTTP' ? `المصدر ردّ بالخطأ ${j.status}` : `لا يمكن الوصول إلى المصدر: ${j.message}`), { code: j.code || 'E_NETWORK' });
+        const why = j.code === 'E_TIMEOUT' ? 'انتهت مهلة الاتصال بالمصدر — الخادم لم يستجب'
+          : j.code === 'E_HTTP' ? `المصدر ردّ بالخطأ ${j.status}`
+          : `لا يمكن الوصول إلى المصدر: ${j.message || 'شبكة'}${j.code === 'E_NETWORK' ? ' — بيئة المعاينة قد تحجب الاتصال الخارجي؛ جرّب تنزيل القائمة واستيرادها كملف .m3u' : ''}`;
+        throw Object.assign(new Error(why), { code: j.code || 'E_NETWORK' });
       }
       if (proxied.status !== 404) throw Object.assign(new Error('تعذّر الاتصال بالمصدر عبر وسيط التطوير'), { code: 'E_NETWORK' });
       const res = await fetch(url, { signal: ac.signal, redirect: 'follow' });

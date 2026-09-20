@@ -121,7 +121,7 @@ export async function LiveHomePage() {
     const box = stateBlock({
       anim: 'importing', title: 'جارٍ استيراد القائمة…',
       desc: s ? `المصدر: ${s.name} — تجري القراءة والتحليل دون تجميد الواجهة.` : '',
-      secondary: { label: 'إلغاء', icon: 'x', onClick: () => { if (s) live._cancel(s.id); render(); } },
+      secondary: { label: 'إلغاء', icon: 'x', onClick: () => { if (s) live.cancelImport(s.id); render(); } },
     });
     box.dataset.liveWatch = '1';
     return box;

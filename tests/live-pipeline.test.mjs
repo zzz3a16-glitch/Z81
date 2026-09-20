@@ -144,3 +144,36 @@ test('stale flag math matches the TTL contract (spec 35/36)', async () => {
   src.lastUpdate = t0 - 6 * 864e5;
   assert.ok(!(Date.now() - src.lastUpdate > ttl * 864e5));
 });
+
+test('reload-mid-import rows are recovered — never stuck importing (add/cancel dead bug)', async () => {
+  const base = { enabled: true, addedAt: 1, order: 1, channelCount: 0, groupsCount: 0, lastUpdate: 0, error: null, epgUrl: '' };
+  const stuckUrl = { id: 'stuckA', name: 'u', url: 'http://iptv.test/pl.m3u', status: 'importing', ...base };
+  const stuckNoSrc = { id: 'stuckB', name: 'b', url: '', status: 'importing', ...base };
+  live.sources = [stuckUrl, stuckNoSrc];
+  live.playlists = new Map();
+  assert.equal(live._staleRecover(), 2);
+  assert.equal(stuckNoSrc.status, 'error');
+  assert.notEqual(stuckUrl.status, 'importing'); // resumes (fails fast off-browser, ok on real fetch)
+  const flight = live._loading.get('stuckA');
+  if (flight) await flight;
+  assert.notEqual(stuckUrl.status, 'importing');
+  live.sources = []; live.playlists = new Map(); live.rebuildIndex();
+});
+
+test('crash after parse but before status write → recovered as ok, no refetch needed', async () => {
+  const chans = await parseM3U(mk(5), { sourceId: 'stuckD' });
+  live.sources = [{ id: 'stuckD', name: 'd', url: 'http://x/y', status: 'importing', enabled: true, addedAt: 1, order: 1, channelCount: 0, groupsCount: 0, lastUpdate: 0, error: null, epgUrl: '' }];
+  live.playlists = new Map([['stuckD', { sourceId: 'stuckD', builtAt: Date.now(), channels: chans }]]);
+  live._staleRecover();
+  assert.equal(live.sources[0].status, 'ok');
+  assert.equal(live.sources[0].channelCount, 5);
+  live.sources = []; live.playlists = new Map(); live.rebuildIndex();
+});
+
+test('cancel on a stale row is a real transition, not a silent no-op', () => {
+  const s0 = { id: 'stuckE', name: 'e', url: 'http://x/z', status: 'importing', enabled: true, addedAt: 1, order: 1, channelCount: 0, groupsCount: 0, lastUpdate: 0, error: null, epgUrl: '' };
+  live.sources = [s0];
+  live.cancelImport('stuckE');
+  assert.equal(s0.status, 'new');
+  live.sources = []; live.rebuildIndex();
+});
