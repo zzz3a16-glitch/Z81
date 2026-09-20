@@ -61,6 +61,7 @@ Every interactive component supports: **default · hover · active · focus-visi
 | Feedback | single `showtoast` event → NotificationService; `statusPill` for recency; `pill/statPill` for metadata | — | no page-local alert/toast clones (§33). |
 | Icon | `icon(name,size,{weight})` from `ui/icons.js` ONLY | thin…fill | zero emoji/unicode glyphs — gate-enforced. Size ladder 11–44px. |
 | Dialog/Menu | `ui/contextMenu.js`, modal keyframes `zmodalin` | — | focus returns to trigger; Esc closes; backdrop `--z-modal-backdrop`. |
+| Sidebar | `createSidebar()` → GROUPS tuples `[route, icon, label, badge?, also?]` | expanded · rail | All 8 states required: expanded/rail/hover/active/focus/disabled(`aria-disabled`)/tooltip(rail-only `data-tip`)/responsive(≤900 drawer). Active = `z-active`+`aria-current`+duotone icon flip; merged routes light via `data-also` aliases; badges count user-actionable state only (قوائمي = favorites+later). |
 | Hero | `--hero-h` + `--hero-overlay` | home/details/anime | one per page max; content must not push rails below the fold (§38). |
 
 ## 5. Page templates (§20)
@@ -93,7 +94,7 @@ python3 scripts/audit-tokens.py --drift   # report: spacing/grid/typography drif
 
 Manual checklist per page (§40): alignment to section rhythm · density switch changes grid? · hover/focus/selected/disabled exist · RTL flip sane (toggle `dir` in devtools) · skeleton matches layout · empty & error copy answers §31 trio · no horizontal overflow at 1366/1920/2560 · contrast ≥ 4.5:1 text, ≥ 3:1 large/UI (WCAG AA, §41) · hit target ≥ 30px · Esc/tab-order.
 
-Gate hard rules encoded: no emoji/symbol glyphs in rendered strings; no hex outside palette/boot/data modules; **no `minmax(<px>` override of `.media-grid`** (protects §3); shimmer keyframe defined exactly once; **no `font-size: Npx` ≤40** — `--text-*` roles only, so density typography actually propagates (decorative >40px numerals exempt); **no off-scale padding/margin/gap** — integers 4…80 must be on the `--sp-*` scale (≤3px optical micro-values and >80px voids exempt; justified exceptions carry `lint:ok`). Single skins: `.z-state` is the ONLY empty/error pattern, `.sk*` the ONLY skeleton skin.
+Gate hard rules encoded: no emoji/symbol glyphs in rendered strings; no hex outside palette/boot/data modules; **no `minmax(<px>` override of `.media-grid`** (protects §3); shimmer keyframe defined exactly once; **no `font-size: Npx` ≤40** — `--text-*` roles only, so density typography actually propagates (decorative >40px numerals exempt); **no off-scale padding/margin/gap** — integers 4…80 must be on the `--sp-*` scale (≤3px optical micro-values and >80px voids exempt; justified exceptions carry `lint:ok`). **no masked px/hex fallbacks** (`MASK`): `var(--token, Npx)` freezes a defined token against retunes and hides a hardcode when the token doesn't exist — defaults live at one definition site; JS-runtime-set vars (`--cols`, `--gw`, `--zanim-sz` inline templates) are the whitelisted exception. **Glass only via presets**: `backdrop-filter` stays confined to chrome and must read `var(--z-glass-blur)` so `data-z-glass` switches every blurred surface at once (per-layer blur literals = drift bug class, fixed 2026-09). Single skins: `.z-state` is the ONLY empty/error pattern, `.sk*` the ONLY skeleton skin.
 
 ## 9. Adding a new page — the recipe
 
