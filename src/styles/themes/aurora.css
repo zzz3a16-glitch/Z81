@@ -1,0 +1,21 @@
+/* zPopcorn Theme · aurora — سماوي متوهج بلطف فوق كحلي عميق */
+:root[data-theme="aurora"] {
+  --surface-0: #070b12;
+  --surface-1: #0c1219;
+  --surface-2: #111a24;
+  --surface-3: #16222e;
+  --surface-4: #1c2a38;
+  --surface-5: #24344a;
+  --accent: #4cc9f0;
+  --accent-bright: #7ad8f5;
+  --accent-deep: #2596be;
+  --accent-contrast: #04121a;
+  --accent-soft: rgba(76,201,240,.12);
+  --accent-line: rgba(76,201,240,.42);
+  --accent-glow: rgba(76,201,240,.18);
+  --color-text-primary: #eef4f8;
+}
+:root[data-theme="aurora"] .z-hero,
+:root[data-theme="aurora"] .hero {
+  --hero-overlay: linear-gradient(78deg, rgba(10,10,10,.96) 0%, rgba(10,10,10,.82) 38%, rgba(10,10,10,.28) 74%, rgba(10,10,10,.10) 100%);
+}

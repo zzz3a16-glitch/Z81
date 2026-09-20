@@ -1,0 +1,8 @@
+/* zPopcorn Theme · midnight-neon — ليلي — بنفسجي هادئ، الهوية الافتراضية لـ zPopcorn */
+:root[data-theme="midnight-neon"] {
+
+}
+:root[data-theme="midnight-neon"] .z-hero,
+:root[data-theme="midnight-neon"] .hero {
+  --hero-overlay: linear-gradient(78deg, rgba(10,10,10,.96) 0%, rgba(10,10,10,.82) 38%, rgba(10,10,10,.28) 74%, rgba(10,10,10,.10) 100%);
+}

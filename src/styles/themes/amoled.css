@@ -1,0 +1,18 @@
+/* zPopcorn Theme · amoled — أسود نقي مع لمسة بنفسجية — مثالي لشاشات OLED */
+:root[data-theme="amoled"] {
+  --surface-0: #000000;
+  --surface-1: #070707;
+  --surface-2: #0e0e0e;
+  --surface-3: #151515;
+  --surface-4: #1d1d1d;
+  --surface-5: #262626;
+  --accent: #8f83ff;
+  --accent-bright: #ab9fff;
+  --accent-deep: #6a5cf0;
+  --color-border: rgba(255,255,255,.10);
+  --card-hover-transform: none;
+}
+:root[data-theme="amoled"] .z-hero,
+:root[data-theme="amoled"] .hero {
+  --hero-overlay: linear-gradient(78deg, rgba(10,10,10,.96) 0%, rgba(10,10,10,.82) 38%, rgba(10,10,10,.28) 74%, rgba(10,10,10,.10) 100%);
+}

@@ -1,0 +1,203 @@
+/**
+ * Assistant Page - Smart Chat Assistant UI
+ * Production-Grade Media Assistant
+ */
+
+import { mediaAssistant } from '../services/assistant/MediaAssistant.js';
+
+export async function AssistantPage() {
+ const container = document.createElement('div');
+ container.className = 'assistant-page';
+ container.innerHTML = `
+    <div class="container" style="padding-top: 24px; padding-bottom: 100px; max-width: 900px;">
+      <div style="text-align: center; margin-bottom: 32px;">
+        <div style="font-size: 48px; margin-bottom: 12px;"></div>
+        <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 8px;">مساعد zPopcorn الذكي</h1>
+        <p style="color: var(--color-text-secondary);">اسألني عن مكتبتك، سجل المشاهدة، التوصيات، والإحصائيات</p>
+      </div>
+
+      <div id="chat-container" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; min-height: 400px; max-height: 600px; overflow-y: auto; padding: 20px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 16px;">
+        <div class="assistant-message" style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 36px; height: 36px; background: var(--color-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"></div>
+          <div style="background: var(--color-surface); padding: 12px 16px; border-radius: 16px 16px 16px 4px; max-width: 80%; line-height: 1.6;">
+            <div style="font-weight: 500; margin-bottom: 4px;">مرحباً! أنا مساعد zPopcorn</div>
+            <div style="font-size: 14px; color: var(--color-text-secondary);">يمكنني مساعدتك في:</div>
+            <ul style="font-size: 14px; color: var(--color-text-secondary); margin: 8px 0; padding-right: 16px; list-style: disc;">
+              <li>آخر فيلم شاهدته</li>
+              <li>كم حلقة بقيت لي في مسلسل؟</li>
+              <li>أعمال كريستوفر نولان الموجودة عندي</li>
+              <li>أكثر الأنواع التي أشاهدها</li>
+              <li>اقترح فيلم أكشن من 2024</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 12px; display: flex; gap: 12px; align-items: flex-end; position: sticky; bottom: 20px;">
+        <div style="flex: 1;">
+          <textarea id="assistant-input" placeholder="اكتب سؤالك هنا... مثال: آخر فيلم شاهدته" style="width: 100%; min-height: 44px; max-height: 120px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; padding: 12px; font-family: inherit; font-size: 14px; color: var(--color-text-primary); resize: none; outline: none;"></textarea>
+          <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+            <button class="quick-query" data-query="آخر فيلم شاهدته" style="padding: 6px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px; cursor: pointer; color: var(--color-text-secondary);">آخر فيلم شاهدته</button>
+            <button class="quick-query" data-query="اقترح فيلم أكشن" style="padding: 6px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px; cursor: pointer; color: var(--color-text-secondary);">اقترح فيلم أكشن</button>
+            <button class="quick-query" data-query="أكثر الأنواع التي أشاهدها" style="padding: 6px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px; cursor: pointer; color: var(--color-text-secondary);">إحصائياتي</button>
+            <button class="quick-query" data-query="ابحث عن Interstellar" style="padding: 6px 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; font-size: 12px; cursor: pointer; color: var(--color-text-secondary);">ابحث عن Interstellar</button>
+          </div>
+        </div>
+        <button id="send-btn" class="btn btn-primary" style="height: 44px; padding: 0 20px; flex-shrink: 0;">إرسال</button>
+      </div>
+    </div>
+ `;
+
+ const chatContainer = container.querySelector('#chat-container');
+ const input = container.querySelector('#assistant-input');
+ const sendBtn = container.querySelector('#send-btn');
+
+ const addUserMessage = (text) => {
+ const div = document.createElement('div');
+ div.style.cssText = 'display: flex; gap: 12px; align-items: flex-start; justify-content: flex-end;';
+ div.innerHTML = `
+      <div style="background: var(--color-accent); color: white; padding: 12px 16px; border-radius: 16px 16px 4px 16px; max-width: 80%; line-height: 1.6; font-size: 14px;">${text}</div>
+      <div style="width: 36px; height: 36px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;color:var(--color-text-muted)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></div>
+ `;
+ chatContainer.appendChild(div);
+ chatContainer.scrollTop = chatContainer.scrollHeight;
+ };
+
+ const addAssistantMessage = (response) => {
+ const div = document.createElement('div');
+ div.style.cssText = 'display: flex; gap: 12px; align-items: flex-start;';
+    
+ let content = `
+      <div style="background: var(--color-surface); padding: 12px 16px; border-radius: 16px 16px 16px 4px; max-width: 80%; line-height: 1.6;">
+        <div style="font-size: 14px; white-space: pre-wrap;">${response.message || 'لا توجد إجابة'}</div>
+ `;
+
+ // Add data if available
+ if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+ content += `<div style="margin-top: 12px; display: grid; gap: 8px;">`;
+ response.data.slice(0, 3).forEach(item => {
+ const title = item.title || item.name || item.mediaId || 'عنصر';
+ content += `<div style="padding: 8px 12px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 8px; font-size: 13px;">${title}</div>`;
+ });
+ content += `</div>`;
+ }
+
+ // Add actions
+ if (response.actions && response.actions.length > 0) {
+ content += `<div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">`;
+ response.actions.forEach(action => {
+ content += `<button class="assistant-action" data-action='${JSON.stringify(action).replace(/'/g, "&#39;")}' style="padding: 6px 12px; background: var(--color-accent); color: white; border: none; border-radius: 16px; font-size: 12px; cursor: pointer;">${action.label}</button>`;
+ });
+ content += `</div>`;
+ }
+
+ content += `</div>`;
+    
+ div.innerHTML = `
+      <div style="width: 36px; height: 36px; background: var(--color-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"></div>
+ ${content}
+ `;
+
+ chatContainer.appendChild(div);
+ chatContainer.scrollTop = chatContainer.scrollHeight;
+
+ // Bind action buttons
+ div.querySelectorAll('.assistant-action').forEach(btn => {
+ btn.addEventListener('click', () => {
+ try {
+ const action = JSON.parse(btn.dataset.action.replace(/&#39;/g, "'"));
+ handleAction(action);
+ } catch (e) {
+ console.warn('Failed to parse action:', e);
+ }
+ });
+ });
+ };
+
+ const handleAction = (action) => {
+ switch (action.action) {
+ case 'navigate':
+ if (window.router) {
+ window.router.navigate(action.path);
+ } else {
+ window.location.hash = `#${action.path}`;
+ }
+ break;
+ case 'play':
+ window.dispatchEvent(new CustomEvent('playmedia', { detail: { id: action.mediaId, media_type: action.mediaType } }));
+ break;
+ default:
+ console.log('Unknown action:', action);
+ }
+ };
+
+ const addTypingIndicator = () => {
+ const div = document.createElement('div');
+ div.id = 'typing-indicator';
+ div.style.cssText = 'display: flex; gap: 12px; align-items: flex-start;';
+ div.innerHTML = `
+      <div style="width: 36px; height: 36px; background: var(--color-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"></div>
+      <div style="background: var(--color-surface); padding: 12px 16px; border-radius: 16px 16px 16px 4px;">
+        <div style="display: flex; gap: 4px;">
+          <span style="width: 8px; height: 8px; background: var(--color-text-muted); border-radius: 50%; animation: bounce 1.4s infinite;"></span>
+          <span style="width: 8px; height: 8px; background: var(--color-text-muted); border-radius: 50%; animation: bounce 1.4s infinite 0.2s;"></span>
+          <span style="width: 8px; height: 8px; background: var(--color-text-muted); border-radius: 50%; animation: bounce 1.4s infinite 0.4s;"></span>
+        </div>
+      </div>
+ `;
+ chatContainer.appendChild(div);
+ chatContainer.scrollTop = chatContainer.scrollHeight;
+ return div;
+ };
+
+ const sendMessage = async () => {
+ const query = input.value.trim();
+ if (!query) return;
+
+ addUserMessage(query);
+ input.value = '';
+ input.style.height = '44px';
+    
+ const typing = addTypingIndicator();
+ sendBtn.disabled = true;
+ sendBtn.textContent = '...';
+
+ try {
+ const result = await mediaAssistant.processQuery(query);
+ typing.remove();
+ addAssistantMessage(result.response);
+ } catch (e) {
+ typing.remove();
+ addAssistantMessage({
+ message: `عذراً، حدث خطأ: ${e.message}`,
+ type: 'error'
+ });
+ }
+
+ sendBtn.disabled = false;
+ sendBtn.textContent = 'إرسال';
+ };
+
+ sendBtn.addEventListener('click', sendMessage);
+  
+ input.addEventListener('keydown', (e) => {
+ if (e.key === 'Enter' && !e.shiftKey) {
+ e.preventDefault();
+ sendMessage();
+ }
+ });
+
+ input.addEventListener('input', () => {
+ input.style.height = '44px';
+ input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+ });
+
+ container.querySelectorAll('.quick-query').forEach(btn => {
+ btn.addEventListener('click', () => {
+ input.value = btn.dataset.query;
+ sendMessage();
+ });
+ });
+
+ return container;
+}
