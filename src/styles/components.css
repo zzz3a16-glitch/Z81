@@ -23,6 +23,14 @@
   overflow: hidden;
 }
 
+.btn.is-loading { pointer-events: none; }
+.btn.is-loading > * { opacity: 0.45; }
+.btn.is-loading::after {
+  content: ''; display: inline-block; vertical-align: -2px;
+  width: 12px; height: 12px; margin-inline-start: 7px;
+  border: 2px solid currentColor; border-top-color: transparent;
+  border-radius: 50%; animation: spin var(--dur-3) linear infinite;
+}
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -248,43 +256,21 @@
   letter-spacing: 0.5px;
 }
 
-/* Card Grid */
+/* Card Grid — single source: --grid-min = density×viewport fluid --card-w.
+   NEVER re-override minmax() per breakpoint here; that decouples the grid from
+   the density system (the bug this replaced). Skeletons ride the same class. */
 .media-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: var(--spacing-lg);
-}
-
-@media (min-width: 768px) {
-  .media-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: var(--spacing-xl);
-  }
-}
-
-@media (min-width: 1024px) {
-  .media-grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  }
-}
-
-@media (min-width: 1440px) {
-  .media-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  }
+  grid-template-columns: repeat(auto-fill, minmax(var(--grid-min), 1fr));
+  gap: clamp(var(--sp-3), 1.1vw, var(--sp-8));
 }
 
 /* ========== SKELETON ========== */
 .skeleton {
   background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-surface-hover) 50%, var(--color-surface) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite linear;
+  background-size: 220% 100%;
+  animation: zskel var(--dur-shimmer) infinite linear;
   border-radius: var(--radius-md);
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
 }
 
 .skeleton-card {
@@ -1220,10 +1206,7 @@
     font-size: var(--font-size-body);
   }
 
-  .media-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: var(--spacing-md);
-  }
+  .media-grid { gap: var(--spacing-md); }
 
   .section-header {
     padding: 0 var(--spacing-md);

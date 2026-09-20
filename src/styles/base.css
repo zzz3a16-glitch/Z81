@@ -120,6 +120,8 @@ a:hover {
   font-size: var(--font-size-caption);
 }
 
+/* Canonical content-skeleton sweep — the ONLY shimmer motion (§14/§43). */
+@keyframes zskel { from { background-position: 220% 0; } to { background-position: -220% 0; } }
 @keyframes spin {
   to { transform: rotate(360deg); }
 }

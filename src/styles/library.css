@@ -60,8 +60,8 @@
 /* Media Grid Inner */
 .media-grid-inner {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(var(--grid-min), 1fr));
+  gap: var(--sp-5);
 }
 
 .media-card .media-poster {
@@ -201,8 +201,8 @@
 .empty-examples { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
 .example-chip { background: var(--color-surface); padding: 6px 12px; border-radius: var(--radius-full); font-size: 0.8rem; border: 1px solid var(--color-border); }
 .loading-skeleton { display: flex; flex-direction: column; gap: 12px; padding: 24px; }
-.loading-skeleton i { display: block; height: 14px; border-radius: var(--r-sm); background: linear-gradient(90deg, color-mix(in srgb, var(--color-text-primary) 5%, transparent), color-mix(in srgb, var(--color-text-primary) 11%, transparent), color-mix(in srgb, var(--color-text-primary) 5%, transparent)); background-size: 220% 100%; animation: zskel 1.3s var(--ease-std, ease) infinite; }
-@keyframes zskel { to { background-position: -220% 0; } }
+.loading-skeleton i { display: block; height: 14px; border-radius: var(--r-sm); background: linear-gradient(90deg, color-mix(in srgb, var(--color-text-primary) 5%, transparent), color-mix(in srgb, var(--color-text-primary) 11%, transparent), color-mix(in srgb, var(--color-text-primary) 5%, transparent)); background-size: 220% 100%; animation: zskel var(--dur-shimmer) var(--ease-std, ease) infinite; }
+/* keyframe lives in base.css (canonical zskel) */
 .error-state { padding: 40px; text-align: center; color: var(--color-danger); background: color-mix(in srgb, var(--color-danger) 5%, transparent); border-radius: var(--radius-lg); border: 1px solid color-mix(in srgb, var(--color-danger) 20%, transparent); }
 
 .missing-stats { display: flex; gap: 16px; margin-bottom: 24px; }

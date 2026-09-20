@@ -144,6 +144,7 @@
   --dur-2: 190ms;   /* normal */
   --dur-3: 320ms;   /* slow   */
   --dur-4: 560ms;   /* entrance rails/hero */
+  --dur-shimmer: 1.4s;  /* ONE skeleton sweep — every shimmer across the app uses this + @keyframes zskel (base.css) */
   --ease-std: cubic-bezier(0.3, 0.1, 0.3, 1);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
@@ -168,7 +169,7 @@
   --sidebar-collapsed-width: var(--rail-w);
 
   /* Card grid rhythm per density */
-  --card-w: 172px;                /* poster column width */
+  --card-w: clamp(120px, 7.6vw + 80px, 220px);  /* poster column — fluid across 1366→3840, density rescales */
   --grid-min: var(--card-w);
   --rail-snap: 280px;
   --card-aspect-ratio: 2/3;
@@ -196,12 +197,12 @@
 :root[data-density="compact"] {
   --sp-6: 18px; --sp-8: 24px; --sp-10: 30px; --sp-12: 36px;
   --text-base: 0.875rem; --text-sm: 0.78rem;
-  --card-w: 142px; --topbar-h: 48px; --sidebar-w: 228px;
+  --card-w: clamp(122px, 6.2vw + 72px, 190px); --topbar-h: 48px; --sidebar-w: 228px;
   --hero-h: clamp(320px, 44vh, 440px);
   --r-lg: 10px; --r-xl: 12px;
 }
 :root[data-density="comfortable"] {
-  --card-w: 196px; --sp-6: 28px; --sp-8: 40px; --topbar-h: 60px;
+  --card-w: clamp(158px, 8.4vw + 78px, 240px); --sp-6: 28px; --sp-8: 40px; --topbar-h: 60px;
   --hero-h: clamp(420px, 58vh, 580px);
 }
 

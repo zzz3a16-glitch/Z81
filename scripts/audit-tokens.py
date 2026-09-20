@@ -55,6 +55,36 @@ for d in ('src', 'electron'):
                 hits.append((p, i, 'GLYPH', o.strip()[:80]))
             if HEX.search(o) and p not in ALLOW_HEX:
                 hits.append((p, i, 'HEX', o.strip()[:80]))
+# structural guards (regression locks for the grid/shimmer unification)
+for d in ('src',):
+    for f in pathlib.Path(d).rglob('*.css'):
+        p = str(f); body = open(f, encoding='utf-8', errors='ignore').read()
+        if 'design-tokens' in p: continue
+        for mm in re.finditer(r'\.media-grid[^{]*\{[^}]*minmax\(\s*\d+px', body):
+            hits.append((p, body[:mm.start()].count('\n') + 1, 'GRID', 'media-grid px override — use var(--grid-min) (docs/DESIGN-SYSTEM.md §3)'))
+        n = len(re.findall(r'@keyframes\s+zskel\b', body))
+        if n:
+            hits.append((p, 1, 'SHIMMER', f'zskel keyframe defined here; canonical home is base.css (count={n})')) if p != 'src/styles/base.css' or n != 1 else None
+
+if '--drift' in sys.argv:
+    print('\n── drift report (informational) ──')
+    rows = []
+    for d in ('src',):
+        for f in pathlib.Path(d).rglob('*.css'):
+            p = str(f)
+            if 'design-tokens' in p or 'themes/' in p: continue
+            body = open(f, encoding='utf-8', errors='ignore').read()
+            spacing = len(re.findall(r'(?:padding|margin|gap)(?:-\w+)?:\s*\d+px', body))
+            fontpx = len(re.findall(r'font-size:\s*\d+(?:\.\d+)?px', body))
+            gridpx = len(re.findall(r'minmax\(\s*\d+px', body))
+            radpx = len(re.findall(r'border-radius:\s*\d+px', body))
+            if spacing + fontpx + gridpx + radpx: rows.append((p, spacing, fontpx, gridpx, radpx))
+    rows.sort(key=lambda r: -sum(r[1:]))
+    print(f"{'file':<44} {'spacing':>7} {'font-px':>8} {'grid-px':>8} {'radius-px':>9}")
+    for r in rows[:12]: print(f"{r[0]:<44} {r[1]:>7} {r[2]:>8} {r[3]:>8} {r[4]:>9}")
+    print(f"files with drift: {len(rows)}")
+    sys.exit(0)
+
 for h in hits[:40]:
     print(f"{h[0]}:{h[1]} {h[2]}: {h[3]}")
 print(f"violations: {len(hits)}")

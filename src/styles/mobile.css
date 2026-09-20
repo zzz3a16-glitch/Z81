@@ -299,8 +299,7 @@
   }
 
   .media-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 12px;
+    gap: var(--sp-3);
   }
 
   .section-header {
@@ -355,9 +354,7 @@
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-  .media-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  }
+
 
   .sidebar {
     width: 240px;
@@ -370,15 +367,11 @@
 }
 
 @media (min-width: 1025px) and (max-width: 1440px) {
-  .media-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  }
+
 }
 
 @media (min-width: 1441px) {
-  .media-grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  }
+
 
   .container {
     max-width: 1400px;
