@@ -25,6 +25,7 @@ import { PersonPage as NewPersonPage } from './js/pages/PersonPage.js';
 import { MoviesPage } from './js/pages/MoviesPage.js';
 import { TVShowsPage } from './js/pages/TVShowsPage.js';
 import { AnimePage } from './js/pages/AnimePage.js';
+import { ImportPage } from './js/pages/ImportPage.js';
 import { MovieDetailsPage, TVDetailsPage } from './js/pages/DetailsPage.js';
 import { SearchPage } from './js/pages/SearchPage.js';
 import { SettingsPage } from './js/pages/SettingsPage.js';
@@ -291,6 +292,7 @@ export class App {
       '/collection-builder': () => this.renderPage(() => new CollectionBuilderPage().render()),
       '/library': () => this.renderPage((params, query) => new LibraryBrowsePage().render(params, query)),
       '/library-hub': () => this.renderPage(() => new LibraryHubPage().render()),
+      '/import': () => this.renderPage(() => new ImportPage().render()),
       '/assistant': () => this.renderPage(() => AssistantPage()),
       '/chat': () => this.renderPage(() => AssistantPage()),
       // System - Enhanced Settings with 15 categories

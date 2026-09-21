@@ -38,7 +38,7 @@ export async function TVShowsPage(params = {}, query = {}) {
 
   let tab = query.tab || 'popular';
   let p_ = 1, acc = [];
-  let seq = 0, disco = null, discoParams = null, genreList = [];
+  let seq = 0, disco = null, discoParams = null, genreList = [], netList = [];
   const tEl = page.querySelector('#tv-grid-title');
   const moreRow = more.parentElement;
   const grid = page.querySelector('#tv-grid');
@@ -85,8 +85,9 @@ export async function TVShowsPage(params = {}, query = {}) {
     tEl.style.display = grid.style.display = moreRow.style.display = 'none';
     if (!disco) {
       if (!genreList.length) genreList = (await tmdbClient.getGenres('tv').catch(() => []))?.genres || [];
+      if (!netList.length) netList = (await tmdbClient.request('tv/networks').catch(() => null))?.results || [];
       disco = discoverPanel({
-        mediaType: 'tv', genres: genreList,
+        mediaType: 'tv', genres: genreList, networks: netList,
         onRun: (p) => { discoParams = p; tEl.style.display = grid.style.display = moreRow.style.display = ''; load(true, p); },
         onCancel: () => { discoParams = null; },
       });

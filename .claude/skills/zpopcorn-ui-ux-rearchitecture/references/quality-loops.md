@@ -61,6 +61,7 @@ a loop catches a new class, add its row the same commit:
 grep -rnE "var\(--[a-z0-9-]+, *#[0-9a-fA-F]{3,8}\)" src/js src/styles src/index.html | grep -v design-tokens  # masked hex fallbacks (audit-tokens MASK also fails the gate)
 grep -rnE "var\(--[a-z0-9-]+, *-?[0-9.]+px\)" src/js src/styles src/index.html | grep -vE "design-tokens|themes/"  # masked px fallbacks / fake tokens (gate: MASK)
 grep -rn "auto-fit" src/styles src/js | grep grid-min          # variant overriding the grid token
+node --test tests/*.mjs   # GLOB REQUIRED — directory form fails silently on this node; 51 pass
 grep -rn "animation:.*s linear infinite" src/styles | grep -vE "zskel|zshimmer|var\(--dur"  # hardcoded sweep/spin durations
 grep -rn "spin\|skel\|shimmer" src/styles --include="*.css" | grep "@keyframes"  # exactly one spin + one zskel (KEYDUP)
 grep -rn "backdrop-filter" src/styles | wc -l                  # glass sprawl (≤1, must use --z-glass-blur)

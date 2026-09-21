@@ -665,3 +665,26 @@
 .z-disco .f > label { font-size: var(--text-3xs); font-weight: var(--weight-bold); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--color-text-muted); }
 .z-disco .f .input { width: 100%; }
 .z-disco-bar { display: flex; gap: var(--sp-2); justify-content: flex-end; border-top: 1px solid var(--color-hairline); padding-top: var(--sp-3); }
+
+/* ================= §33 MEDIA IMPORT — TMDB match + review ================= */
+.z-import-body { padding: 0 var(--page-gutter) 40px; display: grid; gap: var(--sp-4); max-width: 1020px; }
+.z-import-lookup { display: flex; gap: var(--sp-2); }
+.z-import-lookup .input { flex: 1; }
+.z-import-results { display: grid; gap: var(--sp-2); }
+.z-imp-note { font-size: var(--text-xs); color: var(--color-text-muted); }
+.z-imp-row { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-2) var(--sp-3); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-md); cursor: pointer; text-align: start; color: inherit; font: inherit; transition: border-color var(--dur-1) var(--ease-std), transform var(--dur-1) var(--ease-std); }
+.z-imp-row:hover { border-color: var(--accent-line); transform: translateY(calc(-0.5 * var(--card-lift))); }
+.z-imp-row img { width: 44px; height: 66px; object-fit: cover; border-radius: var(--r-sm); flex-shrink: 0; }
+.z-imp-row .t { display: block; font-size: var(--text-sm); font-weight: 700; }
+.z-imp-row .m { font-size: var(--text-2xs); color: var(--color-text-muted); }
+.z-imp-editor { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5); display: grid; gap: var(--sp-4); }
+.z-imp-preview { display: flex; gap: var(--sp-3); align-items: flex-start; flex-wrap: wrap; }
+.z-imp-preview img { border-radius: var(--r-md); border: 1px solid var(--color-border); }
+.z-imp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--sp-3) var(--sp-4); }
+.z-imp-f label { display: block; font-size: var(--text-2xs); color: var(--color-text-muted); margin-bottom: 4px; }
+.z-imp-f .input { width: 100%; }
+.z-imp-cast { display: flex; flex-wrap: wrap; gap: var(--sp-1); }
+.z-imp-cast .chip { cursor: pointer; }
+.z-imp-cast .chip input { accent-color: var(--accent); }
+.z-imp-actions { display: flex; gap: var(--sp-2); justify-content: flex-end; flex-wrap: wrap; }
+@media (prefers-reduced-motion: reduce) { .z-imp-row { transition: none; } }

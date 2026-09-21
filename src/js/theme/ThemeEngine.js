@@ -375,6 +375,7 @@ class ThemeEngine {
     v['--r-xl'] = `${Math.min(28, Math.round(base * 1.33))}px`; v['--r-2xl'] = `${Math.min(32, Math.round(base * 1.66))}px`;
     // shadows
     v['--card-lift'] = `${(+cfg.cards.lift || 3)}px`;
+    v['--poster-scale'] = String(clamp(Number(cfg.cards.size) || 1, 0.8, 1.4));
     v['--card-hover-transform'] = cfg.cards.hover === 'none' ? 'none' : cfg.cards.hover === 'zoom' ? 'scale(1.025)' : 'translateY(calc(-1 * var(--card-lift)))';
     const sa = SHADOW_PRESETS[cfg.shadows.preset];
     if (sa !== undefined) {

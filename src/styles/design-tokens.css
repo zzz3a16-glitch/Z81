@@ -152,7 +152,9 @@
 
   /* Card grid rhythm per density */
   --card-w: clamp(120px, 7.6vw + 80px, 220px);  /* poster column — fluid across 1366→3840, density rescales */
-  --grid-min: var(--card-w);
+  --poster-scale: 1;                             /* user poster-size control (§13) — engine-retuned, rescales every grid + rail */
+  --card-w-final: calc(var(--card-w) * var(--poster-scale));
+  --grid-min: var(--card-w-final);
   --rail-snap: 280px;
   --card-aspect-ratio: 2/3;
   --backdrop-aspect-ratio: 16/9;

@@ -341,6 +341,7 @@ function panelShape() {
   p.appendChild(row('سماكة الحد', slider(0.5, 2, 0.5, c.borders.thickness, (v) => themeEngine.setPath('borders.thickness', v), (v) => `${v}px`)));
   p.appendChild(row('الظلال', segmented(Object.keys(SHADOW_PRESETS).map((k) => [k, { none: 'بلا', subtle: 'خفيفة', soft: 'ناعمة', deep: 'عميقة' }[k]]), c.shadows.preset, (v) => themeEngine.setPath('shadows.preset', v))));
   p.appendChild(row('شدة الرفع عند المرور', slider(0, 6, 1, c.cards.lift ?? 3, (v) => themeEngine.setPath('cards.lift', +v), (v) => `${v}px`)));
+  p.appendChild(row('حجم الملصقات (كل الشبكات والأرفف)', slider(80, 140, 5, Math.round((c.cards.size ?? 1) * 100), (v) => themeEngine.setPath('cards.size', v / 100), (v) => `${v}%`)));
   return p;
 }
 

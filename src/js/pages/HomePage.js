@@ -197,7 +197,7 @@ function elRailSkeleton() {
   const f = document.createDocumentFragment();
   const s = section({ title: '…', wide: true });
   s.body.appendChild(el('div', '')).appendChild(skelRail(6, false));
-  s.root.querySelectorAll('.sk-card').forEach((x) => { x.style.width = 'var(--card-w)'; x.style.minWidth = '150px'; });
+  s.root.querySelectorAll('.sk-card').forEach((x) => { x.style.width = 'var(--card-w-final)'; x.style.minWidth = '150px'; });
   f.appendChild(s.root);
   return f;
 }

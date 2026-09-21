@@ -32,7 +32,7 @@ If two pages solve the same problem differently, the fix lands in the shared lay
 | Elevation | `--shadow-pop`, `--ring-focus`, z-scale `--z-base…1000` | ad-hoc box-shadows/z-index |
 | Motion | `--dur-1…4`, `--dur-shimmer`, easings; global reduced-motion kill-switch in base.css | per-component timings |
 | Sizing | `--button-height-sm/md/lg` (30/36/44), `--input-height`, `--avatar-*`, `--topbar-h`, `--sidebar-w`, `--rail-w` | 26px hit targets |
-| Media grid | `--card-w` (fluid `clamp(…vw…)`), `--grid-min`, `--rail-snap`, `--card-aspect-ratio`, `--hero-h` | breakpoint minmax overrides |
+| Media grid | `--card-w` (fluid `clamp(…vw…)`), `--poster-scale` (user poster/card size §13 — studio slider 80–140%, engine-retuned), `--card-w-final: calc(--card-w × --poster-scale)`, `--grid-min`, `--rail-snap`, `--card-aspect-ratio`, `--hero-h` | breakpoint minmax overrides |
 
 ## 3. Grid, density, responsiveness
 
@@ -54,8 +54,9 @@ Every interactive component supports: **default · hover · active · focus-visi
 | Switch | `.z-switch` = `label > input[type=checkbox] + .track` | one size (44×24, knob 18 via `--switch-*`) | THE toggle — page-inlined slider markup was deduplicated into it (2026-09). RTL knob travel, `:focus-visible` outline, disabled track ink. |
 | Field/Input | `.input`, labels above control, hint under | url/number/select | RTL text fields inherit rtl direction; URLs/paths/durations get `dir="ltr"`. |
 | Media card | `MediaCard(media, {variant})` | poster · wide · continue · row · compact · person | same DNA: radius `--r-lg`, hover = `var(--card-hover-transform)` + shadow-2 (lift intensity user-controlled), actions on hover/focus only, never the description. Progress bar = `.continue` only. |
+| Import workbench (§33) | `ImportPage` — route `/import`, linked from library hub | TMDB match → review | filename/URL parsed locally first (FileNameParser), explicit search only, editor PREFILLED from TMDB (poster/logo/year/genres/seasons/episodes/cast/networks/studios) with every field editable, save = `db.put('movies'|'tvshows')` + `zpopcorn:library-changed`. |
 | Top 10 | `createTop10(list)` — THE one builder | compact editorial | rank as a 20px plain numeral (`1`–`10`, never `01`), fixed 72px poster cadence, 2-line title clamp, hairline separators; every ranked rail (top/trending/rated) uses it — no per-page rank styles. |
-| Discover panel | `discoverPanel({mediaType, genres, onRun})` from `ui/filters.js` | movies/tv | THE deep-browse entry: criteria grid (years·rating·votes·sort·language·region·genre) + explicit بحث button DISABLED until ≥1 criterion — no auto-query, no endless load. Tab switches carry a `seq` race-guard: superseded responses are dropped, never appended (§12). |
+| Discover panel | `discoverPanel({mediaType, genres, onRun})` from `ui/filters.js` | movies/tv | THE deep-browse entry: criteria grid (years·rating·votes·sort·status·language·region·genre, +networks for tv) + explicit بحث button DISABLED until ≥1 criterion — no auto-query, no endless load. Tab switches carry a `seq` race-guard: superseded responses are dropped, never appended (§12). |
 | Rail | `railEl/railSection` | snap = `--card-w` | horizontal flow, no vertical scroll; caps use `--text-3xs`. |
 | Section | `section({title, subtitle, action})` | — | THE page rhythm unit: SectionTitle role + action slot on the far inline-end. |
 | Skeletons | `skelGrid/skelRail/skelHero/skelLines/skelRows` + `createSkeletonGrid` | mirrors each pattern | canonical sweep = `@keyframes zskel` + `--dur-shimmer`; markup class set is `sk sk-card/sk-line/sk-row/sk-hero` only — `.skeleton*` and `.empty-state*` legacy families purged. |
@@ -143,5 +144,5 @@ Gate hard rules encoded: no emoji/symbol glyphs in rendered strings; no hex outs
 | 41–43 workflow/functionality/data | skill 20-stage workflow; deep-link & behavior preservation laws; real data only (empty states answer §31 trio) |
 | 20 carousels | railEl() = prev/next + RTL-aware edge dimming sync — shared by every rail |
 | 35–39/41 settings | ThemeStudio panels own identity/typography/cards (lift slider new); language options = full ISO-639-1 set localized via Intl.DisplayNames('ar') |
-| 42–48 preservation/audit | 51/51 backend+live tests, TMDB/live/import flows untouched (presentation-layer discipline); Skills Library: verified absent (routes/pages/state greps = 0) |
+| 42–48 preservation/audit | 51/51 backend+live tests, TMDB/live flows untouched (presentation-layer discipline); §33 import implemented as /import workbench; Skills Library: verified absent (routes/pages/state greps = 0) |
 | 44–47 references/quality bar | principles-only sources; §45 questions = §9 checklist; useful-beauty law in skill |

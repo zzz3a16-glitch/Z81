@@ -136,6 +136,7 @@ export class LibraryHubPage {
  ['franchises', 'layers', 'السلاسل والامتيازات', 'تنظيم الأعمال المترابطة'],
  ['collections', 'collection', 'المجموعات الذكية', 'مجموعات بقواعد تلقائية'],
  ['collection-builder', 'plus', 'منشئ المجموعات', 'أنشئ مجموعات مخصصة'],
+ ['import', 'folderOpen', 'استيراد وسائط', 'مطابقة TMDB وتحرير كامل قبل الحفظ'],
  ['media-types', 'disc', 'أنواع الوسائط', 'فيلم، مسلسل، أومد، OV...'],
  ['genres', 'grid', 'تصفح بالأنواع', 'دراما، خيال، إثارة'],
  ['countries', 'globe', 'الدول والمناطق', 'سينما عالمية'],
@@ -185,6 +186,8 @@ export class LibraryBrowsePage {
  const VIEW_KEY = 'zpopcorn-lib-view';
  let view = localStorage.getItem(VIEW_KEY) || 'grid';
  let type = query.type || 'all';
+ let status = 'any';
+ let favSet = new Set();
  let sort = 'added';
  let q = '';
  let rows = [];
@@ -197,7 +200,9 @@ export class LibraryBrowsePage {
         </div>
         <div style="display:flex;gap: var(--sp-2);align-items:center;flex-wrap:wrap">
           <input id="lb-q" class="input input-sm" style="width:190px" placeholder="بحث في مكتبتك…" aria-label="بحث في المكتبة">
- ${[['all', 'الكل'], ['movie', 'أفلام'], ['tv', 'مسلسلات']].map(([v, l]) => `<button class="chip" data-type="${v}">${l}</button>`).join('')}
+ ${[['all', 'الكل'], ['movie', 'أفلام'], ['tv', 'مسلسلات'], ['anime', 'أنمي'], ['fav', 'مفضلتي']].map(([v, l]) => `<button class="chip" data-type="${v}">${l}</button>`).join('')}
+ <span style="font-size: var(--text-2xs);color:var(--color-text-faint)">الحالة</span>
+ ${[['any', 'الكل'], ['seen', 'شُوهد'], ['unseen', 'لم يُشاهد']].map(([v, l]) => `<button class="chip" data-status="${v}">${l}</button>`).join('')}
           <select id="lb-sort" class="input input-sm" style="width:auto" aria-label="الترتيب">
             <option value="added">الأحدث إضافة</option>
             <option value="title">العنوان أ-ي</option>
@@ -207,6 +212,7 @@ export class LibraryBrowsePage {
           <div style="display:flex;gap:2px;background:var(--surface-2);border:1px solid var(--color-border);border-radius:var(--r-md);padding:2px">
             <button class="z-iconbtn on" data-view="grid" title="شبكة">${icon('grid', 15)}</button>
             <button class="z-iconbtn" data-view="table" title="جدول">${icon('list', 15)}</button>
+ <button class="z-iconbtn" data-hub title="مركز المكتبة">${icon('gauge', 15)}</button>
           </div>
         </div>
       </div>
@@ -214,16 +220,26 @@ export class LibraryBrowsePage {
 
  const body = page.querySelector('#lb-body');
  page.querySelectorAll('[data-type]').forEach((b) => b.classList.toggle('active', b.dataset.type === type));
+ page.querySelectorAll('[data-status]').forEach((b) => b.classList.toggle('active', b.dataset.status === status));
  body.appendChild(skelGrid(8));
 
  try {
  const [m, t] = await Promise.all([db.getAll('movies', 2000).catch(() => []), db.getAll('tvshows', 2000).catch(() => [])]);
  rows = [...(m || []).map((x) => ({ ...x, media_type: 'movie' })), ...(t || []).map((x) => ({ ...x, media_type: 'tv' }))];
  } catch { rows = []; }
+ try {
+ const { watchlistManager } = await import('../../services/watchlist/WatchlistManager.js');
+ const fl = await watchlistManager.getList('favorites').catch(() => null);
+ (fl?.items || []).forEach((i) => favSet.add(String(i.mediaId ?? i.id)));
+ } catch { /* المفضلة بُعد اختياري */ }
 
  const paint = () => {
  page.querySelectorAll('[data-view]').forEach((b) => b.classList.toggle('on', b.dataset.view === view));
- let list = rows.filter((r) => type === 'all' || r.media_type === type);
+ let list = rows.filter((r) => type === 'all'
+ || (type === 'movie' && r.media_type === 'movie') || (type === 'tv' && r.media_type === 'tv')
+ || (type === 'anime' && r.media_type === 'tv' && (r.genre_ids || []).includes(16))
+ || (type === 'fav' && favSet.has(String(r.id ?? r.key))));
+ if (status !== 'any') list = list.filter((r) => status === 'seen' ? (r.watched || r.userRating) : !(r.watched || r.userRating));
  if (q) { const lq = q.toLowerCase(); list = list.filter((r) => (r.title || r.name || '').toLowerCase().includes(lq) || (r.original_title || r.original_name || '').toLowerCase().includes(lq)); }
  list.sort((a, b) => {
  if (sort === 'title') return String(a.title || a.name || '').localeCompare(String(b.title || b.name || ''), 'ar');
@@ -275,6 +291,12 @@ export class LibraryBrowsePage {
  page.querySelectorAll('[data-type]').forEach((x) => x.classList.toggle('active', x === b));
  paint();
  }));
+ page.querySelectorAll('[data-status]').forEach((b) => b.addEventListener('click', () => {
+ status = b.dataset.status;
+ page.querySelectorAll('[data-status]').forEach((x) => x.classList.toggle('active', x === b));
+ paint();
+ }));
+ page.querySelector('[data-hub]').addEventListener('click', () => window.router.navigate('/library-hub'));
  page.querySelectorAll('[data-view]').forEach((b) => b.addEventListener('click', () => { view = b.dataset.view; localStorage.setItem(VIEW_KEY, view); paint(); }));
  page.querySelector('#lb-sort').addEventListener('change', (e) => { sort = e.target.value; paint(); });
  let tq = null;

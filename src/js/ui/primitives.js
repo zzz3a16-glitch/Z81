@@ -63,7 +63,7 @@ export const skelRows = (n = 5) => {
 };
 
 /* ---------- horizontal rail with scroll buttons ---------- */
-export function railEl(cards = [], { snapCards = 'var(--card-w)' } = {}) {
+export function railEl(cards = [], { snapCards = 'var(--card-w-final)' } = {}) {
   const wrap = el('div', 'z-rail-wrap');
   const rail = el('div', 'z-rail');
   rail.style.gridAutoColumns = `minmax(${snapCards}, ${snapCards})`;
@@ -95,7 +95,7 @@ export function railSection(title, cards, opts = {}) {
   const { subtitle, action, wide, cardWidth } = opts;
   const s = section({ title, subtitle, action, wide: true });
   if (!cards.length) return null;
-  const { wrap, rail } = railEl(cards, { snapCards: cardWidth || (wide ? 'clamp(280px, 26vw, 360px)' : 'var(--card-w)') });
+  const { wrap, rail } = railEl(cards, { snapCards: cardWidth || (wide ? 'clamp(280px, 26vw, 360px)' : 'var(--card-w-final)') });
   s.body.appendChild(wrap);
   if (wide) rail.style.gridAutoColumns = 'minmax(clamp(280px, 26vw, 360px), clamp(280px, 26vw, 360px))';
   return s.root;

@@ -130,7 +130,7 @@ label { font-size: var(--text-sm); color: var(--color-text-secondary); }
 /* rails (horizontal) */
 .z-rail-wrap { position: relative; }
 .z-rail {
-  display: grid; grid-auto-flow: column; grid-auto-columns: minmax(var(--card-w), var(--card-w));
+  display: grid; grid-auto-flow: column; grid-auto-columns: minmax(var(--card-w-final), var(--card-w-final));
   gap: var(--sp-3); overflow-x: auto; scroll-snap-type: x proximity;
   padding: 2px var(--page-gutter) var(--sp-3);
   scrollbar-width: none;

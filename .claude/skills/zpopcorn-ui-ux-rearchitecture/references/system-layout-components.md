@@ -17,6 +17,8 @@ space     --sp-1..8,10,12,14,16,20 (4px base) — the ONLY spacing vocabulary
 radius    --r-xs..2xl, --r-full · motion --dur-1..4, --dur-shimmer, --dur-spin,
           --ease-std/out/in-out, --motion-micro · z --z-base..toast
 layout    --topbar-h --sidebar-w(-compact) --rail-w --grid-min --hero-h --page-gutter
+          (card cadence = --card-w × --poster-scale → --card-w-final; user poster-size
+           control lives on --poster-scale ONLY — never re-multiply per page)
 ```
 
 Token law (all gate-enforced — the gate is the contract's compiler):
