@@ -118,6 +118,11 @@ _defs = set()
 for _f in pathlib.Path('src').rglob('*.css'):
     _defs.update(re.findall(r'(--[a-z0-9-]+)\s*:', open(_f, encoding='utf-8', errors='ignore').read()))
 _defs.update(_runtime)
+# tokens fed by the ThemeEngine varMap (written into a generated <style>, invisible to CSS scans)
+_te = pathlib.Path('src/js/theme/ThemeEngine.js')
+if _te.exists():
+    _defs.update(re.findall(r"v\['(--[a-z0-9-]+)'\]", _te.read_text(encoding='utf-8', errors='ignore')))
+    _defs.update(re.findall(r"setProperty\('(--[a-z0-9-]+)'", _te.read_text(encoding='utf-8', errors='ignore')))
 for _f in pathlib.Path('src').rglob('*.css'):
     for _i, _ln in enumerate(open(_f, encoding='utf-8', errors='ignore').read().splitlines(), 1):
         for _m in re.finditer(r'var\(\s*(--[a-z0-9-]+)\s*[,)]', _ln):
@@ -140,6 +145,21 @@ for _n, _locs in sorted(_kf.items()):
         hits.append((_locs[0][0], _locs[0][1], 'KEYDUP', 'spinner keyframe ' + _n + ' - canonical is spin (--dur-spin)'))
     if len(_locs) > 1 and not any('themes/' in f for f, _ in _locs):
         hits.append((_locs[1][0], _locs[1][1], 'KEYDUP', '@keyframes ' + _n + ' defined ' + str(len(_locs)) + 'x outside themes'))
+
+# GLASS lock (directive §03): the app runs on solid surfaces — blur chrome is retired for good
+for _f in list(pathlib.Path('src').rglob('*.css')) + list(pathlib.Path('src').rglob('*.js')) + [pathlib.Path('index.html')]:
+    if not _f.exists(): continue
+    for _i, _ln in enumerate(open(_f, encoding='utf-8', errors='ignore').read().splitlines(), 1):
+        if 'backdrop-filter' in _ln:
+            hits.append((str(_f), _i, 'GLASS', 'backdrop-filter banned — solid surfaces + borders + shadows only (DESIGN-SYSTEM §glass)'))
+
+# INLINEFONT lock (directive §02/§33): literal font sizes inside JS inline styles
+for _f in pathlib.Path('src/js').rglob('*.js'):
+    for _i, _ln in enumerate(open(_f, encoding='utf-8', errors='ignore').read().splitlines(), 1):
+        for _m in re.finditer(r'font-size:\s*([\d.]+)(px|rem)', _ln):
+            _v = float(_m.group(1)) * (16 if _m.group(2) == 'rem' else 1)
+            if 0 < _v <= 40 and 'lint:ok' not in _ln:
+                hits.append((str(_f), _i, 'INLINEFONT', f'inline font-size {_m.group(0)[10:]} — use var(--text-*) roles'))
 
 if '--drift' in sys.argv:
     print('\n── drift report (informational) ──')

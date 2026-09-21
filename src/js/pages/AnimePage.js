@@ -42,7 +42,9 @@ export async function AnimePage() {
   page.querySelector('#an-discover').appendChild(discHead.root);
 
   let sort = 'popularity.desc';
+  let dseq = 0;
   async function loadDiscover() {
+    const my = ++dseq;
     createSkeletonGrid(discGrid, 12);
     try {
       const res = await tmdbClient.discoverTV({
@@ -53,6 +55,7 @@ export async function AnimePage() {
         page: 1,
       });
       const rows = (res?.results || []).filter((m) => m.poster_path);
+      if (my !== dseq) return; // stale sort response
       discGrid.innerHTML = '';
       if (!rows.length) { discGrid.appendChild(emptyState({ iconName: 'sparkle', title: 'لا نتائج — جرّب ترتيباً آخر أو اتصالاً بالإنترنت' })); return; }
       rows.slice(0, 24).forEach((m) => discGrid.appendChild(createMediaCard({ ...m, media_type: 'tv', anime: true }, { variant: 'poster' })));

@@ -254,12 +254,12 @@ export function createTop10(medias) {
     item.tabIndex = 0;
     const path = m.poster_path;
     item.innerHTML = `
-      <span class="rank">${String(i + 1).padStart(2, '0')}</span>
+      <span class="rank">${i + 1}</span>
       <div class="poster">${path
         ? `<img src="${esc(getTMDBImageUrl(path, 'poster', 'w342'))}" alt="" loading="lazy">`
         : fallbackArt(getMediaTitle(m))}</div>
       <div class="tinfo">
-        <b>${esc(truncate(getMediaTitle(m), 24))}</b>
+        <b>${esc(truncate(getMediaTitle(m), 40))}</b>
         <span class="num">${getMediaYear(m) || ''} ${m.vote_average ? `· <span class="rate">${icon('star',12)} ${Number(m.vote_average).toFixed(1)}</span>` : ''}</span>
       </div>`;
     item.dataset.zctx = 'media';

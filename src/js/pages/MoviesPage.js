@@ -8,6 +8,7 @@ import { createMediaCard } from '../components/MediaCard.js';
 import { createSkeletonGrid } from '../components/MediaCard.js';
 import { el, esc, section, railEl, skelRail, errorState, emptyState, paintError } from '../ui/primitives.js';
 import { icon } from '../ui/icons.js';
+import { discoverPanel } from '../ui/filters.js';
 
 const TABS = [
   ['popular', 'الأكثر رواجاً'],
@@ -50,6 +51,9 @@ export async function MoviesPage(params = {}, query = {}) {
   let genreId = query.genre || '';
   let page_ = 1;
   let accumulated = [];
+  let seq = 0; // race guard: stale tab/filter responses are dropped
+  let discoParams = null; let disco = null; let genreList = [];
+  const resultsWrap = page.querySelector('#mv-grid').parentElement;
 
   loadMyMovies(page.querySelector('#mv-lib'));
 
@@ -59,26 +63,47 @@ export async function MoviesPage(params = {}, query = {}) {
 
   try {
     const genres = await tmdbClient.getGenres('movie').catch(() => []);
+    genreList = genres?.genres || genres || [];
     const sel = page.querySelector('#mv-genre');
-    (genres?.genres || genres || []).forEach((g) => {
+    genreList.forEach((g) => {
       const o = document.createElement('option');
       o.value = g.id; o.textContent = g.name;
       if (String(g.id) === String(genreId)) o.selected = true;
       sel.appendChild(o);
     });
-    sel.addEventListener('change', () => { genreId = sel.value; loadGrid(true); });
+    sel.addEventListener('change', () => { genreId = sel.value; if (tab !== 'discover') loadGrid(true); else applyDiscover(); });
   } catch { /* offline without cached genres */ }
 
-  async function loadGrid(reset = false) {
+  function showDiscover() {
+    resultsWrap.style.display = 'none';
+    if (!disco) {
+      disco = discoverPanel({
+        mediaType: 'movie', genres: genreList,
+        onRun: (p) => { discoParams = p; resultsWrap.style.display = ''; loadGrid(true, p); },
+        onCancel: () => { discoParams = null; },
+      });
+      page.querySelector('#mv-feature').appendChild(disco.root);
+    } else if (genreList.length) {
+      const gs = page.querySelector('.z-disco select'); // keep panel in sync once built
+      void gs;
+    }
+    if (discoParams) { resultsWrap.style.display = ''; loadGrid(true, discoParams); }
+  }
+  function applyDiscover() { if (discoParams) loadGrid(true, discoParams); }
+
+  async function loadGrid(reset = false, extra = null) {
+    const my = ++seq;
     if (reset) { page_ = 1; accumulated = []; createSkeletonGrid(grid, 12); }
     try {
-      const p = { page: page_, with_genres: genreId || undefined };
+      const p = { page: page_, with_genres: genreId || undefined, ...(extra || {}) };
       let res;
       if (tab === 'discover') {
-        res = await tmdbClient.discover('movie', { sort_by: 'popularity.desc', 'vote_count.gte': 250, ...p });
+        if (!extra && !discoParams) { grid.innerHTML = ''; more.style.display = 'none'; return; } // explicit-criteria law
+        res = await tmdbClient.discover('movie', { sort_by: 'popularity.desc', ...p });
       } else {
         res = await tmdbClient.request(`movie/${tab}`, { page: page_ });
       }
+      if (my !== seq) return; // a newer tab/filter switch superseded this response
       const results = (res?.results || []).filter((m) => m.poster_path);
       accumulated = [...accumulated, ...results];
       grid.innerHTML = '';
@@ -86,8 +111,9 @@ export async function MoviesPage(params = {}, query = {}) {
       more.style.display = (res?.total_pages > page_) ? 'inline-flex' : 'none';
       if (!accumulated.length) grid.appendChild(emptyState({ iconName: 'search', title: 'لا نتائج هنا — جرّب تبويباً آخر' }));
     } catch (e) {
+      if (my !== seq) return;
       grid.innerHTML = '';
-      grid.appendChild(errorState({ desc: e.message || 'تعذّر الوصول لـ TMDB — ستعود النتائج من الكاش عند توفر الشبكة.', onRetry: () => loadGrid(true) }));
+      grid.appendChild(errorState({ desc: e.message || 'تعذّر الوصول لـ TMDB — ستعود النتائج من الكاش عند توفر الشبكة.', onRetry: () => loadGrid(true, extra) }));
     }
   }
 
@@ -96,8 +122,11 @@ export async function MoviesPage(params = {}, query = {}) {
     b.classList.add('active');
     tab = b.dataset.tab;
     title.textContent = TABS.find(([id]) => id === tab)?.[1] || 'أفلام';
+    if (tab === 'discover') { showDiscover(); return; }
+    resultsWrap.style.display = '';
     loadGrid(true);
   }));
+  if (tab === 'discover') showDiscover();
   more.addEventListener('click', () => { page_++; loadGrid(false); });
 
   await loadGrid(true);

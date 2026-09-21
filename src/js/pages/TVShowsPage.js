@@ -7,12 +7,14 @@ import { createMediaCard, createSkeletonGrid } from '../components/MediaCard.js'
 import { el, section, railEl, emptyState, errorState } from '../ui/primitives.js';
 
 import { icon } from '../ui/icons.js';
+import { discoverPanel } from '../ui/filters.js';
 
 const TABS = [
   ['popular', 'الأشهر'],
   ['airing_today', 'يعرض اليوم'],
   ['top_rated', 'الأعلى تقييماً'],
   ['on_the_air', 'في الهواء'],
+  ['discover', 'استكشاف متقدم'],
 ];
 
 export async function TVShowsPage(params = {}, query = {}) {
@@ -36,16 +38,27 @@ export async function TVShowsPage(params = {}, query = {}) {
 
   let tab = query.tab || 'popular';
   let p_ = 1, acc = [];
+  let seq = 0, disco = null, discoParams = null, genreList = [];
+  const tEl = page.querySelector('#tv-grid-title');
+  const moreRow = more.parentElement;
   const grid = page.querySelector('#tv-grid');
   const title = page.querySelector('#tv-grid-title');
   const more = page.querySelector('#tv-more');
 
   loadMyShows(page.querySelector('#tv-lib'));
 
-  async function load(reset) {
+  async function load(reset, extra = null) {
+    const my = ++seq;
     if (reset) { p_ = 1; acc = []; createSkeletonGrid(grid, 12); }
     try {
-      const res = await tmdbClient.request(`tv/${tab}`, { page: p_ });
+      let res;
+      if (tab === 'discover') {
+        if (!extra && !discoParams) { grid.innerHTML = ''; more.style.display = 'none'; return; } // explicit-criteria law
+        res = await tmdbClient.discoverTV({ sort_by: 'popularity.desc', page: p_, ...(extra || discoParams || {}) });
+      } else {
+        res = await tmdbClient.request(`tv/${tab}`, { page: p_ });
+      }
+      if (my !== seq) return; // superseded by a newer tab/filter switch
       const rows = (res?.results || []).filter((m) => m.poster_path);
       acc = [...acc, ...rows];
       grid.innerHTML = '';
@@ -53,8 +66,9 @@ export async function TVShowsPage(params = {}, query = {}) {
       more.style.display = res?.total_pages > p_ ? 'inline-flex' : 'none';
       if (!acc.length) grid.appendChild(emptyState({ iconName: 'tv', title: 'لا نتائج — تحقق من الاتصال أو جرّب تبويباً آخر' }));
     } catch (e) {
+      if (my !== seq) return;
       grid.innerHTML = '';
-      grid.appendChild(errorState({ onRetry: () => load(true) }));
+      grid.appendChild(errorState({ onRetry: () => load(true, extra) }));
     }
   }
 
@@ -63,8 +77,24 @@ export async function TVShowsPage(params = {}, query = {}) {
     b.classList.add('active');
     tab = b.dataset.tab;
     title.textContent = TABS.find(([id]) => id === tab)?.[1];
+    if (tab === 'discover') { showDiscover(); return; }
+    tEl.style.display = grid.style.display = moreRow.style.display = '';
     load(true);
   }));
+  async function showDiscover() {
+    tEl.style.display = grid.style.display = moreRow.style.display = 'none';
+    if (!disco) {
+      if (!genreList.length) genreList = (await tmdbClient.getGenres('tv').catch(() => []))?.genres || [];
+      disco = discoverPanel({
+        mediaType: 'tv', genres: genreList,
+        onRun: (p) => { discoParams = p; tEl.style.display = grid.style.display = moreRow.style.display = ''; load(true, p); },
+        onCancel: () => { discoParams = null; },
+      });
+      page.querySelector('#tv-lib').appendChild(disco.root);
+    }
+    if (discoParams) { tEl.style.display = grid.style.display = moreRow.style.display = ''; load(true, discoParams); }
+  }
+  if (tab === 'discover') showDiscover();
   more.addEventListener('click', () => { p_++; load(false); });
 
   await load(true);

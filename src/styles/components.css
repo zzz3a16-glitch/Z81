@@ -15,7 +15,7 @@
   border: none;
   border-radius: var(--r-md);
   cursor: pointer;
-  transition: all var(--dur-1) var(--ease-default);
+  transition: transform var(--dur-1) var(--ease-default), opacity var(--dur-1) var(--ease-default), background var(--dur-1) var(--ease-default), border-color var(--dur-1) var(--ease-default), color var(--dur-1) var(--ease-default), box-shadow var(--dur-1) var(--ease-default);
   white-space: nowrap;
   user-select: none;
   text-decoration: none;
@@ -137,7 +137,7 @@
   overflow: hidden;
   background: var(--color-card);
   border: 1px solid var(--color-border);
-  transition: all var(--dur-2) var(--ease-default);
+  transition: transform var(--dur-2) var(--ease-default), opacity var(--dur-2) var(--ease-default), background var(--dur-2) var(--ease-default), border-color var(--dur-2) var(--ease-default), color var(--dur-2) var(--ease-default), box-shadow var(--dur-2) var(--ease-default);
   cursor: pointer;
   group: card;
 }
@@ -209,11 +209,10 @@
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  background: rgba(0, 0, 0, 0.6);
+  background: color-mix(in srgb, var(--color-true-black) 76%, transparent);
   padding: 2px var(--sp-2);
   border-radius: var(--r-sm);
   font-size: var(--text-2xs);
-  backdrop-filter: blur(4px);
 }
 
 .media-card-actions {
@@ -235,15 +234,14 @@
   width: 32px;
   height: 32px;
   border-radius: var(--r-full);
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.78);
   color: var(--color-white);
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all var(--dur-1) var(--ease-default);
-  backdrop-filter: blur(8px);
+  transition: transform var(--dur-1) var(--ease-default), opacity var(--dur-1) var(--ease-default), background var(--dur-1) var(--ease-default), border-color var(--dur-1) var(--ease-default), color var(--dur-1) var(--ease-default), box-shadow var(--dur-1) var(--ease-default);
 }
 
 .media-card-action:hover {
@@ -287,8 +285,7 @@
   display: flex;
   align-items: center;
   padding: 0 var(--sp-4);
-  transition: all var(--dur-2) var(--ease-default);
-  backdrop-filter: blur(20px);
+  transition: transform var(--dur-2) var(--ease-default), opacity var(--dur-2) var(--ease-default), background var(--dur-2) var(--ease-default), border-color var(--dur-2) var(--ease-default), color var(--dur-2) var(--ease-default), box-shadow var(--dur-2) var(--ease-default);
 }
 
 .header.transparent {
@@ -303,7 +300,6 @@
 .header.solid {
   background: var(--color-surface);
   border-bottom-color: var(--color-border);
-  backdrop-filter: blur(20px);
 }
 
 .header-start {
@@ -342,7 +338,7 @@
   font-family: var(--font-family);
   font-size: var(--text-base);
   color: var(--color-text-primary);
-  transition: all var(--dur-1) var(--ease-default);
+  transition: transform var(--dur-1) var(--ease-default), opacity var(--dur-1) var(--ease-default), background var(--dur-1) var(--ease-default), border-color var(--dur-1) var(--ease-default), color var(--dur-1) var(--ease-default), box-shadow var(--dur-1) var(--ease-default);
 }
 
 [dir="rtl"] .header-search-input {
@@ -386,7 +382,7 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--r-md);
-  transition: all var(--dur-1) var(--ease-default);
+  transition: transform var(--dur-1) var(--ease-default), opacity var(--dur-1) var(--ease-default), background var(--dur-1) var(--ease-default), border-color var(--dur-1) var(--ease-default), color var(--dur-1) var(--ease-default), box-shadow var(--dur-1) var(--ease-default);
 }
 
 .input:focus {
@@ -403,8 +399,7 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.78);
   z-index: var(--z-modal-backdrop);
   display: flex;
   align-items: center;
@@ -412,7 +407,7 @@
   padding: var(--sp-4);
   opacity: 0;
   visibility: hidden;
-  transition: all var(--dur-2) var(--ease-default);
+  transition: transform var(--dur-2) var(--ease-default), opacity var(--dur-2) var(--ease-default), background var(--dur-2) var(--ease-default), border-color var(--dur-2) var(--ease-default), color var(--dur-2) var(--ease-default), box-shadow var(--dur-2) var(--ease-default);
 }
 
 .modal-backdrop.active {
@@ -465,7 +460,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--dur-1) var(--ease-default);
+  transition: transform var(--dur-1) var(--ease-default), opacity var(--dur-1) var(--ease-default), background var(--dur-1) var(--ease-default), border-color var(--dur-1) var(--ease-default), color var(--dur-1) var(--ease-default), box-shadow var(--dur-1) var(--ease-default);
 }
 
 .modal-close:hover {
@@ -518,8 +513,7 @@
   pointer-events: auto;
   transform: translateY(20px);
   opacity: 0;
-  transition: all var(--dur-2) var(--ease-spring);
-  backdrop-filter: blur(20px);
+  transition: transform var(--dur-2) var(--ease-spring), opacity var(--dur-2) var(--ease-spring), background var(--dur-2) var(--ease-spring), border-color var(--dur-2) var(--ease-spring), color var(--dur-2) var(--ease-spring), box-shadow var(--dur-2) var(--ease-spring);
 }
 
 .toast.show {
@@ -587,7 +581,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: all var(--dur-1) var(--ease-default);
+  transition: transform var(--dur-1) var(--ease-default), opacity var(--dur-1) var(--ease-default), background var(--dur-1) var(--ease-default), border-color var(--dur-1) var(--ease-default), color var(--dur-1) var(--ease-default), box-shadow var(--dur-1) var(--ease-default);
 }
 
 .toast-close:hover {
@@ -663,3 +657,11 @@
 
 /* disabled ink for fields — state was silently missing (§14 state matrix) */
 .input:disabled, .input[readonly], select:disabled { color: var(--color-text-disabled); cursor: not-allowed; -webkit-text-fill-color: var(--color-text-disabled); }
+
+/* ============ .z-disco — shared discover-criteria panel (filters.js) ============ */
+.z-disco { border: 1px solid var(--color-border); border-radius: var(--r-lg); background: var(--color-surface); padding: var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-3); }
+.z-disco-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: var(--sp-3) var(--sp-4); }
+.z-disco .f { display: flex; flex-direction: column; gap: var(--sp-1); min-width: 0; }
+.z-disco .f > label { font-size: var(--text-3xs); font-weight: var(--weight-bold); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--color-text-muted); }
+.z-disco .f .input { width: 100%; }
+.z-disco-bar { display: flex; gap: var(--sp-2); justify-content: flex-end; border-top: 1px solid var(--color-hairline); padding-top: var(--sp-3); }

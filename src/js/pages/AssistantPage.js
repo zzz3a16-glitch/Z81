@@ -13,7 +13,7 @@ export async function AssistantPage() {
     <div class="container" style="padding-top: var(--sp-6); padding-bottom: 100px; max-width: 900px;">
       <div style="text-align: center; margin-bottom: var(--sp-8);">
         <div style="font-size: 48px; margin-bottom: var(--sp-3);"></div>
-        <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--sp-2);">مساعد zPopcorn الذكي</h1>
+        <h1 style="font-size: var(--text-3xl); font-weight: 700; margin-bottom: var(--sp-2);">مساعد zPopcorn الذكي</h1>
         <p style="color: var(--color-text-secondary);">اسألني عن مكتبتك، سجل المشاهدة، التوصيات، والإحصائيات</p>
       </div>
 

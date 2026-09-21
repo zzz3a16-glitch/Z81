@@ -39,7 +39,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--r-full);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
   color: var(--color-text-primary);
 }
 
@@ -118,7 +118,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--r-lg);
   padding: var(--sp-5);
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
 }
 
@@ -170,7 +170,7 @@
 
 /* Command Center */
 .command-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--sp-5); margin-bottom: var(--sp-8); }
-.command-card { background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-xl); padding: var(--sp-6); transition: all 0.2s; }
+.command-card { background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-xl); padding: var(--sp-6); transition: transform 0.2s, opacity 0.2s, background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s; }
 .command-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-2); border-color: var(--color-accent); }
 .command-card .card-icon { font-size: 2rem; margin-bottom: var(--sp-3); }
 .command-card h3 { font-size: 1rem; margin-bottom: var(--sp-2); }
@@ -179,7 +179,7 @@
 .command-card .card-link { font-size: 0.85rem; color: var(--color-accent); text-decoration: none; }
 .quick-actions h3 { margin-bottom: var(--sp-4); }
 .actions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--sp-3); }
-.action-btn { padding: var(--sp-4); background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); cursor: pointer; transition: all 0.2s; font-size: 0.9rem; color: var(--color-text-primary); }
+.action-btn { padding: var(--sp-4); background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); cursor: pointer; transition: transform 0.2s, opacity 0.2s, background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s; font-size: 0.9rem; color: var(--color-text-primary); }
 .action-btn:hover { border-color: var(--color-accent); background: var(--color-card-hover); }
 
 /* Audit */
@@ -230,7 +230,7 @@
 .inbox-toolbar { display: flex; justify-content: space-between; align-items: center; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: var(--sp-4); }
 .inbox-chips { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
 .chip { padding: var(--sp-2) var(--sp-3); border-radius: var(--r-full); border: 1px solid var(--color-border); background: transparent;
-  color: var(--color-text-secondary); font-size: var(--text-xs); cursor: pointer; transition: all .15s ease; }
+  color: var(--color-text-secondary); font-size: var(--text-xs); cursor: pointer; transition: transform .15s ease, opacity .15s ease, background .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease; }
 .chip:hover { border-color: var(--color-accent); color: var(--color-text-primary); }
 .chip.active { background: color-mix(in srgb, var(--color-accent) 14%, transparent);
   border-color: var(--color-accent); color: var(--color-accent); font-weight: 600; }

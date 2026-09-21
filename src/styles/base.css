@@ -14,7 +14,7 @@ html {
 }
 
 body {
-  font-family: var(--font-family);
+  font-family: var(--z-font-body);
   font-size: var(--text-base);
   font-weight: var(--weight-regular);
   line-height: var(--leading-loose);

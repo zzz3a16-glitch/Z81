@@ -16,7 +16,7 @@ export async function SettingsPage(params) {
  container.className = 'settings-page';
  container.innerHTML = `
     <div class="container" style="padding-top: var(--sp-6); padding-bottom: var(--sp-10);">
-      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--sp-6);">الإعدادات</h1>
+      <h1 style="font-size: var(--text-3xl); font-weight: 700; margin-bottom: var(--sp-6);">الإعدادات</h1>
       
       <div style="display: grid; grid-template-columns: 240px 1fr; gap: var(--sp-6); align-items: start;">
         <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-3); position: sticky; top: 80px;">
@@ -87,7 +87,7 @@ function createGeneralSection() {
  const language = localStorage.getItem('zpopcorn-language') || 'ar-SA';
   
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">الإعدادات العامة</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">الإعدادات العامة</h2>
     
     <div style="display: flex; flex-direction: column; gap: var(--sp-5);">
       <div>
@@ -177,12 +177,12 @@ async function createThemesSection() {
  const allThemes = themeManager.getThemeList();
   
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">المظاهر</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">المظاهر</h2>
     <p style="color: var(--color-text-secondary); margin-bottom: var(--sp-6);">اختر مظهراً يناسب ذوقك. كل مظهر يحول التطبيق بالكامل وليس الألوان فقط.</p>
     
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--sp-4); margin-bottom: var(--sp-8);" id="themes-grid">
  ${allThemes.map(theme => `
-        <div class="theme-card ${currentTheme === theme.id ? 'active' : ''}" data-theme="${theme.id}" style="border: 2px solid ${currentTheme === theme.id ? 'var(--color-accent)' : 'var(--color-border)'}; border-radius: var(--r-lg); overflow: hidden; cursor: pointer; transition: all 0.2s; background: var(--color-surface);">
+        <div class="theme-card ${currentTheme === theme.id ? 'active' : ''}" data-theme="${theme.id}" style="border: 2px solid ${currentTheme === theme.id ? 'var(--color-accent)' : 'var(--color-border)'}; border-radius: var(--r-lg); overflow: hidden; cursor: pointer; transition: transform 0.2s, opacity 0.2s, background 0.2s, border-color 0.2s; background: var(--color-surface);">
           <div style="height: 120px; background: ${theme.preview.bg}; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
             <div style="position: absolute; inset: 0; background: linear-gradient(135deg, ${theme.preview.accent}40, ${theme.preview.accent2}40);"></div>
             <div style="position: relative; display: flex; gap: var(--sp-2);">
@@ -317,7 +317,7 @@ async function createTMDBSection() {
  const stats = tmdbClient.getStats();
   
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">إعدادات TMDB</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">إعدادات TMDB</h2>
     
     <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5); margin-bottom: var(--sp-5);">
       <h3 style="font-weight: 600; margin-bottom: var(--sp-3); display: flex; align-items: center; gap: var(--sp-2);">
@@ -403,7 +403,7 @@ function createPlaybackSection() {
  const div = document.createElement('div');
   
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">إعدادات التشغيل</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">إعدادات التشغيل</h2>
     
     <div style="display: flex; flex-direction: column; gap: var(--sp-5);">
       <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--sp-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-md);">
@@ -454,7 +454,7 @@ function createNotificationsSection() {
  const prefs = notificationService.getPreferences();
   
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">إعدادات الإشعارات</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">إعدادات الإشعارات</h2>
     
     <div style="display: flex; flex-direction: column; gap: var(--sp-3);">
  ${Object.entries(prefs).map(([type, enabled]) => `
@@ -521,7 +521,7 @@ async function createBackupSection() {
  const stats = await db.getStats().catch(() => ({}));
   
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">النسخ الاحتياطي والاستعادة</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">النسخ الاحتياطي والاستعادة</h2>
     
     <div style="display: grid; gap: var(--sp-5);">
       <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5);">
@@ -615,11 +615,11 @@ function createAboutSection() {
  const div = document.createElement('div');
   
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">حول zPopcorn</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">حول zPopcorn</h2>
     
     <div style="text-align: center; padding: var(--sp-8) 0; border-bottom: 1px solid var(--color-border); margin-bottom: var(--sp-6);">
       <div style="font-size: 64px; margin-bottom: var(--sp-4);"></div>
-      <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--sp-2); background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">zPopcorn Ultimate</h2>
+      <h2 style="font-size: var(--text-3xl); font-weight: 700; margin-bottom: var(--sp-2); background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">zPopcorn Ultimate</h2>
       <p style="color: var(--color-text-secondary); margin-bottom: var(--sp-2);">منصة الوسائط الذكية المتكاملة</p>
       <p style="font-size: var(--text-sm); color: var(--color-text-muted);">الإصدار 2.0.0 - Production-Grade</p>
     </div>

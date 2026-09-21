@@ -28,7 +28,7 @@ export class MediaTypesPage {
               <span style="display:block;margin-bottom: var(--sp-2);color:var(--accent-bright)">${uiIcon(t.icon, 26)}</span>
               <h4>${t.name}</h4>
               <span style="display: inline-block; width: 12px; height: 12px; background: ${t.color}; border-radius: 50%; margin-top: var(--sp-2);"></span>
- ${t.custom ? '<span style="font-size: 0.7rem; background: var(--color-accent); color: var(--accent-contrast); padding: 2px var(--sp-2); border-radius: var(--r-full); margin-right: var(--sp-2);">مخصص</span>' : ''}
+ ${t.custom ? '<span style="font-size: var(--text-2xs); background: var(--color-accent); color: var(--accent-contrast); padding: 2px var(--sp-2); border-radius: var(--r-full); margin-right: var(--sp-2);">مخصص</span>' : ''}
             </div>
  `).join('')}
         </div>

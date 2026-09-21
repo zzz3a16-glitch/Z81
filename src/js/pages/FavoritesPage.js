@@ -130,7 +130,7 @@ export async function HistoryPage() {
  const container = document.createElement('div');
  container.innerHTML = `
     <div class="container" style="padding-top: var(--sp-6);">
-      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--sp-4);"> سجل المشاهدة</h1>
+      <h1 style="font-size: var(--text-3xl); font-weight: 700; margin-bottom: var(--sp-4);"> سجل المشاهدة</h1>
       <div class="z-pagetabs" role="tablist" aria-label="أدوات المشاهدة">
         <a role="tab" href="#/continue-watching">قيد المشاهدة</a>
         <a role="tab" class="on" aria-selected="true" href="#/history">السجل الكامل</a>
@@ -175,7 +175,7 @@ export async function ContinueWatchingPage() {
  const container = document.createElement('div');
  container.innerHTML = `
     <div class="container" style="padding-top: var(--sp-6);">
-      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--sp-4); display:flex; align-items:center; gap: var(--sp-3);">${icon('play', 22, { weight: "bold" })} متابعة المشاهدة</h1>
+      <h1 style="font-size: var(--text-3xl); font-weight: 700; margin-bottom: var(--sp-4); display:flex; align-items:center; gap: var(--sp-3);">${icon('play', 22, { weight: "bold" })} متابعة المشاهدة</h1>
       <div class="z-pagetabs" role="tablist" aria-label="أدوات المشاهدة">
         <a role="tab" class="on" aria-selected="true" href="#/continue-watching">قيد المشاهدة</a>
         <a role="tab" href="#/history">السجل الكامل</a>
@@ -219,7 +219,7 @@ export async function PlatformsPage() {
  const container = document.createElement('div');
  container.innerHTML = `
     <div class="container" style="padding-top: var(--sp-6);">
-      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--sp-2);"> المنصات</h1>
+      <h1 style="font-size: var(--text-3xl); font-weight: 700; margin-bottom: var(--sp-2);"> المنصات</h1>
       <p style="color: var(--color-text-secondary); margin-bottom: var(--sp-6);">منصات البث المتاحة في منطقتك (بيانات حقيقية من TMDB Watch Providers)</p>
       <div id="platforms-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--sp-4);"></div>
     </div>
@@ -240,7 +240,7 @@ export async function PlatformsPage() {
  ];
 
  grid.innerHTML = platforms.map(platform => `
-    <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5); text-align: center; cursor: pointer; transition: all 0.2s;" onmouseenter="this.style.borderColor='var(--color-accent)'" onmouseleave="this.style.borderColor='var(--color-border)'">
+    <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5); text-align: center; cursor: pointer; transition: transform 0.2s, opacity 0.2s, background 0.2s, border-color 0.2s;" onmouseenter="this.style.borderColor='var(--color-accent)'" onmouseleave="this.style.borderColor='var(--color-border)'">
       <div style="width: 60px; height: 60px; background: ${platform.color}; border-radius: var(--r-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--sp-3); color: var(--color-white); font-weight: 700; font-size: var(--text-2xs);">${platform.name.slice(0, 2).toUpperCase()}</div>
       <h3 style="font-weight: 600; margin-bottom: var(--sp-1);">${platform.name}</h3>
       <p style="font-size: var(--text-2xs); color: var(--color-text-secondary);">متاح في ${localStorage.getItem('zpopcorn-region') || 'SA'}</p>
@@ -271,7 +271,7 @@ export async function PersonPage(params) {
           </div>
           
           <div>
-            <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: var(--sp-2);">${person.name}</h1>
+            <h1 style="font-size: var(--text-4xl); font-weight: 700; margin-bottom: var(--sp-2);">${person.name}</h1>
  ${person.birthday ? `<p style="color: var(--color-text-secondary); margin-bottom: var(--sp-4);">${person.birthday} • ${person.place_of_birth || ''}</p>` : ''}
             
             <div style="display: flex; gap: var(--sp-2); margin-bottom: var(--sp-5); flex-wrap: wrap;">
@@ -332,19 +332,19 @@ export async function AnalyticsPage() {
  content.innerHTML = `
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--sp-4); margin-bottom: var(--sp-8);">
         <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5); text-align: center;">
-          <div style="font-size: 2rem; font-weight: 700; color: var(--color-accent);">${Math.floor(analytics.watchTime.total / 3600)}س</div>
+          <div style="font-size: var(--text-3xl); font-weight: 700; color: var(--color-accent);">${Math.floor(analytics.watchTime.total / 3600)}س</div>
           <div style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-top: var(--sp-1);">إجمالي وقت المشاهدة</div>
         </div>
         <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5); text-align: center;">
-          <div style="font-size: 2rem; font-weight: 700; color: var(--color-accent);">${analytics.library.completed}</div>
+          <div style="font-size: var(--text-3xl); font-weight: 700; color: var(--color-accent);">${analytics.library.completed}</div>
           <div style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-top: var(--sp-1);">أعمال مكتملة</div>
         </div>
         <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5); text-align: center;">
-          <div style="font-size: 2rem; font-weight: 700; color: var(--color-accent);">${analytics.ratings.total}</div>
+          <div style="font-size: var(--text-3xl); font-weight: 700; color: var(--color-accent);">${analytics.ratings.total}</div>
           <div style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-top: var(--sp-1);">تقييمات</div>
         </div>
         <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5); text-align: center;">
-          <div style="font-size: 2rem; font-weight: 700; color: var(--color-accent);">${achievements.unlocked.length}</div>
+          <div style="font-size: var(--text-3xl); font-weight: 700; color: var(--color-accent);">${achievements.unlocked.length}</div>
           <div style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-top: var(--sp-1);">إنجازات</div>
         </div>
       </div>

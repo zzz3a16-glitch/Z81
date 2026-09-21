@@ -84,8 +84,7 @@ export const DENSITIES = ['compact', 'comfortable', 'spacious'];
 export const RADIUS_PRESETS = { sharp: 0, subtle: 6, modern: 12, rounded: 18 };
 export const BORDER_PRESETS = { none: 0, subtle: 0.06, standard: 0.09, defined: 0.14 };
 export const SHADOW_PRESETS = { none: 0, subtle: 0.28, soft: 0.45, deep: 0.62 };
-export const GLASS_LEVELS = { off: 0, subtle: 8, medium: 14, strong: 22 };
-export const CARD_STYLES = ['cinematic', 'minimal', 'glass', 'elevated', 'editorial', 'flat'];
+export const CARD_STYLES = ['cinematic', 'minimal', 'elevated', 'editorial', 'flat'];
 export const HOME_SECTIONS = [
   { id: 'hero', label: 'الواجهة الرئيسية' }, { id: 'continue', label: 'متابعة المشاهدة' },
   { id: 'recent', label: 'أضيف حديثاً' }, { id: 'watched', label: 'شاهدته مؤخراً' },
@@ -108,12 +107,11 @@ export function defaultConfig() {
     radius: { preset: 'modern', base: 12 },
     borders: { preset: 'standard', thickness: 1 },
     shadows: { preset: 'soft' },
-    glass: 'subtle',
     density: 'comfortable',
     uiScale: 1,
     typography: { familyApp: '', familyHeading: '', familyBody: '', size: 15, weight: 400, lineHeight: 1.6, headingScale: 1 },
     background: { type: 'solid', gradient: { from: '#0B0B0D', to: '#141417', angle: 160 }, image: { src: null, opacity: 1, blur: 0, brightness: 0.9, saturate: 1, size: 'cover', position: 'center' } },
-    cards: { style: 'cinematic', hover: 'lift', overlay: 0.55, rating: true, year: true, progress: true },
+    cards: { style: 'cinematic', hover: 'lift', lift: 3, overlay: 0.55, rating: true, year: true, progress: true },
     sidebar: { width: 260, opacity: 1, iconSize: 18 },
     icons: { weight: 1.7, opacity: 1 },
     motion: 'full',
@@ -135,7 +133,7 @@ export const PRESETS = [
   { id: 'lime-studio', name: 'لايم استوديو', config: { accent: { primary: '#C9F24D', secondary: '#84CC16', tertiary: '#ECFCCB', angle: 135, stops: 2 }, colors: { 'bg-app': '#0C0C0C', 'surface': '#171717', 'card': '#1D1D1D' }, cards: { style: 'editorial' } } },
   { id: 'crimson', name: 'القرمزية', config: { accent: { primary: '#E5484D', secondary: '#FF8A5C', tertiary: '#FFC7C9', angle: 135, stops: 2 }, colors: { 'bg-app': '#0D090A', 'surface': '#181114', 'card': '#1D1418' } } },
   { id: 'oceanic', name: 'محيطي', config: { accentMode: 'gradient', accent: { primary: '#2D7DFF', secondary: '#19C37D', tertiary: '#90E0EF', angle: 140, stops: 2 }, background: { type: 'gradient', gradient: { from: '#050A14', to: '#0A1A2E', angle: 160 } }, colors: { 'bg-app': '#050A14', surface: '#0C1626', card: '#0E1B30' } } },
-  { id: 'monochrome', name: 'أحادي', desc: 'أسود وأبيض وحواف فقط', config: { accent: { primary: '#F5F5F5', secondary: '#A7A7AF', tertiary: '#707079', angle: 135, stops: 2 }, cards: { style: 'flat' }, borders: { preset: 'defined' }, shadows: { preset: 'none' }, glass: 'off' } },
+  { id: 'monochrome', name: 'أحادي', desc: 'أسود وأبيض وحواف فقط', config: { accent: { primary: '#F5F5F5', secondary: '#A7A7AF', tertiary: '#707079', angle: 135, stops: 2 }, cards: { style: 'flat' }, borders: { preset: 'defined' }, shadows: { preset: 'none' } } },
 ];
 
 /* ============================ validation ============================ */
@@ -171,7 +169,6 @@ function validateConfig(raw) {
     if (Number.isFinite(+raw.borders.thickness)) c.borders.thickness = clamp(+raw.borders.thickness, 0.5, 2);
   }
   if (SHADOW_PRESETS[raw.shadows?.preset] !== undefined) c.shadows.preset = raw.shadows.preset;
-  if (GLASS_LEVELS[raw.glass] !== undefined) c.glass = raw.glass;
   if (DENSITIES.includes(raw.density)) c.density = raw.density;
   if (Number.isFinite(+raw.uiScale)) c.uiScale = clamp(+raw.uiScale, 0.9, 1.4);
   if (raw.typography && typeof raw.typography === 'object') {
@@ -318,7 +315,7 @@ class ThemeEngine {
       '--accent-soft': rgba(parseColor(p), 0.13),
       '--accent-line': rgba(parseColor(p), 0.42),
       '--accent-glow': rgba(parseColor(p), 0.16),
-      '--accent-2': accent.secondary,
+      '--color-accent-secondary': accent.secondary,
       '--accent-2-soft': rgba(parseColor(accent.secondary), 0.13),
       '--accent-3': accent.tertiary,
     };
@@ -377,6 +374,8 @@ class ThemeEngine {
     v['--r-md'] = `${Math.round(base * 0.66)}px`; v['--r-lg'] = `${base}px`;
     v['--r-xl'] = `${Math.min(28, Math.round(base * 1.33))}px`; v['--r-2xl'] = `${Math.min(32, Math.round(base * 1.66))}px`;
     // shadows
+    v['--card-lift'] = `${(+cfg.cards.lift || 3)}px`;
+    v['--card-hover-transform'] = cfg.cards.hover === 'none' ? 'none' : cfg.cards.hover === 'zoom' ? 'scale(1.025)' : 'translateY(calc(-1 * var(--card-lift)))';
     const sa = SHADOW_PRESETS[cfg.shadows.preset];
     if (sa !== undefined) {
       v['--shadow-1'] = `0 1px 2px rgba(0,0,0,${round(sa * 0.7)})`;
@@ -415,7 +414,7 @@ class ThemeEngine {
     if (!this._styleEl) { this._styleEl = document.createElement('style'); this._styleEl.id = 'z-theme-engine'; document.head.appendChild(this._styleEl); }
     if (!cfg.enabled) {
       this._styleEl.textContent = '';
-      root.removeAttribute('data-z-bg'); root.removeAttribute('data-z-glass'); root.removeAttribute('data-z-card');
+      root.removeAttribute('data-z-bg'); root.removeAttribute('data-z-card');
       root.removeAttribute('data-z-accent-mode'); root.removeAttribute('data-motion');
       root.style.removeProperty('--z-ui-scale');
       this._destroyBg();
@@ -426,7 +425,6 @@ class ThemeEngine {
     this._styleEl.textContent = `:root.z-theme-live{${decls}}`;
     root.classList.add('z-theme-live');
     root.setAttribute('data-density', cfg.density);
-    root.setAttribute('data-z-glass', cfg.glass);
     root.setAttribute('data-z-card', cfg.cards.style);
     root.setAttribute('data-z-accent-mode', cfg.accentMode);
     root.setAttribute('data-motion', cfg.motion === 'off' ? 'off' : cfg.motion === 'reduced' ? 'reduced' : 'full');
@@ -449,7 +447,7 @@ class ThemeEngine {
     if (cfg.cards.year === false) root.setAttribute('data-z-hide-year', '1'); else root.removeAttribute('data-z-hide-year');
     if (cfg.cards.progress === false) root.setAttribute('data-z-hide-progress', '1'); else root.removeAttribute('data-z-hide-progress');
     root.style.setProperty('--z-card-overlay', `${cfg.cards.overlay}`);
-    root.style.setProperty('--z-card-hover', cfg.cards.hover === 'none' ? 'none' : cfg.cards.hover === 'zoom' ? 'scale(1.025)' : 'translateY(-3px)');
+    root.style.setProperty('--z-card-hover', cfg.cards.hover === 'none' ? 'none' : cfg.cards.hover === 'zoom' ? 'scale(1.025)' : 'translateY(calc(-1 * var(--card-lift)))');
     this._emit();
   }
 

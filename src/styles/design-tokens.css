@@ -72,6 +72,7 @@
   --font-display: 'Cairo', 'Noto Sans Arabic', 'IBM Plex Sans Arabic', 'Segoe UI', sans-serif;
   --font-mono: 'Cascadia Mono', 'Consolas', 'SF Mono', ui-monospace, monospace;
   --font-family: var(--font-ui);
+  --z-font-body: var(--font-family);  /* Identity-settings body font lands here */
   --font-family-arabic-primary: var(--font-ui);
   --font-family-arabic-secondary: var(--font-ui);
   --font-family-arabic-modern: var(--font-display);
@@ -120,8 +121,6 @@
   /* Glass is available but EXPLICITLY rationed */
   --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.07);
-  --glass-blur: blur(14px) saturate(1.2);
-  --blur-intensity: 14px; --glow-intensity: 0;
 
   /* ================= MOTION (spec 40) ================= */
   --dur-1: 110ms;   /* fast   */
@@ -136,6 +135,7 @@
   --ease-default: var(--ease-std); --ease-enter: var(--ease-out); --ease-exit: var(--ease-std);
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.15);
   --card-hover-transform: translateY(-3px);
+  --card-lift: 3px;  /* engine-retuned by the hover-intensity slider */
   --motion-intensity: subtle;
 
   /* ================= LAYOUT (spec 07/44) ================= */

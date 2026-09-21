@@ -5,7 +5,7 @@
  */
 import { el, esc, emptyState } from '../ui/primitives.js';
 import { icon } from '../ui/icons.js';
-import { themeEngine, PRESETS, RADIUS_PRESETS, BORDER_PRESETS, SHADOW_PRESETS, GLASS_LEVELS, CARD_STYLES, HOME_SECTIONS, OVERRIDE_PAGES, DENSITIES } from './ThemeEngine.js';
+import { themeEngine, PRESETS, RADIUS_PRESETS, BORDER_PRESETS, SHADOW_PRESETS, CARD_STYLES, HOME_SECTIONS, OVERRIDE_PAGES, DENSITIES } from './ThemeEngine.js';
 
 const cfg = () => themeEngine.get();
 
@@ -340,7 +340,7 @@ function panelShape() {
   p.appendChild(row('الحدود', segmented(Object.keys(BORDER_PRESETS).map((k) => [k, { none: 'بلا', subtle: 'خفيفة', standard: 'قياسية', defined: 'واضحة' }[k]]), c.borders.preset, (v) => themeEngine.setPath('borders.preset', v))));
   p.appendChild(row('سماكة الحد', slider(0.5, 2, 0.5, c.borders.thickness, (v) => themeEngine.setPath('borders.thickness', v), (v) => `${v}px`)));
   p.appendChild(row('الظلال', segmented(Object.keys(SHADOW_PRESETS).map((k) => [k, { none: 'بلا', subtle: 'خفيفة', soft: 'ناعمة', deep: 'عميقة' }[k]]), c.shadows.preset, (v) => themeEngine.setPath('shadows.preset', v))));
-  p.appendChild(row('الزجاج والتمويه', segmented(Object.keys(GLASS_LEVELS).map((k) => [k, { off: 'متوقف', subtle: 'خفيف', medium: 'متوسط', strong: 'قوي' }[k]]), c.glass, (v) => themeEngine.setPath('glass', v))));
+  p.appendChild(row('شدة الرفع عند المرور', slider(0, 6, 1, c.cards.lift ?? 3, (v) => themeEngine.setPath('cards.lift', +v), (v) => `${v}px`)));
   return p;
 }
 
@@ -348,7 +348,7 @@ function panelCards() {
   const c = cfg();
   const p = el('div', 'ts-card');
   p.innerHTML = `<h3>${icon('layers', 15)} البطاقات والأيقونات</h3><p class="hint">أسلوب البطاقة يغيّر العمق والحدّ والتعامل — بلا مساس بالبنية. الأيقونات تظل لغة zPopcorn الموحدة.</p>`;
-  p.appendChild(row('أسلوب البطاقة', segmented(CARD_STYLES.map((k) => [k, { minimal: 'بسيط', cinematic: 'سينمائي', glass: 'زجاجي', elevated: 'مرتفع', editorial: 'تحريري', flat: 'مسطح' }[k]]), c.cards.style, (v) => themeEngine.setPath('cards.style', v))));
+  p.appendChild(row('أسلوب البطاقة', segmented(CARD_STYLES.map((k) => [k, { minimal: 'بسيط', cinematic: 'سينمائي', elevated: 'مرتفع', editorial: 'تحريري', flat: 'مسطح' }[k]]), c.cards.style, (v) => themeEngine.setPath('cards.style', v))));
   p.appendChild(row('تفاعل المرور', segmented([['lift', 'رفع'], ['zoom', 'تكبير خفيف'], ['none', 'بلا']], c.cards.hover, (v) => themeEngine.setPath('cards.hover', v))));
   p.appendChild(row('قوة الطِلاء', slider(0, 0.9, 0.05, c.cards.overlay, (v) => themeEngine.setPath('cards.overlay', v), (v) => `${Math.round(v * 100)}%`)));
   p.appendChild(row('عرض التقييم', '', toggle(c.cards.rating, (v) => themeEngine.setPath('cards.rating', v))));

@@ -63,14 +63,14 @@ export async function EnhancedSettingsPage(params) {
  container.className = 'settings-page';
  container.innerHTML = `
     <div class="container" style="padding-top: var(--sp-6); padding-bottom: var(--sp-10);">
-      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--sp-2);">الإعدادات</h1>
+      <h1 style="font-size: var(--text-3xl); font-weight: 700; margin-bottom: var(--sp-2);">الإعدادات</h1>
       <p style="color: var(--color-text-secondary); margin-bottom: var(--sp-6);">إدارة جميع جوانب التطبيق</p>
       
       <div style="display: grid; grid-template-columns: 280px 1fr; gap: var(--sp-6); align-items: start;" class="settings-layout">
         <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-3); position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto;" class="settings-sidebar">
           <div style="display: flex; flex-direction: column; gap: 2px;">
  ${SETTINGS_CATEGORIES.map(cat => `
-              <a href="/settings/${cat.id}" data-router class="settings-nav-item ${section === cat.id ? 'active' : ''}" data-section="${cat.id}" style="padding: var(--sp-3) var(--sp-3); border-radius: var(--r-md); text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: var(--sp-3); transition: all 0.2s; ${section === cat.id ? 'background: var(--color-accent); color: var(--accent-contrast);' : 'background: transparent;'}">
+              <a href="/settings/${cat.id}" data-router class="settings-nav-item ${section === cat.id ? 'active' : ''}" data-section="${cat.id}" style="padding: var(--sp-3) var(--sp-3); border-radius: var(--r-md); text-decoration: none; color: var(--color-text-primary); display: flex; align-items: center; gap: var(--sp-3); transition: transform 0.2s, opacity 0.2s, background 0.2s, border-color 0.2s; ${section === cat.id ? 'background: var(--color-accent); color: var(--accent-contrast);' : 'background: transparent;'}">
                 ${uiIcon(cat.icon, 15)}
                 <div style="flex: 1; min-width: 0;">
                   <div style="font-weight: 500; font-size: var(--text-sm);">${cat.name}</div>
@@ -171,7 +171,7 @@ function createGeneralSection() {
  const dateFormat = localStorage.getItem('zpopcorn-date-format') || 'gregorian';
   
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">الإعدادات العامة</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">الإعدادات العامة</h2>
     
     <div style="display: flex; flex-direction: column; gap: var(--sp-6);">
       <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5);">
@@ -314,12 +314,12 @@ async function createAppearanceSection() {
  const allThemes = themeManager.getThemeList();
   
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-2);">المظهر</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-2);">المظهر</h2>
     <p style="color: var(--color-text-secondary); margin-bottom: var(--sp-6); font-size: var(--text-sm);">كل مظهر يحول التطبيق بالكامل: الألوان، الأسطح، البطاقات، الظلال، التأثيرات، الحركة، والكثافة</p>
     
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--sp-4); margin-bottom: var(--sp-8);" id="themes-grid">
  ${allThemes.map(theme => `
-        <div class="theme-card ${currentTheme === theme.id ? 'active' : ''}" data-theme="${theme.id}" style="border: 2px solid ${currentTheme === theme.id ? 'var(--color-accent)' : 'var(--color-border)'}; border-radius: var(--r-lg); overflow: hidden; cursor: pointer; transition: all 0.2s; background: var(--color-surface); position: relative;">
+        <div class="theme-card ${currentTheme === theme.id ? 'active' : ''}" data-theme="${theme.id}" style="border: 2px solid ${currentTheme === theme.id ? 'var(--color-accent)' : 'var(--color-border)'}; border-radius: var(--r-lg); overflow: hidden; cursor: pointer; transition: transform 0.2s, opacity 0.2s, background 0.2s, border-color 0.2s; background: var(--color-surface); position: relative;">
           <div style="height: 120px; background: ${theme.preview?.bg || '#1a1a1a'}; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
             <div style="position: absolute; inset: 0; background: linear-gradient(135deg, ${theme.preview?.accent || '#8b5cf6'}40, ${theme.preview?.accent2 || '#06b6d4'}40);"></div>
             <div style="position: relative; display: flex; gap: var(--sp-2);">
@@ -543,7 +543,7 @@ function createPlaybackSection() {
  const div = document.createElement('div');
  div.innerHTML = `
  ${playerPhaseBanner()}
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">إعدادات التشغيل</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">إعدادات التشغيل</h2>
     <div style="display: grid; gap: var(--sp-5);">
  ${createToggle('auto-next', 'التشغيل التلقائي للحلقة التالية', 'تشغيل الحلقة التالية تلقائياً عند الانتهاء', localStorage.getItem('zpopcorn-auto-next') === 'true')}
  ${createToggle('preload-next', 'تحميل الحلقة التالية مسبقاً', 'تحميل مسبق لتجربة سلسة', localStorage.getItem('zpopcorn-preload-next') !== 'false')}
@@ -599,7 +599,7 @@ function createSubtitlesSection() {
  const div = document.createElement('div');
  div.innerHTML = `
  ${playerPhaseBanner()}
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">إعدادات الترجمة</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">إعدادات الترجمة</h2>
     <div style="display: grid; gap: var(--sp-5);">
       <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5);">
         <h3 style="font-weight: 600; margin-bottom: var(--sp-4);">المظهر</h3>
@@ -672,7 +672,7 @@ function createAudioSection() {
  const div = document.createElement('div');
  div.innerHTML = `
  ${playerPhaseBanner()}
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">إعدادات الصوت</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">إعدادات الصوت</h2>
     <div style="display: grid; gap: var(--sp-5);">
       <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5);">
         <h3 style="font-weight: 600; margin-bottom: var(--sp-4);">المسارات الصوتية</h3>
@@ -725,7 +725,7 @@ function createAudioSection() {
 function createLibrarySection() {
  const div = document.createElement('div');
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">إعدادات المكتبة</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">إعدادات المكتبة</h2>
     <div style="display: grid; gap: var(--sp-5);">
       <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5);">
         <h3 style="font-weight: 600; margin-bottom: var(--sp-4);">مصادر المكتبة</h3>
@@ -780,7 +780,7 @@ function createLibrarySection() {
 function createScannerSection() {
  const div = document.createElement('div');
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">إعدادات الفاحص</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">إعدادات الفاحص</h2>
     <div style="display: grid; gap: var(--sp-5);">
  ${createToggle('scan-startup', 'فحص عند بدء التشغيل', 'فحص المكتبة تلقائياً عند فتح التطبيق', false)}
  ${createToggle('watch-folders', 'مراقبة المجلدات', 'فحص تلقائي عند إضافة ملفات جديدة', true)}
@@ -832,7 +832,7 @@ async function createTMDBSection() {
  } catch {}
   
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">إعدادات TMDB</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">إعدادات TMDB</h2>
     
     <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5); margin-bottom: var(--sp-5);">
       <h3 style="font-weight: 600; margin-bottom: var(--sp-3); display: flex; align-items: center; gap: var(--sp-2);">
@@ -924,7 +924,7 @@ async function createTMDBSection() {
 function createRecommendationsSection() {
  const div = document.createElement('div');
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">إعدادات التوصيات</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">إعدادات التوصيات</h2>
     <div style="display: grid; gap: var(--sp-5);">
       <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5);">
         <h3 style="font-weight: 600; margin-bottom: var(--sp-4);">شدة التوصيات</h3>
@@ -1001,7 +1001,7 @@ function createNotificationsSection() {
  }
   
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">إعدادات الإشعارات</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">إعدادات الإشعارات</h2>
     <div style="display: grid; gap: var(--sp-3);">
  ${Object.entries(prefs).map(([type, enabled]) => `
         <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--sp-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg);">
@@ -1082,7 +1082,7 @@ function getNotificationTypeDesc(type) {
 function createPrivacySection() {
  const div = document.createElement('div');
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">الخصوصية والأمان</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">الخصوصية والأمان</h2>
     <div style="display: grid; gap: var(--sp-5);">
       <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5);">
         <h3 style="font-weight: 600; margin-bottom: var(--sp-3);">مبادئ الخصوصية</h3>
@@ -1149,7 +1149,7 @@ async function createBackupSection() {
  try { stats = await db.getStats(); } catch {}
   
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">النسخ الاحتياطي والاستعادة</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">النسخ الاحتياطي والاستعادة</h2>
     
     <div style="display: grid; gap: var(--sp-5);">
       <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5);">
@@ -1261,7 +1261,7 @@ async function createBackupSection() {
 function createKeyboardSection() {
  const div = document.createElement('div');
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">اختصارات لوحة المفاتيح</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">اختصارات لوحة المفاتيح</h2>
     <div style="display: grid; gap: var(--sp-5);">
       <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5);">
         <h3 style="font-weight: 600; margin-bottom: var(--sp-4);">التشغيل</h3>
@@ -1320,7 +1320,7 @@ async function createAdvancedSection() {
  }
 
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">الإعدادات المتقدمة</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">الإعدادات المتقدمة</h2>
     <div style="display: grid; gap: var(--sp-5);">
       <div style="background: color-mix(in srgb, var(--color-warning) 10%, transparent); border: 1px solid color-mix(in srgb, var(--color-warning) 30%, transparent); border-radius: var(--r-lg); padding: var(--sp-4); font-size: var(--text-sm);">
         <strong>تحذير:</strong> هذه إعدادات متقدمة للمطورين. التغيير الخاطئ قد يؤثر على التطبيق.
@@ -1412,11 +1412,11 @@ async function createAdvancedSection() {
 function createAboutSection() {
  const div = document.createElement('div');
  div.innerHTML = `
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-5);">حول zPopcorn</h2>
+    <h2 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--sp-5);">حول zPopcorn</h2>
     
     <div style="text-align: center; padding: var(--sp-8) 0; border-bottom: 1px solid var(--color-border); margin-bottom: var(--sp-6);">
       <svg width="56" height="56" viewBox="0 0 48 48" style="margin-bottom: var(--sp-4)" aria-hidden="true"><defs><linearGradient id="zpmark" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8d7dff"/><stop offset="1" stop-color="#5343c9"/></linearGradient></defs><path d="M10 18c0-4 3-7 7-7h2l-2 6h4l3-9c4-1 8 1 9 5 1-3 4-4 6-3 3 1 4 5 2 7h1c3 0 5 2 5 5v2c0 7-5 12-12 12H19c-6 0-9-5-9-12v-6z" fill="url(#zpmark)"/><circle cx="19" cy="26" r="2.2" fill="#fff" opacity=".85"/><circle cx="27" cy="30" r="2.2" fill="#fff" opacity=".85"/><circle cx="33" cy="25" r="1.8" fill="#fff" opacity=".85"/></svg>
-      <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: var(--sp-2); background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">zPopcorn Ultimate</h2>
+      <h2 style="font-size: var(--text-3xl); font-weight: 800; margin-bottom: var(--sp-2); background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">zPopcorn Ultimate</h2>
       <p style="color: var(--color-text-secondary); margin-bottom: var(--sp-2); font-size: var(--text-base);">منصة الوسائط الذكية المتكاملة - مساعد شخصي ذكي</p>
       <p style="font-size: var(--text-sm); color: var(--color-text-muted);">الإصدار 2.0.0 • Production-Grade • Local-First • SA Default</p>
       <div style="display: inline-flex; gap: var(--sp-2); margin-top: var(--sp-4);">
