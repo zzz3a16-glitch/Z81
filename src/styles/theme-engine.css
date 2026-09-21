@@ -2,29 +2,7 @@
    The engine NEVER restyles components directly; it sets semantic tokens +
    a handful of root attributes. This file translates those into effects. */
 
-/* ============ canonical semantic aliases (spec 17/43) ============ */
 :root {
-  --background-primary: var(--surface-0);
-  --background-secondary: var(--surface-1);
-  --surface-primary: var(--surface-2);
-  --surface-secondary: var(--surface-3);
-  --surface-elevated: var(--surface-4);
-  --text-primary: var(--color-text-primary);
-  --text-secondary: var(--color-text-secondary);
-  --text-muted: var(--color-text-muted);
-  --text-disabled: var(--color-text-disabled, var(--color-text-faint));
-  --accent-primary: var(--accent);
-  --accent-secondary: var(--accent-2, var(--accent-bright));
-  --accent-hover: var(--accent-bright);
-  --accent-active: var(--accent-deep);
-  --accent-soft: var(--accent-soft);
-  --border-subtle: var(--color-border-subtle);
-  --border-default: var(--color-border);
-  --border-strong: var(--color-border-strong);
-  --state-success: var(--color-success);
-  --state-warning: var(--color-warning);
-  --state-error: var(--color-danger);
-  --state-info: var(--color-info);
   /* engine-owned defaults (overridden inline by ThemeEngine) */
   --z-ui-scale: 1;
   --z-bg-gradient: none;
@@ -99,8 +77,8 @@ a { color: var(--z-link); }
 :root[data-z-accent-mode="gradient"] .chip.active { background-image: var(--accent-grad); border-color: transparent; }
 :root[data-z-accent-mode="gradient"] .z-sb-item.active::before,
 :root[data-z-accent-mode="gradient"] .z-card-framed::before { background: var(--accent-grad); }
-:root[data-z-accent-mode="dual"] .z-sb-item.active::before { background: linear-gradient(var(--accent), var(--accent-2)); }
-:root[data-z-accent-mode="dual"] .z-hero .cta .btn-secondary { border-color: var(--accent-2); color: var(--accent-2); }
+:root[data-z-accent-mode="dual"] .z-sb-item.active::before { background: linear-gradient(var(--accent), var(--color-accent-secondary)); }
+:root[data-z-accent-mode="dual"] .z-hero .cta .btn-secondary { border-color: var(--color-accent-secondary); color: var(--color-accent-secondary); }
 
 /* ============ card styles (spec 29/33) ============ */
 :root[data-z-card="minimal"] .zcard { background: transparent; border-color: transparent; box-shadow: none; }
@@ -242,7 +220,7 @@ a { color: var(--z-link); }
 .ts-app .prog i { display: block; height: 100%; width: 62%; background: var(--accent); border-radius: 2px; }
 :root[data-z-accent-mode="gradient"] .ts-app .prog i { background-image: var(--accent-grad); }
 .ts-app .typo p { color: var(--color-text-secondary); }
-.ts-app .typo h4 { color: var(--color-text-heading); font-size: var(--text-base); }
+.ts-app .typo h4 { color: var(--color-text-primary); font-size: var(--text-base); }
 .ts-fonts li { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2) 0; border-top: 1px solid var(--color-hairline); font-size: var(--text-sm); }
 .ts-fonts li .fx { flex: 1; }
 .ts-listrow { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2) var(--sp-2); border: 1px solid var(--color-border); border-radius: var(--r-md); background: var(--surface-3); font-size: var(--text-sm); }

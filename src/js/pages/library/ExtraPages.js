@@ -24,7 +24,7 @@ export class MediaTypesPage {
  grid.innerHTML = `
         <div class="types-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--sp-4);">
  ${types.map(t => `
-            <div class="type-card" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--sp-5); text-align: center;">
+            <div class="type-card" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5); text-align: center;">
               <span style="display:block;margin-bottom: var(--sp-2);color:var(--accent-bright)">${uiIcon(t.icon, 26)}</span>
               <h4>${t.name}</h4>
               <span style="display: inline-block; width: 12px; height: 12px; background: ${t.color}; border-radius: 50%; margin-top: var(--sp-2);"></span>
@@ -58,7 +58,7 @@ export class CollectionBuilderPage {
         <h1 class="page-title">منشئ المجموعات الذكية</h1>
         <p class="page-subtitle">أنشئ مجموعات ذكية بقواعد مخصصة</p>
       </div>
-      <div class="builder-form" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: var(--sp-6); max-width: 600px;">
+      <div class="builder-form" style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-xl); padding: var(--sp-6); max-width: 600px;">
         <div style="display: grid; gap: var(--sp-4);">
           <label>اسم المجموعة
             <input id="col-name" class="input" placeholder="مثال: أفلام أكشن عالية التقييم" style="margin-top: var(--sp-2);">
@@ -111,7 +111,7 @@ export class CollectionBuilderPage {
  try {
  const col = await smartCollectionManager.createCollection(name, rules, { description: desc, icon: '' });
  container.querySelector('#builder-result').innerHTML = `
-            <div style="padding: var(--sp-4); background: color-mix(in srgb, var(--color-success) 10%, transparent); border: 1px solid color-mix(in srgb, var(--color-success) 30%, transparent); border-radius: var(--radius-lg);">
+            <div style="padding: var(--sp-4); background: color-mix(in srgb, var(--color-success) 10%, transparent); border: 1px solid color-mix(in srgb, var(--color-success) 30%, transparent); border-radius: var(--r-lg);">
  تم إنشاء المجموعة "${col.name}" مع ${col.items?.length || 0} عنصر
             </div>
  `;

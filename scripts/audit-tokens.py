@@ -112,6 +112,35 @@ for _f in pathlib.Path('src').rglob('*.css'):
             if _t in _tok or _t not in _runtime:
                 hits.append((str(_f), _i, 'MASK', f'masked fallback {_m.group(0)} — token defined: fallback freezes retunes' if _t in _tok else f'masked fallback {_m.group(0)} — token defined nowhere: the px IS the value'))
 
+# UNDEFVAR lock: var(--x) used in any CSS whose --x is defined in NO stylesheet
+# and never set from JS (the --sp-11 bug class generalized: silently dead declarations)
+_defs = set()
+for _f in pathlib.Path('src').rglob('*.css'):
+    _defs.update(re.findall(r'(--[a-z0-9-]+)\s*:', open(_f, encoding='utf-8', errors='ignore').read()))
+_defs.update(_runtime)
+for _f in pathlib.Path('src').rglob('*.css'):
+    for _i, _ln in enumerate(open(_f, encoding='utf-8', errors='ignore').read().splitlines(), 1):
+        for _m in re.finditer(r'var\(\s*(--[a-z0-9-]+)\s*[,)]', _ln):
+            if _m.group(1) not in _defs:
+                hits.append((str(_f), _i, 'UNDEFVAR', _m.group(1) + ' used but defined nowhere - declaration silently dead'))
+
+# KEYDUP lock: one canonical sweep & spinner (skelShimmer/zi-spin bug class)
+_kf = {}
+for _f in list(pathlib.Path('src').rglob('*.css')) + [pathlib.Path('index.html')]:
+    if not _f.exists(): continue
+    _t = open(_f, encoding='utf-8', errors='ignore').read()
+    _t = re.sub(r'/\*.*?\*/', '', _t, flags=re.S)
+    for _i, _ln in enumerate(_t.splitlines(), 1):
+        for _m in re.finditer(r'@keyframes\s+([A-Za-z0-9_-]+)', _ln):
+            _kf.setdefault(_m.group(1), []).append((str(_f), _i))
+for _n, _locs in sorted(_kf.items()):
+    if re.search(r'skel|shimmer', _n, re.I) and _n != 'zskel':
+        hits.append((_locs[0][0], _locs[0][1], 'KEYDUP', 'sweep keyframe ' + _n + ' - canonical is zskel only'))
+    if re.search(r'spin', _n, re.I) and _n != 'spin':
+        hits.append((_locs[0][0], _locs[0][1], 'KEYDUP', 'spinner keyframe ' + _n + ' - canonical is spin (--dur-spin)'))
+    if len(_locs) > 1 and not any('themes/' in f for f, _ in _locs):
+        hits.append((_locs[1][0], _locs[1][1], 'KEYDUP', '@keyframes ' + _n + ' defined ' + str(len(_locs)) + 'x outside themes'))
+
 if '--drift' in sys.argv:
     print('\n── drift report (informational) ──')
     rows = []

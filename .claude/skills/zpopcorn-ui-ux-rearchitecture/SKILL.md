@@ -39,11 +39,11 @@ fixed (risk, dependency, or scope evidence — not convenience).
 
 | Artifact | Role |
 |---|---|
-| `docs/DESIGN-SYSTEM.md` | THE contract: tokens table, component contracts, templates, QA checklist. Wins all conflicts. Update it in the same commit as any system change. |
+| `docs/DESIGN-SYSTEM.md` | THE contract: tokens table, component contracts, templates, QA checklist, and §10 map of the 47-section master constitution → system anchors. Wins all conflicts. Update it in the same commit as any system change. |
 | `src/styles/design-tokens.css` | The ONLY home of raw visual values (color/spacing/type/radius/motion/z/sizing). Density + theme live here as overrides. |
 | `src/js/ui/primitives.js` · `src/js/ui/icons.js` (+`build-icon-data.mjs`) | Foundation layer: section/rails/skeletons/empty·error/feedback, the sole icon route (no emoji/unicode glyphs — gate-enforced). |
 | `src/js/components/` · `src/js/theme/ThemeEngine.js` | Components (Sidebar, Header, MediaCard/zcard) + live theming engine (presets, sliders, page overrides). |
-| `scripts/audit-tokens.py` | The enforcer: glyph/hex/MASK/grid-px/shimmer/FONT/SPACE hard locks + `--drift` report. Green = machine-verified consistency. |
+| `scripts/audit-tokens.py` | The enforcer: glyph/hex/MASK(px|ms|s|rem)/UNDEFVAR/KEYDUP/grid-px/shimmer/FONT/SPACE hard locks + `--drift` report. Green = machine-verified consistency. |
 | `src/App.js` route table + `src/js/router.js` | Navigation truth. Routes are public surface — preserve or redirect, never silently drop. |
 | `docs/ARCHITECTURE.md` | Process model + boundaries (Electron main ↔ renderer bridge). Respect them. |
 

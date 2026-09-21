@@ -439,7 +439,7 @@ async function createAppearanceSection() {
  card.addEventListener('mouseenter', () => {
  if (!card.classList.contains('active')) {
  card.style.transform = 'translateY(-2px)';
- card.style.boxShadow = 'var(--shadow-lg)';
+ card.style.boxShadow = 'var(--shadow-2)';
  }
  });
     
@@ -1009,10 +1009,7 @@ function createNotificationsSection() {
             <div style="font-weight: 500; font-size: var(--text-sm); margin-bottom: 2px;">${getNotificationTypeName(type)}</div>
             <div style="font-size: var(--text-3xs); color: var(--color-text-muted);">${getNotificationTypeDesc(type)}</div>
           </div>
-          <label style="position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; cursor: pointer;">
-            <input type="checkbox" data-type="${type}" ${enabled ? 'checked' : ''} style="opacity: 0; width: 0; height: 0;">
-            <span class="toggle-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: ${enabled ? 'var(--color-accent)' : 'var(--color-border)'}; border-radius: var(--r-2xl); transition: 0.2s;"></span>
-          </label>
+          <label class="z-switch"><input type="checkbox" data-type="${type}" ${enabled ? 'checked' : ''}><span class="track"></span></label>
         </div>
  `).join('')}
     </div>

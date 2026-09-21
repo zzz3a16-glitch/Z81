@@ -554,4 +554,4 @@ label { font-size: var(--text-sm); color: var(--color-text-secondary); }
 .z-flowsteps span::before { content: counter(step); counter-increment: step; }
 
 /* press feedback rides the transition already set on these controls */
-.chip, .z-iconbtn { transition: transform var(--motion-micro, 110ms) var(--ease-out), color var(--motion-micro, 110ms) var(--ease-out), background var(--motion-micro, 110ms) var(--ease-out), border-color var(--motion-micro, 110ms) var(--ease-out); }
+.chip, .z-iconbtn { transition: transform var(--motion-micro) var(--ease-out), color var(--motion-micro) var(--ease-out), background var(--motion-micro) var(--ease-out), border-color var(--motion-micro) var(--ease-out); }

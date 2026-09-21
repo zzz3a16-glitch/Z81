@@ -463,10 +463,7 @@ function createNotificationsSection() {
             <div style="font-weight: 500;">${getNotificationTypeName(type)}</div>
             <div style="font-size: var(--text-2xs); color: var(--color-text-secondary);">${getNotificationTypeDesc(type)}</div>
           </div>
-          <label style="position: relative; display: inline-block; width: 44px; height: 24px;">
-            <input type="checkbox" data-type="${type}" ${enabled ? 'checked' : ''} style="opacity: 0; width: 0; height: 0;">
-            <span class="toggle-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: ${enabled ? 'var(--color-accent)' : 'var(--color-border)'}; border-radius: var(--r-2xl); transition: 0.2s;"></span>
-          </label>
+          <label class="z-switch"><input type="checkbox" data-type="${type}" ${enabled ? 'checked' : ''}><span class="track"></span></label>
         </div>
  `).join('')}
     </div>

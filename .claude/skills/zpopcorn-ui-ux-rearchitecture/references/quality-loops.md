@@ -61,14 +61,22 @@ a loop catches a new class, add its row the same commit:
 grep -rnE "var\(--[a-z0-9-]+, *#[0-9a-fA-F]{3,8}\)" src/js src/styles src/index.html | grep -v design-tokens  # masked hex fallbacks (audit-tokens MASK also fails the gate)
 grep -rnE "var\(--[a-z0-9-]+, *-?[0-9.]+px\)" src/js src/styles src/index.html | grep -vE "design-tokens|themes/"  # masked px fallbacks / fake tokens (gate: MASK)
 grep -rn "auto-fit" src/styles src/js | grep grid-min          # variant overriding the grid token
-grep -rn "animation:.*s linear infinite" src/styles | grep -v zshimmer  # rogue shimmers
+grep -rn "animation:.*s linear infinite" src/styles | grep -vE "zskel|zshimmer|var\(--dur"  # hardcoded sweep/spin durations
+grep -rn "spin\|skel\|shimmer" src/styles --include="*.css" | grep "@keyframes"  # exactly one spin + one zskel (KEYDUP)
 grep -rn "backdrop-filter" src/styles | wc -l                  # glass sprawl (≤1, must use --z-glass-blur)
 grep -rnE "zlv-gap: var\(--zlv-gap,[^)]*\)" src/styles         # var self-shadowing (dead code masking a real default)
 node --check src/js/App.js && for f in src/js/pages/*.js src/js/components/*.js; do node --check $f; done
 curl -s "http://127.0.0.1:5173/src/styles/components.css?t=1" | grep -c "<new selector>"  # proof it ships
 ```
 
-History to remember (why each lock exists): theme presets defined a blur token
+History to remember (why each lock exists): a legacy-purge pass deleted a
+`@media (max-width: 768px) {` opener and leaked its rules (hidden header center,
+full-width toasts) into ALL viewports — purges must re-count braces, and BUILD
+WARNINGS ARE FINDINGS (esbuild css-syntax warnings in `vite build` = a bug, not
+noise); a compat alias vocabulary hid 19 dead `var(--radius-full)` declarations
+for months because nothing cross-checked uses vs definitions (now UNDEFVAR);
+after adding ANY className in JS, `grep` it in src/styles — an unstyled class
+hook is ghost UI (the toggle-slider one-off); theme presets defined a blur token
 but 4 surfaces kept literals + a dead fallback → preset switch moved only the
 topbar; a `var(--sp-11, 44px)` referenced a nonexistent token — "tokenized"
 for months while being a hardcode; a selector-prefix delete-sweep missed the

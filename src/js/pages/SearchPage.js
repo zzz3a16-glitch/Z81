@@ -38,7 +38,7 @@ export async function SearchPage(params = {}, query = {}) {
   const paintRecent = () => {
     const list = getRecent();
     recentBox.innerHTML = list.length
-      ? `<button class="btn btn-ghost btn-sm" id="sp-clearrecent" style="font-size: var(--text-3xs);color:var(--color-text-faint)">${icon('x', 12)} مسح السجل</button>` +
+      ? `<button class="btn btn-tertiary btn-sm" id="sp-clearrecent" style="font-size: var(--text-3xs);color:var(--color-text-faint)">${icon('x', 12)} مسح السجل</button>` +
         list.map((x) => `<button class="chip" data-q="${esc(x)}">${icon('history', 13)} ${esc(x)}</button>`).join('')
       : '';
     recentBox.querySelectorAll('[data-q]').forEach((b) => b.addEventListener('click', () => run(b.dataset.q)));

@@ -28,6 +28,8 @@
   --color-text-secondary: #a7a7af;
   --color-text-muted: #707079;
   --color-text-faint: rgba(112, 112, 121, 0.6);
+  --color-text-disabled: rgba(112, 112, 121, 0.42);  /* constitution §05 — disabled control ink */
+  --color-focus: var(--accent-line);                     /* constitution §32 — the ONE focus-ring color */
   --color-text-inverse: #0b0b0d;
 
   /* ================= ACCENT — the single dominant hue (spec 05) ============ */
@@ -40,9 +42,12 @@
   --accent-soft: rgba(123, 108, 246, 0.13);
   --accent-line: rgba(123, 108, 246, 0.42);
   --accent-glow: rgba(123, 108, 246, 0.16);
+  /* accent gradients — the ONE source for data-z-accent-mode="gradient" (was 3 dead refs) */
+  --accent-grad: linear-gradient(135deg, var(--accent-deep), var(--accent) 55%, var(--accent-bright));
+  --accent-grad-hover: linear-gradient(135deg, var(--accent), var(--accent-bright));
+  --accent-grad-soft: linear-gradient(135deg, var(--accent-soft), var(--accent-glow));
   --color-accent: var(--accent);              /* legacy aliases → new system */
   --color-accent-secondary: var(--accent-bright);
-  --color-accent-tertiary: var(--accent-deep);
   --color-primary-500: var(--accent);
 
   /* Status — desaturated, informational only (never decorative) */
@@ -85,24 +90,10 @@
   --text-4xl: 2.7rem;     /* 43px    hero      */
   --text-5xl: 3.6rem;     /* 58px    display   */
 
-  --font-size-body: var(--text-base);
-  --font-size-body-lg: var(--text-lg);
-  --font-size-caption: var(--text-sm);
-  --font-size-label: var(--text-xs);
-  --font-size-metadata: var(--text-2xs);
-  --font-size-h4: var(--text-lg);
-  --font-size-h3: var(--text-xl);
-  --font-size-h2: var(--text-2xl);
-  --font-size-h1: var(--text-3xl);
-  --font-size-display: var(--text-4xl);
-
   --weight-light: 300; --weight-regular: 400; --weight-medium: 500;
   --weight-semibold: 600; --weight-bold: 700; --weight-black: 800;
-  --font-weight-light: var(--weight-light); --font-weight-regular: var(--weight-regular);
-  --font-weight-medium: var(--weight-medium); --font-weight-bold: var(--weight-bold);
 
   --leading-none: 1.06; --leading-tight: 1.22; --leading-snug: 1.4; --leading-base: 1.6; --leading-loose: 1.78;
-  --line-height-tight: var(--leading-tight); --line-height-normal: var(--leading-base); --line-height-relaxed: var(--leading-loose);
 
   --tracking-caps: 0.09em;   /* for 11px caps labels */
   --tracking-tight: -0.01em;
@@ -111,14 +102,9 @@
   --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px;
   --sp-6: 24px; --sp-7: 28px; --sp-8: 32px; --sp-10: 40px; --sp-12: 48px;
   --sp-14: 56px; --sp-16: 64px; --sp-20: 80px;
-  --spacing-xs: var(--sp-1); --spacing-sm: var(--sp-2); --spacing-md: var(--sp-3);
-  --spacing-lg: var(--sp-4); --spacing-xl: var(--sp-5); --spacing-2xl: var(--sp-6);
-  --spacing-3xl: var(--sp-8); --spacing-4xl: var(--sp-10); --spacing-5xl: var(--sp-12); --spacing-6xl: var(--sp-14); --spacing-7xl: var(--sp-16);
 
   /* ================= RADII — restrained (spec 65) ============ */
   --r-xs: 4px; --r-sm: 6px; --r-md: 8px; --r-lg: 12px; --r-xl: 16px; --r-2xl: 20px; --r-full: 999px;
-  --radius-sm: var(--r-sm); --radius-md: var(--r-md); --radius-lg: var(--r-lg);
-  --radius-xl: var(--r-xl); --radius-2xl: var(--r-2xl); --radius-full: var(--r-full);
 
   /* ================= DEPTH — quiet, layered (spec 03) ============ */
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5);
@@ -126,8 +112,6 @@
   --shadow-3: 0 4px 10px rgba(0, 0, 0, 0.45), 0 22px 56px rgba(0, 0, 0, 0.42);
   --shadow-pop: 0 18px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--color-border);
   --ring-focus: 0 0 0 2px var(--surface-0), 0 0 0 4px var(--accent);
-  --shadow-sm: var(--shadow-1); --shadow-md: var(--shadow-2); --shadow-lg: var(--shadow-2);
-  --shadow-xl: var(--shadow-3); --shadow-2xl: var(--shadow-3);
   --shadow-neon-purple: none; --shadow-neon-cyan: none;
   --shadow-glass-sm: var(--shadow-1); --shadow-glass-md: var(--shadow-2);
   --shadow-glow-primary: none; --shadow-glow-secondary: none;
@@ -144,12 +128,11 @@
   --dur-2: 190ms;   /* normal */
   --dur-3: 320ms;   /* slow   */
   --dur-4: 560ms;   /* entrance rails/hero */
-  --dur-shimmer: 1.4s;  /* ONE skeleton sweep — every shimmer across the app uses this + @keyframes zskel (base.css) */
+  --dur-shimmer: 1.4s;  /* ONE skeleton sweep — canonical: @keyframes zskel (base.css) */
+  --dur-spin: 900ms;   /* ONE spinner cycle — canonical: @keyframes spin */  /* ONE skeleton sweep — every shimmer across the app uses this + @keyframes zskel (base.css) */
   --ease-std: cubic-bezier(0.3, 0.1, 0.3, 1);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --duration-instant: 80ms; --duration-fast: var(--dur-1); --duration-normal: var(--dur-2);
-  --duration-slow: var(--dur-3); --duration-slower: var(--dur-4);
   --ease-default: var(--ease-std); --ease-enter: var(--ease-out); --ease-exit: var(--ease-std);
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.15);
   --card-hover-transform: translateY(-3px);
@@ -166,7 +149,6 @@
   --content-max-width: var(--content-max);
   --header-height: var(--topbar-h);
   --sidebar-width: var(--sidebar-w);
-  --sidebar-collapsed-width: var(--rail-w);
 
   /* Card grid rhythm per density */
   --card-w: clamp(120px, 7.6vw + 80px, 220px);  /* poster column — fluid across 1366→3840, density rescales */
@@ -183,6 +165,7 @@
   /* Component sizing */
   --button-height-sm: 30px; --button-height-md: 36px; --button-height-lg: 44px;
   --input-height: 38px;
+  --switch-w: 44px; --switch-h: 24px; --switch-knob: 18px;  /* .z-switch geometry (§33 component sizes) */
   --avatar-size-sm: 30px; --avatar-size-md: 44px; --avatar-size-lg: 64px;
 
   /* Hero */
@@ -243,61 +226,17 @@
 
 ::selection { background: color-mix(in srgb, var(--accent) 40%, transparent); color: var(--color-text-primary); }
 
-:focus-visible { outline: 2px solid var(--accent-line); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 
 /* ════════════════════════════════════════════════════════════════════════
-   zPopcorn Design System v2 — semantic layer (rebuild directive §06–§12, §22)
-   One vocabulary over the existing token engine: pages/components read these
-   names; themes keep painting the primitives, so ThemeEngine & presets stay
-   fully compatible. Geometry follows the 8px foundation (§07).
+   zPopcorn Design System v2 — named roles.
+   The legacy alias vocabulary (--spacing/--font-size/--state/--surface-*) was
+   fully migrated to canonical names (2026-09): one concept = one token name,
+   enforced by the UNDEFVAR + MASK gate locks. Geometry follows the 4px scale.
    ════════════════════════════════════════════════════════════════════════ */
 :root {
-  /* background & surfaces */
-  --background-primary:   var(--color-background);
-  --background-secondary: var(--color-surface);
-  --surface-primary:      var(--color-surface);
-  --surface-secondary:    var(--color-card);
-  --surface-elevated:     var(--color-surface-elevated);
-  --surface-hover:        var(--color-surface-hover);
-
-  /* text */
-  --text-primary:   var(--color-text-primary);
-  --text-secondary: var(--color-text-secondary);
-  --text-muted:     var(--color-text-muted);
-  --text-faint:     var(--color-text-faint);
-
-  /* accent */
-  --accent-primary:   var(--accent);
-  --accent-secondary: var(--color-accent-secondary);
-
-  /* borders */
-  --border-subtle: var(--color-border-subtle);
-  --border-default: var(--color-border);
-  --border-strong: var(--color-border-strong);
-
-  /* state colors (Fluent-style semantic quartet) */
-  --state-success: var(--color-success);
-  --state-warning: var(--color-warning);
-  --state-error:   var(--color-danger);
-  --state-info:    var(--color-info);
-  --state-success-soft: var(--success-soft);
-  --state-warning-soft: var(--warning-soft);
-  --state-error-soft:   var(--danger-soft);
-  --state-info-soft:    var(--info-soft);
-
-  /* motion contract (§22) — short, intentional; every name states its job */
-  --motion-micro:    var(--dur-1);   /* hover, press, chip toggles  */
-  --motion-standard: var(--dur-2);   /* reveals, tabs, surfaces      */
-  --motion-enter:    var(--dur-3);   /* popovers, dock, modals       */
-  --motion-page:     var(--dur-4);   /* route transitions only       */
-  --motion-ease-out:    var(--ease-out);
-  --motion-ease-enter:  var(--ease-enter);
-
-  /* elevation ladder (§08) — exactly four steps; a fifth must be earned */
-  --elevation-1: var(--shadow-sm);
-  --elevation-2: var(--shadow-md);
-  --elevation-3: var(--shadow-lg);
-  --elevation-4: var(--shadow-xl);
+  /* motion contract (§22): the one named motion role components consume */
+  --motion-micro: var(--dur-1);   /* hover, press, chip toggles — identity.css */
 }
 
 /* interaction-state contract (§23): every interactive control answers hover,

@@ -30,7 +30,7 @@
   text-decoration: none;
   color: var(--color-text-muted);
   transition: all 0.2s var(--ease-default);
-  border-radius: var(--radius-md);
+  border-radius: var(--r-md);
   min-width: 0;
 }
 

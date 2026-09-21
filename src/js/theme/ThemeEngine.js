@@ -10,7 +10,7 @@
  *  - live apply through ONE <style> element (rAF-batched, no reloads)
  *  - persistence (localStorage + custom-font data via db store)
  *  - presets, custom themes, export/import, resets, page overrides
- *  - canonical token aliases (--background-primary …) for future components
+ *  - semantic role tokens (color/surface/border families) are the ONLY vocabulary — no alias layer
  */
 
 const LS_KEY = 'zpopcorn-appearance';
