@@ -17,7 +17,7 @@ const ROUTE_TITLES = [
   ['/storage', 'التخزين'], ['/search', 'البحث'], ['/settings', 'الإعدادات'],
   ['/developer', 'وضع المطور'], ['/assistant', 'المساعد الذكي'], ['/analytics', 'الإحصائيات'],
   ['/recommendations', 'توصيات لك'], ['/snapshots', 'اللقطات'], ['/audit', 'سجل التدقيق'],
-  ['/missing', 'المفقود'], ['/platforms', 'المنصات'], ['/movie/', 'فيلم'], ['/tv/', 'مسلسل'], ['/person/', 'شخص'],
+  ['/missing', 'المفقود'], ['/networks', 'الشبكات'], ['/movie/', 'فيلم'], ['/tv/', 'مسلسل'], ['/person/', 'شخص'],
 ];
 
 export function createHeader() {

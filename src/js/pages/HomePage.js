@@ -169,7 +169,7 @@ async function renderSections(body) {
   const FNS = {
     continue: loadContinue, recent: loadRecentlyAdded, watched: loadRecentlyWatched,
     top10: loadTop10, later: loadWatchLater, recs: loadRecommended,
-    trending: loadTrending, health: loadHealthStrip,
+    trending: loadTrending, health: loadHealthStrip, nets: loadPinnedNetworks,
   };
   let eng = null;
   try { eng = (await import('../theme/ThemeEngine.js')).themeEngine; } catch { /* defaults */ }
@@ -326,5 +326,41 @@ async function loadHealthStrip() {
   if (pending) grid.appendChild(mk('inbox', `${pending} عنصر`, 'بانتظار مراجعتك في صندوق الوارد', '/inbox', 'مراجعة'));
   if (issues) grid.appendChild(mk('shield', `${issues} ملاحظة`, 'مشاكل صحة مكتبة مفتوحة', '/health', issues > 5 ? 'فحص' : ''));
   s.body.appendChild(grid);
+  return s.root;
+}
+
+/* Pinned networks/platforms rail (§21/§24) — hidden entirely when nothing is pinned. */
+async function loadPinnedNetworks() {
+  const { netPins } = await import('../services/net/NetPins.js');
+  const pins = netPins.list();
+  if (!pins.length) return null;
+  const items = [];
+  if (pins.some((k) => k.startsWith('n:'))) {
+    try {
+      const res = await tmdbClient.request('tv/networks');
+      (res?.results || []).forEach((n) => { if (pins.includes(`n:${n.id}`)) items.push({ name: n.name || '—', logo: n.logo_path, id: n.id }); });
+    } catch { /* offline */ }
+  }
+  if (pins.some((k) => k.startsWith('p:'))) {
+    try {
+      const wp = await tmdbClient.request('watch/providers/movie');
+      const rg = localStorage.getItem('zpopcorn-region') || 'SA';
+      pins.filter((k) => k.startsWith('p:')).forEach((k) => {
+        const p = wp?.results?.[k.slice(2)];
+        if (p) items.push({ name: p.provider_name || k, logo: p.logo_path, link: (p[rg] || p.US || {}).link || '' });
+      });
+    } catch { /* offline */ }
+  }
+  if (!items.length) return null;
+  const s = section({ title: 'شبكاتك المثبتة', subtitle: 'تُدار من صفحة الشبكات', wide: true, action: { label: 'إدارة' } });
+  s.head.querySelector('.more').addEventListener('click', () => window.router.navigate('/networks'));
+  const row = el('div', 'z-netchips');
+  items.forEach((it) => {
+    const b = el('button', 'z-netchip');
+    b.innerHTML = `${it.logo ? `<img src="${getTMDBImageUrl(it.logo, 'logo', 'w92')}" alt="" loading="lazy">` : ''}<span>${esc(it.name)}</span>`;
+    b.addEventListener('click', () => (it.link ? window.open(it.link, '_blank', 'noopener') : window.router.navigate(`/company/${it.id}`)));
+    row.appendChild(b);
+  });
+  s.body.appendChild(row);
   return s.root;
 }

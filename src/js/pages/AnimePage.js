@@ -4,10 +4,11 @@
  */
 import { tmdbClient } from '../services/tmdb/TMDBClient.js';
 import { db } from '../services/storage/Database.js';
-import { createMediaCard, createSkeletonGrid } from '../components/MediaCard.js';
+import { createMediaCard, createSkeletonGrid, createTop10 } from '../components/MediaCard.js';
 import { el, section, railEl, emptyState, errorState, fmtDateAr } from '../ui/primitives.js';
 import { getTMDBImageUrl } from '../services/tmdb/TMDBImage.js';
 import { icon } from '../ui/icons.js';
+import { discoverPanel } from '../ui/filters.js';
 
 const SORTS = [
   ['popularity.desc', 'الأكثر رواجاً'],
@@ -23,16 +24,19 @@ export async function AnimePage() {
       <h1 class="page-title">أنمي</h1>
       <p class="page-subtitle">مواسم وحلقات ومواعيد بث — كل ما يهم متابع الأنمي حقاً.</p>
     </header>
+    <div id="an-top10"></div>
     <div id="an-airing"></div>
     <div id="an-lib"></div>
     <div class="container" style="margin-bottom: var(--sp-4)">
       <div style="display:flex;gap: var(--sp-2);flex-wrap:wrap;align-items:center">
         ${SORTS.map(([v, l], i) => `<button class="chip ${i === 0 ? 'active' : ''}" data-sort="${v}">${l}</button>`).join('')}
+        <button class="chip" id="an-f" type="button" aria-expanded="false">${icon('slider', 12)} فلاتر أنمي</button>
         <span style="flex:1"></span>
         <span style="font-size: var(--text-3xs);color:var(--color-text-faint)">ياباني · تصنيف 16 · مدعوم بالكاش</span>
       </div>
     </div>
     <div class="container">
+      <div id="an-panel" hidden></div>
       <div id="an-discover"></div>
     </div>`;
 
@@ -43,6 +47,8 @@ export async function AnimePage() {
 
   let sort = 'popularity.desc';
   let dseq = 0;
+  let extra = null;
+  let panel = null;
   async function loadDiscover() {
     const my = ++dseq;
     createSkeletonGrid(discGrid, 12);
@@ -53,6 +59,7 @@ export async function AnimePage() {
         sort_by: sort,
         'vote_count.gte': sort === 'vote_average.desc' ? 500 : 50,
         page: 1,
+        ...extra,
       });
       const rows = (res?.results || []).filter((m) => m.poster_path);
       if (my !== dseq) return; // stale sort response
@@ -71,10 +78,32 @@ export async function AnimePage() {
     loadDiscover();
   }));
 
+  const fBtn = page.querySelector('#an-f');
+  const panelMount = page.querySelector('#an-panel');
+  fBtn.addEventListener('click', () => {
+    if (!panelMount.hidden) { panelMount.hidden = true; fBtn.setAttribute('aria-expanded', 'false'); return; }
+    if (!panel) {
+      // anime-specific criteria set (§11): NOT the generic movies panel — types are tv shapes,
+      // base pins genre 16 + ja, status covers airing/ended.
+      panel = discoverPanel({
+        mediaType: 'tv',
+        types: [['tv', 'سلسلة'], ['tv_special', 'حلقة خاصة'], ['miniseries', 'ميني-سلسلة'], ['movie', 'فيلم أنمي']],
+        base: { with_genres: 16, with_original_language: 'ja' },
+        onRun: (p) => { extra = p; fBtn.classList.add('active'); panelMount.hidden = true; fBtn.setAttribute('aria-expanded', 'false'); loadDiscover(); },
+        onCancel: () => { extra = null; fBtn.classList.remove('active'); loadDiscover(); },
+      });
+      panelMount.appendChild(panel.root);
+    }
+    panelMount.hidden = false;
+    fBtn.setAttribute('aria-expanded', 'true');
+  });
+
   // 1) Airing soon — from library shows (real data, not fake calendar)
   loadAiringSoon(page.querySelector('#an-airing'));
   // 2) My anime rail
   loadMyAnime(page.querySelector('#an-lib'));
+  // 3) Top-10 — same rank system as every other page (§07/§31)
+  top10Anime(page.querySelector('#an-top10'));
   // 3) discovery
   await loadDiscover();
   return page;
@@ -135,4 +164,15 @@ async function loadAiringSoon(mount) {
     } catch { /* offline → no calendar */ }
   }
   if (!painted) s.root.remove();
+}
+
+async function top10Anime(mount) {
+  const s = section({ title: 'أفضل ١٠ أنمي', subtitle: 'رائج ومُقيَّم — نفس نظام الأرقام في كل الصفحات' });
+  mount.appendChild(s.root);
+  try {
+    const res = await tmdbClient.discoverTV({ with_genres: 16, with_original_language: 'ja', sort_by: 'popularity.desc', 'vote_count.gte': 1000, page: 1 });
+    const rows = (res?.results || []).filter((m) => m.poster_path).slice(0, 10);
+    if (rows.length < 4) { s.root.remove(); return; }
+    s.body.appendChild(createTop10(rows.map((m) => ({ ...m, media_type: 'tv' }))));
+  } catch { s.root.remove(); }
 }

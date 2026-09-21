@@ -215,42 +215,6 @@ export async function ContinueWatchingPage() {
  return container;
 }
 
-export async function PlatformsPage() {
- const container = document.createElement('div');
- container.innerHTML = `
-    <div class="container" style="padding-top: var(--sp-6);">
-      <h1 style="font-size: var(--text-3xl); font-weight: 700; margin-bottom: var(--sp-2);"> المنصات</h1>
-      <p style="color: var(--color-text-secondary); margin-bottom: var(--sp-6);">منصات البث المتاحة في منطقتك (بيانات حقيقية من TMDB Watch Providers)</p>
-      <div id="platforms-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--sp-4);"></div>
-    </div>
- `;
-
- const grid = container.querySelector('#platforms-grid');
-  
- // Real platforms from TMDB
- const platforms = [
- { id: 8, name: 'Netflix', logo: 'https://images.justwatch.com/icon/207360008/s100', color: '#e50914' },
- { id: 119, name: 'Amazon Prime Video', logo: 'https://images.justwatch.com/icon/52449861/s100', color: '#00a8e1' },
- { id: 337, name: 'Disney Plus', logo: 'https://images.justwatch.com/icon/147638351/s100', color: '#113ccf' },
- { id: 2, name: 'Apple TV', logo: 'https://images.justwatch.com/icon/190848813/s100', color: '#000000' },
- { id: 384, name: 'HBO Max', logo: 'https://images.justwatch.com/icon/285237061/s100', color: '#000000' },
- { id: 283, name: 'Crunchyroll', logo: 'https://images.justwatch.com/icon/212543997/s100', color: '#f47521' },
- { id: 15, name: 'Hulu', logo: 'https://images.justwatch.com/icon/116653721/s100', color: '#1ce783' },
- { id: 531, name: 'Paramount Plus', logo: 'https://images.justwatch.com/icon/210418396/s100', color: '#0064ff' }
- ];
-
- grid.innerHTML = platforms.map(platform => `
-    <div style="background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--r-lg); padding: var(--sp-5); text-align: center; cursor: pointer; transition: transform 0.2s, opacity 0.2s, background 0.2s, border-color 0.2s;" onmouseenter="this.style.borderColor='var(--color-accent)'" onmouseleave="this.style.borderColor='var(--color-border)'">
-      <div style="width: 60px; height: 60px; background: ${platform.color}; border-radius: var(--r-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--sp-3); color: var(--color-white); font-weight: 700; font-size: var(--text-2xs);">${platform.name.slice(0, 2).toUpperCase()}</div>
-      <h3 style="font-weight: 600; margin-bottom: var(--sp-1);">${platform.name}</h3>
-      <p style="font-size: var(--text-2xs); color: var(--color-text-secondary);">متاح في ${localStorage.getItem('zpopcorn-region') || 'SA'}</p>
-      <div style="margin-top: var(--sp-3); font-size: var(--text-3xs); color: var(--color-text-muted);">بيانات من TMDB • JustWatch</div>
-    </div>
- `).join('');
-
- return container;
-}
-
 export async function PersonPage(params) {
  const id = params.id;
  const container = document.createElement('div');

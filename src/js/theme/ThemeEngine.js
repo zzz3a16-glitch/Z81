@@ -88,7 +88,8 @@ export const CARD_STYLES = ['cinematic', 'minimal', 'elevated', 'editorial', 'fl
 export const HOME_SECTIONS = [
   { id: 'hero', label: 'الواجهة الرئيسية' }, { id: 'continue', label: 'متابعة المشاهدة' },
   { id: 'recent', label: 'أضيف حديثاً' }, { id: 'watched', label: 'شاهدته مؤخراً' },
-  { id: 'top10', label: 'أفضل ١٠' }, { id: 'later', label: 'المشاهدة لاحقاً' },
+  { id: 'top10', label: 'أفضل ١٠' }, { id: 'nets', label: 'الشبكات المثبتة' },
+  { id: 'later', label: 'المشاهدة لاحقاً' },
   { id: 'recs', label: 'موصى به' }, { id: 'trending', label: 'رائج هذا الأسبوع' },
   { id: 'health', label: 'تحتاج انتباهاً' },
 ];

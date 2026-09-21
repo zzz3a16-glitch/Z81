@@ -17,7 +17,7 @@ const GROUPS = [
     ['/tv', 'tv', 'مسلسلات'],
     ['/anime', 'sparkle', 'أنمي'],
   ], more: [
-    ['/platforms', 'globe', 'المنصات'],
+    ['/networks', 'globe', 'الشبكات'],
     ['/genres', 'palette', 'الأنواع'],
     ['/countries', 'globe', 'الدول'],
     ['/eras', 'calendar', 'العقود والحقب'],

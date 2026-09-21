@@ -31,7 +31,8 @@ import { SearchPage } from './js/pages/SearchPage.js';
 import { SettingsPage } from './js/pages/SettingsPage.js';
 import { EnhancedSettingsPage } from './js/pages/EnhancedSettingsPage.js';
 import { AssistantPage } from './js/pages/AssistantPage.js';
-import { FavoritesPage, WatchLaterPage, HistoryPage, ContinueWatchingPage, PlatformsPage, PersonPage, AnalyticsPage } from './js/pages/FavoritesPage.js';
+import { FavoritesPage, WatchLaterPage, HistoryPage, ContinueWatchingPage, PersonPage, AnalyticsPage } from './js/pages/FavoritesPage.js';
+import { NetworksPage } from './js/pages/NetworksPage.js';
 
 // Advanced Library Pages
 import { 
@@ -258,7 +259,8 @@ export class App {
       '/watchlist/:id': (params) => this.renderPage(() => WatchlistPage(params)),
       '/history': () => this.renderPage(HistoryPage),
       '/continue-watching': () => this.renderPage(ContinueWatchingPage),
-      '/platforms': () => this.renderPage(PlatformsPage),
+      '/networks': () => this.renderPage(NetworksPage),
+      '/platforms': () => this.renderPage(NetworksPage),
       '/analytics': () => this.renderPage(AnalyticsPage),
       '/recommendations': () => this.renderPage(RecommendationsPage),
       '/trending': () => this.renderPage(TrendingPage),

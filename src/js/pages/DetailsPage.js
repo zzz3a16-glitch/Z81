@@ -82,6 +82,7 @@ export async function DetailsPage(params, mediaType = 'movie') {
           <span class="z-pill">${mediaType === 'tv' ? 'مسلسل' : 'فيلم'}</span>
           ${media.status && media.status !== 'Released' ? `<span class="z-pill">${esc(media.status)}</span>` : ''}
         </div>
+        ${media.images?.logos?.length ? `<img class="z-dlogo" src="${esc(getTMDBImageUrl(media.images.logos.slice().sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0))[0].file_path, 'logo', 'w300'))}" alt="${esc(title)}">` : ''}
         <h1>${esc(title)}</h1>
         ${originalTitle && originalTitle !== title ? `<div class="orig">${esc(originalTitle)}</div>` : ''}
         <div class="z-meta-strip">

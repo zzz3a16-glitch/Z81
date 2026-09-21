@@ -46,7 +46,7 @@ const SORTS = [
  * @param {(params: object) => void} o.onRun - called ONLY on explicit search press
  * @param {() => void} [o.onCancel]
  */
-export function discoverPanel({ mediaType, genres = [], networks = [], onRun, onCancel }) {
+export function discoverPanel({ mediaType, genres = [], networks = [], types = [], base = {}, onRun, onCancel }) {
   const root = el('div', 'z-disco');
   const yearA = numInput('year', 1900, 2100, 'yyyy');
   const yearB = numInput('year', 1900, 2100, 'yyyy');
@@ -65,6 +65,9 @@ export function discoverPanel({ mediaType, genres = [], networks = [], onRun, on
   const netSel = networks.length
     ? selectInput([['', 'كل الشبكات'], ...networks.map((n) => [String(n.id), n.name])], true)
     : null;
+  const typeSel = types.length
+    ? selectInput([['', 'أي شكل عرض'], ...types], true)
+    : null;
 
   const fields = [
     ['سنة من', yearA], ['سنة إلى', yearB], ['تقييم أدنى', minRate], ['تصويتات أدنى', minVotes],
@@ -72,6 +75,7 @@ export function discoverPanel({ mediaType, genres = [], networks = [], onRun, on
   ];
   if (genreSel) fields.push(['النوع', genreSel]);
   if (netSel) fields.push(['الشبكة', netSel]);
+  if (typeSel) fields.push(['شكل العرض', typeSel]);
 
   const grid = el('div', 'z-disco-grid');
   grid.innerHTML = fields.map(([label, node]) => `<div class="f"><label>${esc(label)}</label></div>`).join('');
@@ -80,14 +84,14 @@ export function discoverPanel({ mediaType, genres = [], networks = [], onRun, on
   const runBtn = el('button', 'btn btn-primary btn-sm', `${icon('search', 14)} بحث`);
   const clearBtn = el('button', 'btn btn-tertiary btn-sm', 'تفريغ');
   runBtn.disabled = true;
-  const anyCriterion = () => [yearA, yearB, minRate, minVotes, lang, region, genreSel, sort, statusSel, netSel]
+  const anyCriterion = () => [yearA, yearB, minRate, minVotes, lang, region, genreSel, sort, statusSel, netSel, typeSel]
     .some((c) => c && c.value !== '');
   const refresh = () => { runBtn.disabled = !anyCriterion(); };
-  [yearA, yearB, minRate, minVotes, lang, region, genreSel, sort, statusSel, netSel].forEach((c) => c && c.addEventListener('input', refresh));
+  [yearA, yearB, minRate, minVotes, lang, region, genreSel, sort, statusSel, netSel, typeSel].forEach((c) => c && c.addEventListener('input', refresh));
 
   runBtn.addEventListener('click', () => {
     if (runBtn.disabled) return;
-    const p = {};
+    const p = { ...base };
     if (yearA.value) p[mediaType === 'movie' ? 'primary_release_date.gte' : 'first_air_date.gte'] = `${yearA.value}-01-01`;
     if (yearB.value) p[mediaType === 'movie' ? 'primary_release_date.lte' : 'first_air_date.lte'] = `${yearB.value}-12-31`;
     if (minRate.value) p['vote_average.gte'] = Math.max(0, Math.min(10, +minRate.value));
@@ -96,6 +100,7 @@ export function discoverPanel({ mediaType, genres = [], networks = [], onRun, on
     if (region.value) { p.watch_region = region.value; p.with_original_country = region.value; }
     if (genreSel && genreSel.value) p.with_genres = genreSel.value;
     if (netSel && netSel.value) p.with_networks = netSel.value;
+    if (typeSel && typeSel.value) p.with_types = typeSel.value;
     if (sort.value) p.sort_by = sort.value;
     if (statusSel.value) {
       if (mediaType === 'movie') {
@@ -106,7 +111,7 @@ export function discoverPanel({ mediaType, genres = [], networks = [], onRun, on
     onRun(p);
   });
   clearBtn.addEventListener('click', () => {
-    [yearA, yearB, minRate, minVotes, lang, region, genreSel, sort, statusSel, netSel].forEach((c) => c && (c.value = ''));
+    [yearA, yearB, minRate, minVotes, lang, region, genreSel, sort, statusSel, netSel, typeSel].forEach((c) => c && (c.value = ''));
     refresh();
     onCancel && onCancel();
   });
