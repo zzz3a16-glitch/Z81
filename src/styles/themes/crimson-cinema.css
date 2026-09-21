@@ -1,0 +1,19 @@
+/* zPopcorn Theme · crimson-cinema — أحمر جريء على فحم داكن */
+:root[data-theme="crimson-cinema"] {
+  --surface-0: #0d090a;
+  --surface-1: #141011;
+  --surface-2: #1a1516;
+  --surface-3: #221a1c;
+  --surface-4: #2a2123;
+  --surface-5: #342829;
+  --accent: #e5484d;
+  --accent-bright: #f2666b;
+  --accent-deep: #b1333a;
+  --accent-soft: rgba(229,72,77,.13);
+  --accent-line: rgba(229,72,77,.45);
+  --accent-glow: rgba(229,72,77,.18);
+}
+:root[data-theme="crimson-cinema"] .z-hero,
+:root[data-theme="crimson-cinema"] .hero {
+  --hero-overlay: linear-gradient(78deg, rgba(10,10,10,.96) 0%, rgba(10,10,10,.82) 38%, rgba(10,10,10,.28) 74%, rgba(10,10,10,.10) 100%);
+}

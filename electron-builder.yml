@@ -1,0 +1,44 @@
+# zPopcorn — electron-builder configuration (Windows x64 production target)
+appId: com.zpopcorn.desktop
+productName: zPopcorn
+copyright: Copyright © zPopcorn Project
+
+directories:
+  buildResources: build
+  output: release
+
+files:
+  - dist/**/*
+  - electron/**/*
+  - package.json
+  - "!**/*.map"
+
+asar: true
+asarUnpack:
+  - "**/*.node"
+
+# Native modules (better-sqlite3) are rebuilt against the Electron ABI
+# automatically by electron-builder (npmRebuild: true is the default).
+npmRebuild: true
+
+win:
+  icon: build/icon.ico
+  target:
+    - target: nsis
+      arch:
+        - x64
+  artifactName: zPopcorn-Setup-${version}-x64.${ext}
+  requestedExecutionLevel: asInvoker
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: zPopcorn
+  # CRITICAL DATA PROTECTION: never touch %APPDATA%\zPopcorn on update/uninstall
+  deleteAppDataOnUninstall: false
+  runAfterFinish: true
+
+publish: null

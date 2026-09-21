@@ -1,0 +1,26 @@
+/* zPopcorn Theme · cinema-noir — كلاسيكي سينمائي — أحمر داكن وحواف حادة */
+:root[data-theme="cinema-noir"] {
+  --surface-0: #0b0a0a;
+  --surface-1: #121010;
+  --surface-2: #181514;
+  --surface-3: #1f1b1a;
+  --surface-4: #272221;
+  --surface-5: #332c2a;
+  --accent: #d24a5f;
+  --accent-bright: #e06a7d;
+  --accent-deep: #a02438;
+  --accent-soft: rgba(210,74,95,.13);
+  --accent-line: rgba(210,74,95,.45);
+  --accent-glow: rgba(210,74,95,.20);
+  --r-lg: 6px;
+  --r-xl: 8px;
+  --r-md: 4px;
+  --hero-overlay: linear-gradient(78deg, rgba(11,10,10,.97) 0%, rgba(11,10,10,.84) 42%, rgba(11,10,10,.25) 100%);
+  --font-ui: 'Amiri', 'Noto Sans Arabic', serif;
+  --font-display: 'Amiri', 'Noto Sans Arabic', serif;
+  --card-hover-transform: translateY(-1px);
+}
+:root[data-theme="cinema-noir"] .z-hero,
+:root[data-theme="cinema-noir"] .hero {
+  --hero-overlay: linear-gradient(78deg, rgba(11,10,10,.97) 0%, rgba(11,10,10,.84) 42%, rgba(11,10,10,.25) 100%);
+}

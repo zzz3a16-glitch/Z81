@@ -1,0 +1,21 @@
+/* zPopcorn Theme · golden-cinema — ذهبي فاترة — بريق الستار الأول */
+:root[data-theme="golden-cinema"] {
+  --surface-0: #0c0a06;
+  --surface-1: #131008;
+  --surface-2: #191510;
+  --surface-3: #211b12;
+  --surface-4: #2a2316;
+  --surface-5: #352c1d;
+  --accent: #d4af37;
+  --accent-bright: #e7c664;
+  --accent-deep: #a8841f;
+  --accent-contrast: #171203;
+  --accent-soft: rgba(212,175,55,.12);
+  --accent-line: rgba(212,175,55,.42);
+  --accent-glow: rgba(212,175,55,.16);
+  --color-text-primary: #f6f1e3;
+}
+:root[data-theme="golden-cinema"] .z-hero,
+:root[data-theme="golden-cinema"] .hero {
+  --hero-overlay: linear-gradient(78deg, rgba(10,10,10,.96) 0%, rgba(10,10,10,.82) 38%, rgba(10,10,10,.28) 74%, rgba(10,10,10,.10) 100%);
+}
