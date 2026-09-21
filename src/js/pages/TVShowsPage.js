@@ -8,6 +8,7 @@ import { el, section, railEl, emptyState, errorState } from '../ui/primitives.js
 
 import { icon } from '../ui/icons.js';
 import { discoverPanel } from '../ui/filters.js';
+import { rankedTop10 } from '../ui/ranked.js';
 
 const TABS = [
   ['popular', 'الأشهر'],
@@ -25,6 +26,7 @@ export async function TVShowsPage(params = {}, query = {}) {
       <p class="page-subtitle">تتبّع الحلقات القادمة وموعد عرضها، من مكتبتك أنت.</p>
     </header>
     <div id="tv-lib"></div>
+    <div class="container"><div id="tv-top10"></div></div>
     <div class="container">
       <div style="display:flex;gap: var(--sp-2);flex-wrap:wrap;margin-bottom: var(--sp-5)">
         ${TABS.map(([id, label]) => `<button class="chip ${id === (query.tab || 'popular') ? 'active' : ''}" data-tab="${id}">${label}</button>`).join('')}
@@ -46,6 +48,8 @@ export async function TVShowsPage(params = {}, query = {}) {
   const more = page.querySelector('#tv-more');
 
   loadMyShows(page.querySelector('#tv-lib'));
+  rankedTop10({ mount: page.querySelector('#tv-top10'), endpoint: 'tv/top_rated',
+    title: 'أفضل ١٠ مسلسلات', subtitle: 'الأعلى تقييماً — نفس باني الترتيب في كل الصفحات' });
 
   async function load(reset, extra = null) {
     const my = ++seq;

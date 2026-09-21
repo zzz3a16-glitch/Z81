@@ -4,11 +4,12 @@
  */
 import { tmdbClient } from '../services/tmdb/TMDBClient.js';
 import { db } from '../services/storage/Database.js';
-import { createMediaCard, createSkeletonGrid, createTop10 } from '../components/MediaCard.js';
+import { createMediaCard, createSkeletonGrid } from '../components/MediaCard.js';
 import { el, section, railEl, emptyState, errorState, fmtDateAr } from '../ui/primitives.js';
 import { getTMDBImageUrl } from '../services/tmdb/TMDBImage.js';
 import { icon } from '../ui/icons.js';
 import { discoverPanel } from '../ui/filters.js';
+import { rankedTop10 } from '../ui/ranked.js';
 
 const SORTS = [
   ['popularity.desc', 'الأكثر رواجاً'],
@@ -103,7 +104,9 @@ export async function AnimePage() {
   // 2) My anime rail
   loadMyAnime(page.querySelector('#an-lib'));
   // 3) Top-10 — same rank system as every other page (§07/§31)
-  top10Anime(page.querySelector('#an-top10'));
+  rankedTop10({ mount: page.querySelector('#an-top10'), endpoint: 'discover/tv',
+    params: { with_genres: 16, with_original_language: 'ja', sort_by: 'popularity.desc', 'vote_count.gte': 1000, page: 1 },
+    title: 'أفضل ١٠ أنمي', subtitle: 'رائج ومُقيَّم — نفس نظام الأرقام في كل الصفحات' });
   // 3) discovery
   await loadDiscover();
   return page;
@@ -164,15 +167,4 @@ async function loadAiringSoon(mount) {
     } catch { /* offline → no calendar */ }
   }
   if (!painted) s.root.remove();
-}
-
-async function top10Anime(mount) {
-  const s = section({ title: 'أفضل ١٠ أنمي', subtitle: 'رائج ومُقيَّم — نفس نظام الأرقام في كل الصفحات' });
-  mount.appendChild(s.root);
-  try {
-    const res = await tmdbClient.discoverTV({ with_genres: 16, with_original_language: 'ja', sort_by: 'popularity.desc', 'vote_count.gte': 1000, page: 1 });
-    const rows = (res?.results || []).filter((m) => m.poster_path).slice(0, 10);
-    if (rows.length < 4) { s.root.remove(); return; }
-    s.body.appendChild(createTop10(rows.map((m) => ({ ...m, media_type: 'tv' }))));
-  } catch { s.root.remove(); }
 }

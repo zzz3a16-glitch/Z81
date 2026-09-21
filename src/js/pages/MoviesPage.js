@@ -9,6 +9,7 @@ import { createSkeletonGrid } from '../components/MediaCard.js';
 import { el, esc, section, railEl, skelRail, errorState, emptyState, paintError } from '../ui/primitives.js';
 import { icon } from '../ui/icons.js';
 import { discoverPanel } from '../ui/filters.js';
+import { rankedTop10 } from '../ui/ranked.js';
 
 const TABS = [
   ['popular', 'الأكثر رواجاً'],
@@ -26,6 +27,7 @@ export async function MoviesPage(params = {}, query = {}) {
       <p class="page-subtitle">مجموعتك المحلية أولاً — ثم اكتشاف العالم عند الحاجة.</p>
     </header>
     <div id="mv-lib"></div>
+    <div class="container"><div id="mv-top10"></div></div>
     <div class="container" id="mv-filters">
       <div style="display:flex;gap: var(--sp-2);flex-wrap:wrap;align-items:center">
         ${TABS.map(([id, label]) => `<button class="chip ${id === (query.tab || 'popular') ? 'active' : ''}" data-tab="${id}">${label}</button>`).join('')}
@@ -56,6 +58,8 @@ export async function MoviesPage(params = {}, query = {}) {
   const resultsWrap = page.querySelector('#mv-grid').parentElement;
 
   loadMyMovies(page.querySelector('#mv-lib'));
+  rankedTop10({ mount: page.querySelector('#mv-top10'), endpoint: 'movie/top_rated',
+    title: 'أفضل ١٠ أفلام', subtitle: 'الأعلى تقييماً — نفس باني الترتيب في كل الصفحات' });
 
   const grid = page.querySelector('#mv-grid');
   const title = page.querySelector('#mv-grid-title');
