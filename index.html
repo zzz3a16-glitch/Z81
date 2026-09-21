@@ -23,7 +23,6 @@
       if (ap && ap.enabled !== false) {
         var R = document.documentElement;
         if (ap.density) R.setAttribute('data-density', ap.density);
-        if (ap.glass) R.setAttribute('data-z-glass', ap.glass);
         if (ap.cards && ap.cards.style) R.setAttribute('data-z-card', ap.cards.style);
         if (ap.accentMode) R.setAttribute('data-z-accent-mode', ap.accentMode);
         if (ap.uiScale && ap.uiScale !== 1) R.style.zoom = ap.uiScale;

@@ -74,7 +74,11 @@ History to remember (why each lock exists): a legacy-purge pass deleted a
 full-width toasts) into ALL viewports — purges must re-count braces, and BUILD
 WARNINGS ARE FINDINGS (esbuild css-syntax warnings in `vite build` = a bug, not
 noise); a compat alias vocabulary hid 19 dead `var(--radius-full)` declarations
-for months because nothing cross-checked uses vs definitions (now UNDEFVAR);
+for months because nothing cross-checked uses vs definitions (now UNDEFVAR — which also
+parses ThemeEngine's generated <style> map, since engine-fed tokens are invisible
+to CSS scans); purge regexes must handle INLINE statements (the identity blur
+rules sat mid-line inside selectors and survived a line-anchored sweep); INLINEFONT
+now catches literal sizes hidden in JS style strings (36 at once);
 after adding ANY className in JS, `grep` it in src/styles — an unstyled class
 hook is ghost UI (the toggle-slider one-off); theme presets defined a blur token
 but 4 surfaces kept literals + a dead fallback → preset switch moved only the

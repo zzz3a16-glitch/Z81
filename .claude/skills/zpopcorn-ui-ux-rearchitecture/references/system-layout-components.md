@@ -141,11 +141,14 @@ without state meaning.
 
 ## 22 · THEME INTEGRATION — new UI works with the theming engine, not beside it
 
-Any new surface must respond to: accent `--accent` swaps (roles +
-`--accent-grad*` auto-follow), `data-z-glass` presets (blur ONLY via
-`var(--z-glass-blur)` — never per-layer literals; the literals bug: presets
-changed just the topbar), `data-z-accent-mode` solid/gradient/dual (dual reads
-`--color-accent-secondary`), density, light theme (test contrast of
+Any new surface must respond to: accent `--accent` swaps — `accentVars()`
+derives bright/deep/soft/line/glow/grad + `--color-accent-secondary` from the
+ONE primary (no faded secondaries possible), GLASS MACHINERY RETIRED (directive
+§03, 2026-09): `data-z-glass`, `--z-glass-blur`/`--glass-blur`/`--blur-intensity`
+and every backdrop-filter were deleted — GLASS lock bans their return; elevation =
+solid surface + hairline + `--shadow-*` tiers; hover lift = `--card-hover-transform`
+(`--card-lift` px via studio slider). `data-z-accent-mode` solid/gradient/dual
+(dual reads `--color-accent-secondary`), density, light theme (test contrast of
 `*-soft/-line` tints), page override (`applyPageOverride`). Theme-adjacent
 controls go in AppearanceSettings' theme tab as cards (pattern:
 ThemeEngine._cardHTML), never as floating new settings pages.
